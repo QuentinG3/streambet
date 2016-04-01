@@ -11,7 +11,6 @@ var flash = require('connect-flash');
 var swig = require('swig');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 var server = require('http').createServer(app);
@@ -41,7 +40,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
 app.use('/', routes);
-app.use('/users', users);
 
 //Database connection
 mongodb_connection_string = '127.0.0.1:27017/streambet';
@@ -56,10 +54,10 @@ mongoose.connect(mongodb_connection_string);
 
 
 // passport config
-var Account = require('./models/account');
-passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+var User = require('./models/User');
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

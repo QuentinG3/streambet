@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
+var swig = require('swig');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -16,9 +17,12 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
+//Magic line
+app.engine('html', swig.renderFile);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'html');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

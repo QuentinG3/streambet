@@ -37,3 +37,6 @@ npm-debug.log
 
 #Not including db
 data/
+
+#Remvoving junk Rhistory
+*.Rhistory

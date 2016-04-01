@@ -17,7 +17,7 @@
     {% for streamer in streamer_list %}
     <div class="block-grid-item">
         <div class="imagehover img-hover">
-          <a href="{% url 'lolbet:stream' streamer.channel_name %}">
+          <a href="">
           <img src="{{ streamer.preview}}" alt="Channel Preview">
           <div class="texthover">
             <p><i class="fa fa-play fa-lg"></i></p>
@@ -30,7 +30,7 @@
 
     <div class="block-grid-item">
         <div class="imagehover img-hover">
-          <a href="{% url 'lolbet:add-streamer' %}">
+          <a href="">
           <img src="{% static 'lolbet/img/new.png' %}" alt="">
           <div class="texthover">
             <p><i class="fa fa-plus fa-lg"></i></p>
@@ -48,7 +48,7 @@
     {% for streamer in streamer_list %}
     <div class="center-block" style="padding:10px">
         <div class="imagehover img-hover">
-          <a href="{% url 'lolbet:stream' streamer.channel_name %}">
+          <a href="">
           <img src="{{ streamer.preview}}" alt="Channel Preview">
           <div class="texthover">
             <p><i class="fa fa-play fa-lg"></i></p>
@@ -61,7 +61,7 @@
 
     <div class="center-block" style="padding:10px">
         <div class="imagehover img-hover">
-          <a href="{% url 'lolbet:add-streamer' %}">
+          <a href="">
           <img src="{% static 'lolbet/img/new.png' %}" alt="">
           <div class="texthover">
             <p><i class="fa fa-plus fa-lg"></i></p>

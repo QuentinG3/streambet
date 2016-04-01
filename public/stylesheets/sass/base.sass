@@ -1,0 +1,448 @@
+@import variables
+@import functions
+@import fonts
+
+
+.collapsing
+  -webkit-transition: none
+  transition: none       
+
+h1,h2,h3,h4,h5,h6
+  font-family: title_font
+  font-weight: bold    
+  color: $brand-grey  
+
+.underline
+  text-decoration: underline
+
+span.twitch
+  background-color: $twitch
+  color: white
+  border-color: lighten($twitch,15%)
+
+button.btn-lolbet
+  +gradient-lolbet()
+  color: black
+
+button.btn-lolbet:hover, button.btn-lolbet:focus
+  +gradient-lolbet2()
+  color: black
+
+//NAVIGATIONS
+.navbar
+  border-radius: 0
+  @media(min-width:768px)
+    font-size: 17px
+
+//Brand nav
+a.brand
+  font-family: brand_font
+  font-size: 30px
+  color: $brand-grey !important
+
+a.brand:hover
+  color: $brand-grey !important
+
+//Navigation
+.navbar-nav
+  li a
+    font-weight: bold
+
+//Button
+button.btn-login
+  background-color: $login
+  color: white
+
+button.btn-login:hover, button.btn-login:focus
+  background-color: darken($login,15%)
+  color: white
+
+button.btn-signup
+  background-color: $signup
+  color: white
+
+button.btn-signup:hover, button.btn-signup:focus
+  background-color: darken($signup,15%)
+  color: white
+
+button.btn-bet
+  width: 100%
+  height: 50px
+  padding-left: 0
+  padding-right: 0
+
+button.btn-bet-red
+  +gradient2($red1,$red2)
+
+button.btn-bet-red:hover, button.btn-bet-red:focus
+  color: white
+  +gradient2($red2,$red1)
+
+button.btn-bet-blue
+  +gradient2($blue1,$blue2)
+
+button.btn-bet-blue:hover, button.btn-bet-blue:focus
+  color: white
+  +gradient2($blue2,$blue1)
+
+//DropDown
+.nav-dropdown
+  width: 160px
+
+//Username
+a.dropdown-username
+  padding: 10px 5px 10px 5px !important
+  height: 50px 
+
+span.username
+  height: 30px
+  display: block
+  float: left
+  padding: 5px 0px 5px 0px !important
+
+//Inverse dropdown
+.dropdown-menu-inverse
+  background-color: $navbg
+
+.dropdown-menu-inverse li a
+  color: $navcolor
+  padding-left: 5px
+
+.dropdown-menu-inverse li a:hover, .dropdown-menu-inverse li a:focus
+  background-color: $navbg
+  color: $navcolor2
+
+.dropdown-menu-inverse li.active a, .dropdown-menu-inverse li.active a:hover, .dropdown-menu-inverse li.active a:focus
+  background-color: $navbg-active
+  color: $navcolor-active
+
+.nav-pills li
+  border-radius: 5px 5px 0px 0px
+  background-color: $navcolor
+
+.nav-pills li a
+  font-weight: bold
+  color: $navbg
+
+.nav-pills li.active a, .nav-pills li.active a:hover, .nav-pills li.active a:focus
+  border-radius: 5px 5px 0px 0px
+  background-color: $navbg
+  color: $navcolor2
+
+.tab-content
+  border-radius: 0px 15px 15px 15px !important
+  margin-top: 0px !important
+
+//Span color
+span.gold
+  +text-gradient($gold1,$gold2,$gold3,$gold4)
+
+//fa color
+i.gold
+  +text-gradient($gold1,$gold2,$gold3,$gold4)
+
+//Background
+body
+  font-family: body_font
+  background-image: url('../img/lolbg.jpg')
+  background-repeat: no-repeat
+  background-attachment: fixed
+  background-position: center 
+  -webkit-background-size: cover
+  -moz-background-size: cover
+  -o-background-size: cover
+  background-size: cover
+
+//content-box
+.content-box
+  background-color: $navbg
+  color: $navcolor2
+  border-radius: 15px
+  padding: 20px 30px 20px 30px
+  margin-top: 10px
+  margin-bottom: 10px
+
+.content-bet 
+  margin-top: 0
+  height:  100%
+  @media(max-width:767px)
+    margin-top: 15px
+
+.center-box
+  max-width: 500px
+  margin-left: auto
+  margin-right: auto
+
+.content-nav
+  border-radius:  0px 0px 15px 15px
+
+//Aspect Ratio
+.aspect-ratio-16-9
+  position: relative
+  /* play-pause bottom twitch bar */
+  padding-bottom: 56.25%
+  height: 0
+
+.element-to-stretch 
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+
+p.info
+  color: $navcolor
+
+.date-slash
+  padding-top: 5px
+  padding-left: 0
+  padding-right: 0
+  text-align: center
+
+//Text Area
+textarea
+  resize: vertical
+
+//Games
+.block-grid
+  @media(max-width:600px)
+    display: none
+
+.block-column
+  @media(min-width:601px)
+    display: none
+
+p.stream-info
+  color: white
+  margin: 0
+  margin-left: 5px
+
+p.stream-info span
+  margin-right: 5px
+
+//COLONNE
+.col-left
+  padding-left: 15px
+  padding-right: 0
+
+  @media(max-width:991px)
+    padding-right: 7.5px
+
+.col-right
+  padding-left: 0
+  padding-right: 15px
+
+  @media(max-width:991px)
+    padding-left: 7.5px
+
+.col-button
+  vertical-align: bottom
+  height: 100px
+  padding-top: 25px
+
+//PROGRESS BAR
+.progress-bar-red
+  +gradient2($red1,$red2)
+
+.progress-bar-blue
+  +gradient2($blue1,$blue2)
+
+//SORTABLE
+ul.sortable-list
+  list-style-type: none
+  margin: 0
+  padding: 0
+
+//CHAMPION
+.champion
+  position: relative
+  width: 100% /* for IE 6 */
+  padding-bottom: 59%
+
+  img.img-background
+    position: absolute
+
+  img.mastery
+    width: 15%
+    height: 25.42%
+    position: absolute
+    bottom: 5%
+    border: solid 1px $navcolor
+
+  img.summoner1, img.summoner2
+    width: 15%
+    height: 25.42%
+    position: absolute
+    bottom: 5%
+    border: solid 1px $navcolor
+
+  img.rank
+    width: 18%
+    position: absolute
+    top: 5px
+
+  h4
+    font-size: 120%
+    position: absolute
+    top: -2px
+    width: 100%
+
+    a
+      color: white
+
+    a:hover, a:focus
+      text-decoration: none
+
+.champion-left
+  border-bottom: solid 1px $red1
+
+  img.img-background
+    -moz-transform: scaleX(-1)
+    -o-transform: scaleX(-1)
+    -webkit-transform: scaleX(-1)
+    transform: scaleX(-1)
+    filter: FlipH
+    -ms-filter: "FlipH"
+
+  img.mastery
+    left: 3%
+
+  img.summoner1
+    right: 3%
+
+  img.summoner2
+    right: 22%
+
+  img.rank
+    right: 3%
+
+  h4
+    left: 5px
+    text-align: left
+    text-shadow: -1px 0 $red1, 0 1px $red1, 1px 0 $red1, 0 -1px $red1
+    width: 100%
+
+.champion-right
+  border-bottom: solid 1px $blue1
+
+  img.mastery
+    right: 3%
+
+  img.summoner1
+    left: 3%
+
+  img.summoner2
+    left: 22%
+
+  img.rank
+    left: 3%
+
+  h4
+    right: 5px
+    text-align: right
+    text-shadow: -1px 0 $blue1, 0 1px $blue1, 1px 0 $blue1, 0 -1px $blue1
+    width: 100%
+
+//PANEL
+.panel
+  border-color: $gold1
+
+.panel-title
+  background-color: $navcolor
+  color: $navbg
+
+.panel-body
+  border-color: $navcolor !important
+  color: white
+  background-color: $navbg
+  border-radius: 0px 0px 4px 4px
+
+.panel-body-empty
+  padding: 0
+  border-radius: 0
+
+.panel-heading
+  color: $navbg
+  +gradient-lolbet()
+  font-family: title_font
+
+.panel-blue
+  border-color: $blue1
+
+  .panel-heading
+    font-size: 18px
+    padding: 5px
+    color: $navcolor
+    text-shadow: -1px 0 $navbg, 0 1px $navbg, 1px 0 $navbg, 0 -1px $navbg
+    text-align: center
+    +gradient2($blue1,$blue2)
+
+.panel-red
+  border-color: $red1
+
+  .panel-heading
+    font-size: 18px
+    padding: 5px
+    color: $navcolor
+    text-shadow: -1px 0 $navbg, 0 1px $navbg, 1px 0 $navbg, 0 -1px $navbg
+    text-align: center
+    +gradient2($red1,$red2)
+
+.panel-clickable
+  padding: 0
+
+.panel-clickable a
+  display: block
+  width: 100%
+  height: 100%
+  padding: 10px
+  padding-left: 15px
+  padding-right: 15px
+
+.panel-clickable a:hover, .panel-clickable a:focus
+  color : $navline
+  text-decoration: none
+
+//MODAL
+.modal-content
+  border-radius: 15px
+  background-color: $navbg
+  font-weight: bold
+  color: $navcolor
+
+.modal-body
+  padding: 20px 30px 20px 30px
+
+.close, .close:hover, .close:focus
+  color: white
+
+
+//FOOTER
+footer
+  background-color: $navbg
+  border-top: solid 1px $navline
+  font-weight: bold
+  color: $navcolor
+  padding-top: 10px
+  margin-top: 10px
+
+a.foot
+  text-decoration: none
+  color: $navcolor
+a.foot:hover
+  color: $navcolor2
+
+a.facebook
+  +socialmedia($facebook)
+a.facebook:hover
+  +socialmediahover($facebook)
+
+a.twitter
+  +socialmedia($twitter)
+a.twitter:hover
+  +socialmediahover($twitter)
+
+a.googleplus
+  +socialmedia($googleplus)
+a.googleplus:hover
+  +socialmediahover($googleplus)

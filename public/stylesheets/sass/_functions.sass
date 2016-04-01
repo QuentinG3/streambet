@@ -1,0 +1,46 @@
+@import variables
+
+//Gradient with 4 colors
+=gradient($color1,$color2,$color3,$color4)
+  background: $color1 /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient($color1, $color2, $color3, $color4) /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient($color1, $color2, $color3, $color4) /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient($color1, $color2, $color3, $color4) /* For Firefox 3.6 to 15 */
+  background: linear-gradient($color1, $color2, $color3, $color4) /* Standard syntax */
+
+//Lolbet Gradient
+=gradient-lolbet()
+  background: $gold1 /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient($gold3, $gold1) /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient($gold3, $gold1) /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient($gold3, $gold1) /* For Firefox 3.6 to 15 */
+  background: linear-gradient($gold3, $gold1) /* Standard syntax */
+
+=gradient-lolbet2()
+  background: $gold2 /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient($gold3, $gold2) /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient($gold3, $gold2) /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient($gold3, $gold2) /* For Firefox 3.6 to 15 */
+  background: linear-gradient($gold3, $gold2) /* Standard syntax */
+
+//Gradient bi color
+=gradient2($color1,$color2)
+  background: $color2 /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient($color1, $color2) /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient($color1, $color2) /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient($color1, $color2) /* For Firefox 3.6 to 15 */
+  background: linear-gradient($color1, $color2) /* Standard syntax */
+
+//Gradient for text with 4 colors
+=text-gradient($color1,$color2,$color3,$color4)
+  color: $color1 /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient($color1, $color2, $color3, $color4) /* For Safari 5.1 to 6.0 */
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+//Social Media
+=socialmedia($color1)
+  text-decoration: none
+  color: $color1
+=socialmediahover($color1)
+  color: darken($color1, 10%)

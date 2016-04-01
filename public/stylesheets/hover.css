@@ -1,0 +1,50 @@
+.imagehover {
+  padding:0 ;
+  margin: 10px;
+  position: relative;
+  background-color: black;
+  border-radius: 8px;
+  vertical-align: middle;
+}
+
+.imagehover:hover img {
+  opacity: 0.40;
+  vertical-align: middle;
+}
+
+.imagehover:hover .texthover {
+  opacity: 1; 
+  vertical-align: middle;
+}
+
+.imagehover img {
+  border-radius: 8px 8px 0 0;
+  padding: 0;
+  width: 100%;
+  display: block;
+  opacity: 1;
+  vertical-align: middle;
+}
+
+.imagehover img,
+.work-text-content {
+  -webkit-transition: opacity 0.5s ease-out;
+  -moz-transition: opacity 0.5s ease-out;
+  -o-transition: opacity 0.5s ease-out;
+  transition: opacity 0.5s ease-out;
+  vertical-align: middle;
+}
+
+.texthover {
+  position: absolute;
+  color: white;
+  top:40%;
+  bottom:0;
+  left: 0;
+  right: 0;
+  font-size: 24px;
+  text-align: center;
+  opacity: 0;
+  vertical-align: middle;
+
+}

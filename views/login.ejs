@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Login{% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="container-fluid">
+
+  <div class="content-box center-box" id="contentbox">
+
+    <h2 class="text-center"><span class="gold bold">Log</span>in</h2>
+    <hr>
+
+    {% if error_list %}
+    <div class="alert alert-danger" style="padding-left:0">
+      <ul>
+      {% for error in error_list %}
+        <li><strong>{{ error }}</strong></li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form data-toggle="validator" role="form" data-disable="false" method="post" action="{% url 'register:login' %}">
+      {% csrf_token %}
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="inputUsername" class="control-label"><i class="fa fa-user gold"></i> Username/email</label>
+        <input type="text" name="username" data-error="Enter your username" class="form-control" id="inputUsername" placeholder="Username" value="{{ username }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="inputPassword" class="control-label"><i class="fa fa-lock gold"></i> Password</label>
+        <input type="password" name="password" data-error="Enter your password" class="form-control" id="inputPassword" placeholder="Password" value="{{ password }}" required>
+        <div class="help-block with-errors"></div>
+        <!--<a class="pull-left" href="">Forgot your password ?</a>-->
+      </div>
+
+      <!-- Submit -->
+      <div class="form-group">
+        <button type="submit" class="btn btn-login center-block" style="margin-top:30px;"><i class="fa fa-sign-in fa-lg"></i> Login</button>
+        <a class="pull-right" style="margin-top:4px" href="{% url 'register:signup' %}">Not a member yet ?</a>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}

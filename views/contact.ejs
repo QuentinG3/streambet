@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Contact Us{% endblock %}
+
+<!-- Nav -->
+{% block nav-contact %}class="active"{% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="container-fluid">
+  <div class="content-box center-box">
+
+    <h2 class="text-center"><span class="gold bold">Contact</span> us</h2>
+    <hr>
+    
+    <form data-toggle="validator" role="form">
+
+      <!-- Name -->
+      <div class="form-group">
+        <label for="inputName" class="control-label"><i class="fa fa-user gold"></i> Name</label>
+        <input type="text" data-error="Enter your name" class="form-control" id="inputName" placeholder="Name" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="inputEmail" class="control-label"><i class="fa fa-envelope gold"></i> Email</label>
+        <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com" data-error="Enter a valid email address." required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Message -->
+      <div class="form-group">
+        <label for="inputMessage" class="control-label"><i class="fa fa-align-left gold"></i> Message</label>
+        <textarea type="text" data-error="Enter your message" rows="4" class="form-control" id="inputMessage" placeholder="Enter your message" required></textarea>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-default center-block" style="margin-top:30px;"><i class="fa fa-envelope fa-lg"></i> Send</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

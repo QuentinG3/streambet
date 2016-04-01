@@ -1,12 +1,12 @@
 @font-face {
   font-family: brand_font;
-  src: url("../font/Bleeding_Cowboys.ttf"); }
+  src: url("../fonts/Bleeding_Cowboys.ttf"); }
 @font-face {
   font-family: title_font;
-  src: url("../font/recharge_bd.ttf"); }
+  src: url("../fonts/recharge_bd.ttf"); }
 @font-face {
   font-family: body_font;
-  src: url("../font/Ubuntu-Regular.ttf"); }
+  src: url("../fonts/Ubuntu-Regular.ttf"); }
 .collapsing {
   -webkit-transition: none;
   transition: none; }

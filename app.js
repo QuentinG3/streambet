@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('express-session')({
-    secret: 'keyboard monkey',
+    secret: process.env.SESSION_SECRET || 'keyboard monkey',
     resave: false,
     saveUninitialized: false
 }));

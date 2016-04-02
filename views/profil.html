@@ -32,9 +32,10 @@
     <li><a data-toggle="tab" href="#settings">
       <i class="fa fa-cog fa-lg"></i> <span class="hidden-xs">Settings</span>
     </a></li>
+    <!-- TODO : add this when we use the add streamer request
     <li><a data-toggle="tab" href="#request">
       <i class="fa fa-plus-circle fa-lg"></i> <span class="hidden-xs">Requests</span>
-    </a></li>
+    </a></li>-->
   </ul>
 
   <!-- Content -->
@@ -274,230 +275,11 @@
       todo
     </div>
 
-    <!--
-      _____                            _
-     |  __ \                          | |
-     | |__) |___  __ _ _   _  ___  ___| |_
-     |  _  // _ \/ _` | | | |/ _ \/ __| __|
-     | | \ \  __/ (_| | |_| |  __/\__ \ |_
-     |_|  \_\___|\__, |\__,_|\___||___/\__|
-                    | |
-                    |_|
-    -->
 
-    <!-- Streamer Request -->
-    <div class="tab-pane" id="request">
-      <h3><i class="fa fa-plus-circle gold"></i> <span class="gold">Streamer</span> requests</h3>
-      <hr>
+  <!-- TODO check old profil.html for the request part and the modal part -->
 
-      <!-- Panel -->
-      <div class="panel">
-        <div class="panel-heading">
-          <i class="fa fa-certificate"></i> Request for StreamerName
-          <a class="pull-right" role="button" href="javascript:void(0)" onclick="">
-            <i class="fa fa-remove fa-lg"></i>
-          </a>
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-sm-6">
-              <!-- Name INFO -->
-              <div class="form-group" id="infoName">
-                <!-- Label & Edit name -->
-                <label style="width:100%;"><i class="fa fa-user gold"></i> Name
-                  <a class="pull-right" role="button" href="javascript:void(0)" onclick="edit('inputName','infoName')">
-                    <i class="fa fa-pencil-square-o fa-lg"></i>
-                  </a>
-                </label>
-                <!-- info-->
-                <p class="info">StreamerName</p>
-              </div>
+  </div><!-- Content box -->
 
-              <!-- Name EDIT -->
-              <form data-toggle="validator" role="form" onsubmit="return false;" id="inputName" style="display:none">
-                <div class="form-group">
-                  <!-- Label & Cancel name -->
-                  <label style="width:100%;" for="inputStreamerName" class="control-label"><i class="fa fa-user gold"></i> Name
-                    <a class="pull-right" role="button" href="javascript:void(0)" onclick="cancel('infoName','inputName')">
-                      <i class="fa fa-undo fa-lg"></i>
-                    </a>
-                  </label>
-                  <!-- Input name -->
-                  <input class="form-control" data-error="Enter a name" type="text" name="streamerName" id="inputStreamerName" placeholder="Streamer name" value="StreamerName" required>
-                  <!-- Error field -->
-                  <div class="help-block with-errors"></div>
-                  <button type="submit" class="btn btn-primary center-block"><i class="fa fa-pencil"></i> Edit</button>
-                </div>
-
-              </form>
-
-              <!-- Channel name INFO -->
-              <div class="form-group" id="infoChannelName">
-                <!-- Label & Edit name -->
-                <label style="width:100%;"><i class="fa fa-video-camera gold"></i> Channel name
-                  <a class="pull-right" role="button" href="javascript:void(0)" onclick="edit('inputChannelName','infoChannelName')">
-                    <i class="fa fa-pencil-square-o fa-lg"></i>
-                  </a>
-                </label>
-                <!-- info-->
-                <p class="info">twitch.tv/Channel name</p>
-              </div>
-
-              <!-- Channel name EDIT -->
-              <form data-toggle="validator" role="form" onsubmit="return false;" id="inputChannelName" style="display:none">
-                <div class="form-group">
-                  <!-- Label & Cancel channel name -->
-                  <label style="width:100%;" for="inputChannelName" class="control-label"><i class="fa fa-video-camera gold"></i> Channel name
-                    <a class="pull-right" role="button" href="javascript:void(0)" onclick="cancel('infoChannelName','inputChannelName')">
-                      <i class="fa fa-undo fa-lg"></i>
-                    </a>
-                  </label>
-                  <!-- Input name -->
-                  <input class="form-control" data-error="Enter a channel name" type="text" name="inputStreamerChannelName" id="inputStreamerChannelName" placeholder="Streamer name" value="StreamerChannelName" required>
-                  <!-- Error field -->
-                  <div class="help-block with-errors"></div>
-                  <button type="submit" class="btn btn-primary center-block"><i class="fa fa-pencil"></i> Edit</button>
-                </div>
-
-              </form>
-
-            </div>
-
-            <div class="col-sm-6">
-              <!-- Summoner INFO -->
-              <div class="form-group" id="infoSummoner1">
-                <!-- Label & Edit name -->
-                <label style="width:100%;"><i class="fa fa-bolt gold"></i> Summoner 1
-                  <a class="pull-right" role="button" href="javascript:void(0)" onclick="edit('inputSummoner1','infoSummoner1')">
-                    <i class="fa fa-pencil-square-o fa-lg"></i>
-                  </a>
-                </label>
-                <!-- info-->
-                <p class="info">Summoner name - Region </p>
-              </div>
-
-              <!-- Summoner EDIT -->
-              <form data-toggle="validator" role="form" onsubmit="return false;" id="inputSummoner1" style="display:none">
-                <div class="form-group">
-                  <!-- Label & Cancel summoner -->
-                  <label style="width:100%;" for="inputStreamerName" class="control-label"><i class="fa fa-bolt gold"></i> Summoner 1
-                    <a class="pull-right" role="button" href="javascript:void(0)" onclick="cancel('infoSummoner1','inputSummoner1')">
-                      <i class="fa fa-undo fa-lg"></i>
-                    </a>
-                  </label>
-                  <!-- Input summoner -->
-                  <div class="row" >
-                    <!-- Summoner Name -->
-                    <div class="form-group col-sm-6" style="margin-bottom:0">
-                      <input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
-                      <div class="help-block with-errors"></div>
-                    </div>
-
-                    <!-- Region Name -->
-                    <div class="form-group col-sm-6" style="margin-bottom:0">
-                      <select class="form-control">
-                        {% for region in region_list %}
-                        <option>{{ region.name }}</option>
-                        {% endfor %}
-                      </select>
-
-                    </div>
-                  </div>
-                  <!-- Error field -->
-                  <div class="help-block with-errors"></div>
-                  <ul class="list-inline text-center">
-                    <li><button type="submit" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</button></li>
-                    <li><button type="submit" class="btn btn-danger"><i class="fa fa-remove"></i> Supprimer</button></li>
-                  </ul>
-                </div>
-
-              </form>
-            </div>
-          </div>
-        </div>
-      </div><!-- Panel -->
-
-      <button class="btn btn-lolbet center-block" data-toggle="modal" data-target="#add_streamer" ><i class="fa fa-plus"></i> Add a streamer</button>
-
-    </div>
-  </div>
-
-  <!--
-    __  __           _       _
-   |  \/  |         | |     | |
-   | \  / | ___   __| | __ _| |
-   | |\/| |/ _ \ / _` |/ _` | |
-   | |  | | (_) | (_| | (_| | |
-   |_|  |_|\___/ \__,_|\__,_|_|
-
-  -->
-
-  <!-- Modal add streamer -->
-  <div id="add_streamer" class="modal" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-body">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h2 class="text-center"><span class="gold bold">Add</span> a streamer</h2>
-          <hr>
-
-          <form data-toggle="validator" onsubmit="return false;" data-disable="false" role="form">
-
-            <!-- Channel Name -->
-            <div class="form-group">
-              <label for="inputchannelName" class="control-label">Channel name</label>
-              <div class="input-group">
-                <span class="input-group-addon twitch">twitch.tv/</span>
-                <input type="text" data-error="Enter a channel name" class="form-control" id="inputchannelName" placeholder="Channel name" required>
-              </div>
-              <div class="help-block with-errors"></div>
-            </div>
-
-            <!-- Summoner Template -->
-            <div class="form-group" id="summoner_template" style="display:none;">
-              <label class="control-label" style="width:100%;">Summoner <span id="summonerNumber"></span></label>
-              <div class="row" >
-                <!-- Summoner Name -->
-                <div class="form-group col-sm-6" style="margin-bottom:0">
-                  <input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
-                  <div class="help-block with-errors"></div>
-                </div>
-
-                <!-- Region Name -->
-                <div class="form-group col-sm-6" style="margin-bottom:0">
-                  <select class="form-control">
-                    {% for region in region_list %}
-                    <option>{{ region.name }}</option>
-                    {% endfor %}
-                  </select>
-
-                </div>
-              </div>
-            </div>
-
-            <!-- List containing the summoners of the streamer -->
-            <div id="summonerList">
-            </div>
-
-            <!-- Add or remove summoners -->
-            <div class="form-group text-center">
-              <button type="button" class="btn btn-lolbet" onclick="addSummoner()" ><i class="fa fa-plus fa-lg"></i></button>
-              <button type="button" class="btn btn-lolbet" onclick="deleteSummoner()" ><i class="fa fa-minus fa-lg"></i></button>
-            </div>
-
-            <!-- Submit -->
-            <div class="form-group">
-              <button type="submit" class="btn btn-default center-block" style="margin-top:30px;"><i class="fa fa-envelope fa-lg"></i> Send request</button>
-            </div>
-
-          </form>
-        </div>
-      </div>
-
-    </div>
-  </div>
 
 </div>
 {% endblock %}
@@ -516,6 +298,7 @@
 {% block JS %}
 <!-- Edit account -->
 <script src="js/edit_account.js"></script>
-<!-- Add Streamer js -->
+<!-- Add Streamer js TODO add this when we use the add streamer
 <script src="js/add_streamer.js"></script>
+-->
 {% endblock %}

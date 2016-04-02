@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Recover account{% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="container-fluid">
+
+  <div class="content-box center-box" id="contentbox">
+
+    <h2 class="text-center"><span class="gold bold">Recover</span> account</h2>
+    <hr>
+
+    {% if error_list %}
+    <div class="alert alert-danger" style="padding-left:0">
+      <ul>
+      {% for error in error_list %}
+        <li><strong>{{ error }}</strong></li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form data-toggle="validator" role="form" method="post" action="TODO">
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="inputUsername" class="control-label"><i class="fa fa-user gold"></i> Username/email</label>
+        <input type="text" name="username" data-error="Enter your username/email" class="form-control" id="inputUsername" placeholder="Username" value="{{ username }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-group">
+        <button type="submit" class="btn btn-login center-block" style="margin-top: 30px;"><i class="fa fa-key fa-lg"></i> Recover</button>
+        <ul class="pull-right nodeco">
+          <a class="pull-right lolbet" style="margin-top:4px" href="/login">Oh I remember now !</a>
+        </ul>
+      </div>
+
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}

@@ -27,7 +27,7 @@
       <!-- Username -->
       <div class="form-group">
         <label for="inputUsername" class="control-label"><i class="fa fa-user gold"></i> Username/email</label>
-        <input type="text" name="username" data-error="Enter your username" class="form-control" id="inputUsername" placeholder="Username" value="{{ username }}" required>
+        <input type="text" name="username" data-error="Enter your username/email" class="form-control" id="inputUsername" placeholder="Username" value="{{ username }}" required>
         <div class="help-block with-errors"></div>
       </div>
 
@@ -40,10 +40,14 @@
       </div>
 
       <!-- Submit -->
-      <div class="form-group">
-        <button type="submit" class="btn btn-login center-block" style="margin-top:30px;"><i class="fa fa-sign-in fa-lg"></i> Login</button>
-        <a class="pull-right" style="margin-top:4px" href="/signup">Not a member yet ?</a>
+      <div class="form-group" style="margin-bottom: 30px;">
+        <button type="submit" class="btn btn-login center-block" style="margin-top: 30px;"><i class="fa fa-sign-in fa-lg"></i> Login</button>
+        <ul class="pull-right nodeco">
+          <li><a class="lolbet" style="margin-top:4px" href="/signup">Not a member yet ?</a></li>
+          <li><a class="lolbet" style="margin-top:4px" href="/recover">Lost your password ?</a></li>
+        </ul>
       </div>
+
 
     </form>
   </div>

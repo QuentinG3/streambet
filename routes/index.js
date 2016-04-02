@@ -28,6 +28,9 @@ router.get('/signup', account.signup);
 /* GET Profil page. */
 router.get('/profil', account.profil);
 
+/* GET Recover account page. */
+router.get('/recover', account.recover);
+
 /* GET streamers page. */
 router.get('/streamers', lolbet.streamers);
 

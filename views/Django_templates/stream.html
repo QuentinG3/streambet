@@ -5,6 +5,7 @@
 
 <!-- Content -->
 {% block content %}
+{% load static from staticfiles %}
 <div class="container-fluid">
 	<!-- Stream and Bet -->
 	<div class="row">
@@ -27,7 +28,20 @@
 					<!-- Loading animation while no bet to show -->
 					<div id="looking">
 						<p class="text-center">
-							<!-- TODO summoner name -->
+							<!-- If only 1 summoner -->
+							{% if streamer.summoner_set.all|length == 1 %}
+							{% with streamer.summoner_set.all|first as summoner %}
+							<span class="quote">{{summoner.name}} ({{summoner.region|upper}})</span>
+							{% endwith %}
+							{% else %}
+							<!-- If more than 1 summoner -->
+							{% for summoner in streamer.summoner_set.all %}
+							<span class="quotes">{{summoner.name}} ({{summoner.region|upper}})</span>
+							<!-- If no summoner -->
+							{% empty %}
+							<span style="color:red;"> ( no summoners registered for "{{streamer.name}}" ) </span>
+							{% endfor %}
+							{% endif %}
 						</p>
 						<div class="spinner">
 						  <div class="double-bounce1"></div>
@@ -45,7 +59,7 @@
 					<div class="row">
 						<div class="col-xs-3">
 							<button class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red" id="bet-red"></button>
-
+							
 						</div>
 						<div class="col-xs-6 text-center">
 							<div class="row">
@@ -62,7 +76,7 @@
 									<span id="percent-red"></span>%
 								</div>
 								<div class="progress-bar progress-bar-blue" role="progressbar" style="width:50%">
-									<span id="percent-blue"></span>%
+									<span id="percent-blue"></span>%	
 								</div>
 							</div>
 
@@ -78,7 +92,7 @@
 		<!-- Red Team section -->
 		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left">
 			<div class="panel panel-red">
-
+				
 				<div class="panel-heading">Red Team</div>
 				<div class="panel-body panel-body-empty">
 
@@ -88,7 +102,7 @@
 							<div class="champion champion-left" style="display:none">
 								<img class="img-background img-responsive center-block picture-red" src="" alt="">
 								<h4><a class="summonerName-red" href="http://www.lolking.net/" target="_blank"></a></h4>
-								<img class="rank rank-red" src="img/rank/diamond.png" alt="">
+								<img class="rank rank-red" src="{% static 'lolbet/img/rank/diamond.png' %}" alt="">
 								<img class="mastery img-rounded mastery-red" src="" alt="">
 								<img class="summoner1 img-rounded spell1-red" src="" alt="">
 								<img class="summoner2 img-rounded spell2-red" src="" alt="">
@@ -107,14 +121,14 @@
 
 				<div class="panel-heading">Blue Team</div>
 				<div class="panel-body panel-body-empty">
-
+				
 					<ul id="blue-list" class="sortable-list">
 						{% for e in "12345" %}
 						<li>
 							<div class="champion champion-right" style="display:none">
 								<img class="img-background img-responsive center-block picture-blue" src="" alt="">
 								<h4><a class="summonerName-blue" href="http://www.lolking.net/" target="_blank"></a></h4>
-								<img class="rank rank-blue" src="img/rank/diamond.png" alt="">
+								<img class="rank rank-blue" src="{% static 'lolbet/img/rank/diamond.png' %}" alt="">
 								<img class="mastery img-rounded mastery-blue" src="" alt="">
 								<img class="summoner1 img-rounded spell1-blue" src="" alt="">
 								<img class="summoner2 img-rounded spell2-blue" src="" alt="">
@@ -131,7 +145,7 @@
 	<!-- Red Modal -->
 	  <div class="modal" id="modal-red" role="dialog">
 	    <div class="modal-dialog">
-
+	    
 	      <!-- Modal content-->
 	      <div class="modal-content">
 	        <div class="modal-header">
@@ -162,20 +176,20 @@
 					</div>
 				</div>
 				<div id="red-bet-message" style="display:none;">
-
+					
 				</div>
 	        </div>
 	      </div>
 
-
-
+	      
+	      
 	    </div>
 	  </div> <!-- Red Modal -->
 
 	  <!-- Blue Modal -->
 	  <div class="modal" id="modal-blue" role="dialog">
 	    <div class="modal-dialog">
-
+	    
 	      <!-- Modal content-->
 	      <div class="modal-content">
 	        <div class="modal-header">
@@ -199,7 +213,7 @@
 			      	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-blue-modal">Cancel</button></li>
 			      </ul>
 	        	</div>
-
+				
 				<div id="blue-bet-loading" style="display:none;">
 					<div class="spinner">
 					  <div class="double-bounce1"></div>
@@ -212,20 +226,21 @@
 	        </div>
 	      </div>
 
-
-
+	      
+	      
 	    </div>
 	  </div> <!-- Blue Modal -->
 
-
+	
 </div>
 {% endblock %}
 
 
 {% block JS %}
+{% load static from staticfiles %}
 
 <!-- Chrono -->
-<script src="js/chrono.js"></script>
+<script src="{% static 'lolbet/js/chrono.js' %}"></script>
 
 <!-- Local Variable -->
 <script>
@@ -233,11 +248,13 @@
 	var game_ID = -1;
 </script>
 
+<!-- Stream Ajax -->
+<script src="{% static 'lolbet/js/stream_ajax.js' %}"></script>
 <!-- Quotes animation not IG -->
-<script src="js/quotes-animation.js"></script>
+<script src="{% static 'lolbet/js/quotes-animation.js' %}"></script>
 
 <!-- Sortable Jquery -->
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src="js/sortable.js"></script>
+<script src="{% static 'lolbet/js/sortable.js' %}"></script>
 {% endblock %}

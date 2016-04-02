@@ -352,9 +352,9 @@ ul.sortable-list {
   color: #222222; }
 
 .panel-body {
-  border-color: #9D9D9D !important;
+  border-color: transparent !important;
   color: white;
-  background-color: #222222;
+  background-color: #2f2f2f;
   border-radius: 0px 0px 4px 4px; }
 
 .panel-body-empty {
@@ -402,6 +402,11 @@ ul.sortable-list {
   padding: 0; }
 
 .panel-clickable a {
+  background: #D39C2C;
+  background: -webkit-linear-gradient(#d38b39, #D39C2C);
+  background: -o-linear-gradient(#d38b39, #D39C2C);
+  background: -moz-linear-gradient(#d38b39, #D39C2C);
+  background: linear-gradient(#d38b39, #D39C2C);
   display: block;
   width: 100%;
   height: 100%;

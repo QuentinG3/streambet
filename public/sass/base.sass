@@ -5,12 +5,12 @@
 
 .collapsing
   -webkit-transition: none
-  transition: none       
+  transition: none
 
 h1,h2,h3,h4,h5,h6
   font-family: title_font
-  font-weight: bold    
-  color: $brand-grey  
+  font-weight: bold
+  color: $brand-grey
 
 .underline
   text-decoration: underline
@@ -92,7 +92,7 @@ button.btn-bet-blue:hover, button.btn-bet-blue:focus
 //Username
 a.dropdown-username
   padding: 10px 5px 10px 5px !important
-  height: 50px 
+  height: 50px
 
 span.username
   height: 30px
@@ -147,7 +147,7 @@ body
   background-image: url('../img/lolbg.jpg')
   background-repeat: no-repeat
   background-attachment: fixed
-  background-position: center 
+  background-position: center
   -webkit-background-size: cover
   -moz-background-size: cover
   -o-background-size: cover
@@ -162,7 +162,7 @@ body
   margin-top: 10px
   margin-bottom: 10px
 
-.content-bet 
+.content-bet
   margin-top: 0
   height:  100%
   @media(max-width:767px)
@@ -183,7 +183,7 @@ body
   padding-bottom: 56.25%
   height: 0
 
-.element-to-stretch 
+.element-to-stretch
   position: absolute
   top: 0
   left: 0
@@ -352,9 +352,9 @@ ul.sortable-list
   color: $navbg
 
 .panel-body
-  border-color: $navcolor !important
+  border-color: transparent !important
   color: white
-  background-color: $navbg
+  background-color: lighten($navbg,5%)
   border-radius: 0px 0px 4px 4px
 
 .panel-body-empty
@@ -392,6 +392,7 @@ ul.sortable-list
   padding: 0
 
 .panel-clickable a
+  +gradient-lolbet()
   display: block
   width: 100%
   height: 100%

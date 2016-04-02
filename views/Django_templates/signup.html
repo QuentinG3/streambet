@@ -6,7 +6,7 @@
 <!-- Content -->
 {% block content %}
 <div class="container-fluid">
-
+  
   <div class="content-box center-box">
 
     <h2 class="text-center"><span class="gold">Sign</span> Up</h2>
@@ -22,7 +22,8 @@
     </div>
     {% endif %}
 
-    <form data-toggle="validator" role="form" method="post" action="TODO">
+    <form data-toggle="validator" role="form" method="post" action="{% url 'register:signup' %}">
+      {% csrf_token %}
       <!-- Email -->
       <div class="form-group">
         <label for="inputEmail" class="control-label"><i class="fa fa-envelope gold"></i> Email</label>
@@ -66,7 +67,7 @@
           <!-- Month -->
           <div class="form-group col-xs-3" style="padding:0;margin:0;">
             <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ month }}" required>
-            <div class="help-block with-errors"></div>
+            <div class="help-block with-errors"></div>    
           </div>
 
           <div class="col-xs-1 date-slash">/</div>
@@ -74,7 +75,7 @@
           <!-- Year -->
           <div class="form-group col-xs-4" style="padding:0;margin:0;">
             <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ year }}" required>
-            <div class="help-block with-errors"></div>
+            <div class="help-block with-errors"></div>    
           </div>
 
           <!-- Set min and max year -->
@@ -91,7 +92,7 @@
       <!-- Submit -->
       <div class="form-group">
         <button type="submit" class="btn btn-signup center-block" style="margin-top:20px;"><i class="fa fa-user-plus fa-lg"></i> Create Account</button>
-        <a class="pull-right" style="margin-top:4px" href="/login">Already a member ?</a>
+        <a class="pull-right" style="margin-top:4px" href="{% url 'register:login' %}">Already a member ?</a>
       </div>
 
 

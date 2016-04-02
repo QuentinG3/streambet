@@ -57,17 +57,17 @@
           <span class="icon-bar"></span>
         </button>
         <!-- Brand -->
-        <a class="navbar-brand brand" href="" title="Bet on famous streamers"><span class="gold">STREAM</span>BET</a>
+        <a class="navbar-brand brand" href="/" title="Bet on famous streamers"><span class="gold">STREAM</span>BET</a>
       </div><!-- nav header -->
 
       <!-- LINKS -->
       <div class="collapse navbar-collapse " id="navbar">
         <!-- links -->
         <ul class="nav navbar-nav">
-          <li {% block streamers %}{% endblock %} ><a href="">
+          <li {% block streamers %}{% endblock %} ><a href="/streamers">
             <i class="hidden-xs fa fa-video-camera fa-lg"></i><i class="pull-right visible-xs fa fa-video-camera fa-lg" style="padding-top:4px"></i> Streamers
           </a></li>
-          <li {% block ranking %}{% endblock %} ><a href="">
+          <li {% block ranking %}{% endblock %} ><a href="/ranking">
             <i class="hidden-xs fa fa-trophy fa-lg"></i><i class="pull-right visible-xs fa fa-trophy fa-lg" style="padding-top:4px"></i> Ranking
           </a></li>
           <li {% block nav-contact %}{% endblock %} ><a href="/contact">
@@ -75,16 +75,17 @@
           </a></li>
         </ul>
       <!-- USER -->
+      <!-- TODO Add when user is connected -->
       <hr class="visible-xs" style="margin:5px">
         <!-- Login and signup on normal screen -->
         <ul class="nav navbar-nav navbar-right hidden-xs">
-          <li><button class="btn navbar-btn btn-signup" onclick="location.href='';" style="margin-right:8px"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
-          <li><button class="btn navbar-btn btn-login" onclick="location.href='';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
+          <li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';" style="margin-right:8px"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
+          <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
         </ul>
         <!-- Login and signup on small screen -->
         <ul class="list-inline text-center visible-xs">
-          <li><button class="btn navbar-btn btn-signup" onclick="location.href='';" style="margin-right:8px"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
-          <li><button class="btn navbar-btn btn-login" onclick="location.href='';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
+          <li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';" style="margin-right:8px"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
+          <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
         </ul>
       </div><!-- nav content -->
 

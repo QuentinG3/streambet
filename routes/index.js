@@ -2,25 +2,43 @@ var express = require('express');
 var router = express.Router();
 var swig  = require('swig');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('base', {
-  });
-});
+var base = require('./base');
+var account = require('./account');
+var lolbet = require('./lolbet')
 
-router.get('/about', function(req, res, next) {
-  res.render('about', {
-  });
-});
 
-router.get('/faq', function(req, res, next) {
-  res.render('faq', {
-  });
-});
+/* GET Home page. */
+router.get('/', base.home);
 
-router.get('/contact', function(req, res, next) {
-  res.render('contact', {
-  });
-});
+/* GET About page. */
+router.get('/about', base.about);
+
+/* GET FAQ page. */
+router.get('/faq', base.faq);
+
+/* GET Contact page. */
+router.get('/contact', base.contact);
+
+/* GET Login page. */
+router.get('/login', account.login);
+
+/* GET Signup page. */
+router.get('/signup', account.signup);
+
+/* GET Profil page. */
+router.get('/profil', account.profil);
+
+/* GET streamers page. */
+router.get('/streamers', lolbet.streamers);
+
+/* GET stream page. */
+router.get('/stream', lolbet.stream);
+
+/* GET Ranking page. */
+router.get('/ranking', lolbet.ranking);
+
+/* GET add_streamer page. */
+//TODO : Keep or remove? get the list of region
+//router.get('/new_streamer', lolbet.add_streamer);
 
 module.exports = router;

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Sign up{% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="container-fluid">
+  
+  <div class="content-box center-box">
+
+    <h2 class="text-center"><span class="gold">Sign</span> Up</h2>
+    <hr>
+
+    {% if error_list %}
+    <div class="alert alert-danger" style="padding-left:0">
+      <ul>
+      {% for error in error_list %}
+        <li><strong>{{ error }}</strong></li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form data-toggle="validator" role="form" method="post" action="{% url 'register:signup' %}">
+      {% csrf_token %}
+      <!-- Email -->
+      <div class="form-group">
+        <label for="inputEmail" class="control-label"><i class="fa fa-envelope gold"></i> Email</label>
+        <input type="email" name="email" data-error="Enter a valid email address."  class="form-control" id="inputEmail" placeholder="example@email.com" value="{{ email }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="inputUsername" class="control-label"><i class="fa fa-user gold"></i> Username</label>
+        <input type="text" name="username" data-error="Minimum of 3 characters (letters and numbers only)" pattern="^[_A-z0-9]{3,}$"  class="form-control" id="inputUsername" placeholder="Username" value="{{ username }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="inputPassword" class="control-label"><i class="fa fa-lock gold"></i> Password</label>
+        <input type="password" name="password" data-error="Minimum of 3 characters" data-minlength="3" class="form-control" id="inputPassword" placeholder="Password" value="{{ password }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="inputPassword2" class="control-label"><i class="fa fa-lock gold"></i> Confirm password</label>
+        <input type="password" name="confirm" data-error="Passwords doesn't match" data-match="#inputPassword" class="form-control" id="inputPassword2" placeholder="Confirm" value="{{ confirm }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Verify Age -->
+      <div class="form-group">
+        <label for="inputDay" class="control-label"><i class="fa fa-calendar gold"></i> Verify age</label>
+        <div class="row center-block" style="margin:0">
+          <!-- Day -->
+          <div class="form-group col-xs-3" style="padding:0;margin:0;">
+            <input type="number" name="day" data-error="Invalid day" min="1" max="31" class="form-control text-center" id="inputDay" placeholder="dd" style="padding:0" value="{{ day }}" required>
+            <div class="help-block with-errors"></div>
+          </div>
+
+          <div class="col-xs-1 date-slash">/</div>
+
+          <!-- Month -->
+          <div class="form-group col-xs-3" style="padding:0;margin:0;">
+            <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ month }}" required>
+            <div class="help-block with-errors"></div>    
+          </div>
+
+          <div class="col-xs-1 date-slash">/</div>
+
+          <!-- Year -->
+          <div class="form-group col-xs-4" style="padding:0;margin:0;">
+            <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ year }}" required>
+            <div class="help-block with-errors"></div>    
+          </div>
+
+          <!-- Set min and max year -->
+          <script>
+          var year = new Date().getFullYear();
+          document.getElementById("inputYear").setAttribute("min", year-100 )
+          document.getElementById("inputYear").setAttribute("max", year-1 )
+          </script>
+
+        </div><!-- Row -->
+      </div><!-- Form Group -->
+
+
+      <!-- Submit -->
+      <div class="form-group">
+        <button type="submit" class="btn btn-signup center-block" style="margin-top:20px;"><i class="fa fa-user-plus fa-lg"></i> Create Account</button>
+        <a class="pull-right" style="margin-top:4px" href="{% url 'register:login' %}">Already a member ?</a>
+      </div>
+
+
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}

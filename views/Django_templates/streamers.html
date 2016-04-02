@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Stream Wall{% endblock %}
+
+<!-- Nav -->
+{% block streamers %}class="active"{% endblock %}
+
+
+<!-- Content -->
+{% block content %}
+{% load static from staticfiles %}
+<div class="container-fluid">
+  <!-- Stream Wall for large screen -->
+  <div class="block-grid-lg-5 block-grid-md-4 block-grid-sm-3 block-grid-xs-2 block-grid">
+
+    {% for streamer in streamer_list %}
+    <div class="block-grid-item">
+        <div class="imagehover img-hover">
+          <a href="{% url 'lolbet:stream' streamer.channel_name %}">
+          <img src="{{ streamer.preview}}" alt="Channel Preview">
+          <div class="texthover">
+            <p><i class="fa fa-play fa-lg"></i></p>
+          </div>
+          </a>
+          <p class="stream-info">{{ streamer.channel_name }} <span class="pull-right"> {{ streamer.viewers_repr }} <i class="fa fa-user"></i></span></p>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="block-grid-item">
+        <div class="imagehover img-hover">
+          <a href="{% url 'lolbet:add-streamer' %}">
+          <img src="{% static 'lolbet/img/new.png' %}" alt="">
+          <div class="texthover">
+            <p><i class="fa fa-plus fa-lg"></i></p>
+          </div>
+          </a>
+          <p class="text-center stream-info">Add a Streamer</p>
+        </div>
+    </div>
+
+  </div><!-- Block Grid -->
+
+  <!-- Stream Wall for small screen -->
+  <div class="block-column">
+
+    {% for streamer in streamer_list %}
+    <div class="center-block" style="padding:10px">
+        <div class="imagehover img-hover">
+          <a href="{% url 'lolbet:stream' streamer.channel_name %}">
+          <img src="{{ streamer.preview}}" alt="Channel Preview">
+          <div class="texthover">
+            <p><i class="fa fa-play fa-lg"></i></p>
+          </div>
+          </a>
+          <p class="stream-info">{{ streamer.channel_name }} <span class="pull-right"> {{ streamer.viewers_repr }} <i class="fa fa-user"></i></span></p>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="center-block" style="padding:10px">
+        <div class="imagehover img-hover">
+          <a href="{% url 'lolbet:add-streamer' %}">
+          <img src="{% static 'lolbet/img/new.png' %}" alt="">
+          <div class="texthover">
+            <p><i class="fa fa-plus fa-lg"></i></p>
+          </div>
+          </a>
+          <p class="text-center stream-info">Add a Streamer</p>
+        </div>
+    </div>
+
+  </div><!-- Block Column -->
+</div>
+{% endblock %}

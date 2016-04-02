@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}{{streamer.channel_name}}{% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="container-fluid">
+	<!-- Stream and Bet -->
+	<div class="row">
+
+		<div class="col-sm-6" id="stream">
+			<div class="aspect-ratio-16-9">
+			<iframe class="element-to-stretch" src="http://www.twitch.tv/{{streamer.channel_name}}/embed" width="100%" height="100%" id="stream"></iframe>
+			</div>
+		</div>
+
+		<div class="col-sm-6" id="betReview">
+			<div class="panel panel-lolbet">
+				<div class="panel-heading"><i class="fa fa-database"></i> Bet review</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group">
+								<label><i class="fa fa-video-camera gold "></i> Better watching</label>
+								<p class="info">52</p>
+							</div>
+							<div class="form-group">
+								<label><i class="fa fa-star gold "></i> Bet on this game</label>
+								<p class="info">15</p>
+							</div>
+							<div class="form-group">
+								<label><i class="fa fa-certificate gold "></i> Possible Gain</label>
+								<p class="info">13 elo</p>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<div class="form-group">
+								<label><i class="fa fa-thumbs-up gold "></i> Bet on win</label>
+								<p class="info">62%</p>
+							</div>
+							<div class="form-group">
+								<label><i class="fa fa-thumbs-down gold "></i> Bet on lose</label>
+								<p class="info">48%</p>
+							</div>
+							<div class="form-group">
+								<label><i class="fa fa-flag gold "></i> Status</label>
+								<p class="info">All bet taken</p>
+							</div>
+						</div>
+					</div>
+					<button class="center-block btn btn-lolbet"><i class="fa fa-arrow-right"></i> Take a bet</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- IG stat and history -->
+	<div class="panel panel-lolbet" style="margin-top:15px;">
+		<div class="panel-heading"><i class="fa fa-bolt"></i> {{streamer.name}} - Current Game</div>
+		<div class="panel-body">
+
+			<!-- Loading animation while no game to show -->
+			<div id="looking">
+				<p class="text-center">Looking for a ranked solo queue on <br>
+					<!-- If only 1 summoner -->
+					{% if streamer.summoner_set.all|length == 1 %}
+					<span class="quote">{{streamer.summoner_set.all|first}}</span>
+					{% else %}
+					<!-- If more than 1 summoner -->
+					{% for summoner in streamer.summoner_set.all %}
+					<span class="quotes">{{summoner}}</span>
+					<!-- If no summoner -->
+					{% empty %}
+					<span style="color:red;"> ( no summoners registered for "{{streamer.name}}" ) </span>
+					{% endfor %}
+					{% endif %}
+				</p>
+				<div class="spinner">
+				  <div class="double-bounce1"></div>
+				  <div class="double-bounce2"></div>
+				</div>
+			</div>
+
+			<!-- Current game info -->
+			<div id="game" style="display:none;">
+				Game info
+			</div>
+			
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block JS %}
+{% load static from staticfiles %}
+<script>
+	var channel_name = '{{streamer.channel_name}}';
+	var game_ID = -1;
+</script>
+<!-- Stream Ajax -->
+<script src="{% static 'lolbet/js/stream_ajax.js' %}"></script>
+<!-- Quotes -->
+<script>
+	(function() {
+
+    var quotes = $(".quotes");
+    var quoteIndex = -1;
+    
+    function showNextQuote() {
+        ++quoteIndex;
+        quotes.eq(quoteIndex % quotes.length)
+            .fadeIn(500)
+            .delay(1000)
+            .fadeOut(500, showNextQuote);
+    }
+    
+    showNextQuote();
+    
+})();
+</script>
+{% endblock %}

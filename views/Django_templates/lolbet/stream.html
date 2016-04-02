@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}{{streamer.channel_name}}{% endblock %}
+
+<!-- Content -->
+{% block content %}
+{% load static from staticfiles %}
+<div class="container-fluid">
+	<!-- Stream and Bet -->
+	<div class="row">
+
+		<!-- Stream section -->
+		<div class=" col-lg-8 col-lg-push-2 col-md-8 col-md-push-2" id="stream">
+			<div class="panel">
+				<div class="panel-heading text-center"><i class="fa fa-bolt"></i> {{streamer.name}} <span id="streamer-info" style="display:none"></span> <i class="fa fa-bolt"></i></div>
+				<div class="panel-body panel-body-empty">
+					<div class="aspect-ratio-16-9">
+						<iframe class="element-to-stretch" src="http://www.twitch.tv/{{streamer.channel_name}}/embed" width="100%" height="100%" id="stream"></iframe>
+					</div>
+				</div>
+			</div>
+			<div class="panel" id="looking">
+				<div class="panel-heading">
+					<i class="fa fa-search"></i> Looking for a ranked solo queue
+				</div>
+				<div class="panel-body">
+					<!-- Loading animation while no bet to show -->
+					<div id="looking">
+						<p class="text-center">
+							<!-- If only 1 summoner -->
+							{% if streamer.summoner_set.all|length == 1 %}
+							{% with streamer.summoner_set.all|first as summoner %}
+							<span class="quote">{{summoner.name}} ({{summoner.region|upper}})</span>
+							{% endwith %}
+							{% else %}
+							<!-- If more than 1 summoner -->
+							{% for summoner in streamer.summoner_set.all %}
+							<span class="quotes">{{summoner.name}} ({{summoner.region|upper}})</span>
+							<!-- If no summoner -->
+							{% empty %}
+							<span style="color:red;"> ( no summoners registered for "{{streamer.name}}" ) </span>
+							{% endfor %}
+							{% endif %}
+						</p>
+						<div class="spinner">
+						  <div class="double-bounce1"></div>
+						  <div class="double-bounce2"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel" id="bet-info" style="display:none;">
+				<div class="panel-heading">
+					<i class="fa fa-database"></i> Bet Info <span class="pull-right" id="chronotime">00:00</span>
+				</div>
+				<div class="panel-body">
+					<!-- Current bet info -->
+					<div class="row">
+						<div class="col-xs-3">
+							<button class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red" id="bet-red"></button>
+							
+						</div>
+						<div class="col-xs-6 text-center">
+							<div class="row">
+								<div class="col-xs-5">
+									<i class="fa fa-database"></i> <span id="amount-red"></span>
+								</div>
+								<div class="col-xs-2">-</div>
+								<div class="col-xs-5">
+									<i class="fa fa-database"></i> <span id="amount-blue"></span>
+								</div>
+							</div>
+							<div class="progress">
+								<div class="progress-bar progress-bar-red" role="progressbar" style="width:50%">
+									<span id="percent-red"></span>%
+								</div>
+								<div class="progress-bar progress-bar-blue" role="progressbar" style="width:50%">
+									<span id="percent-blue"></span>%	
+								</div>
+							</div>
+
+						</div>
+						<div class="col-xs-3">
+							<button class="btn btn-bet btn-bet-blue center-block" data-toggle="modal" data-target="#modal-blue" id="bet-blue"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Red Team section -->
+		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left">
+			<div class="panel panel-red">
+				
+				<div class="panel-heading">Red Team</div>
+				<div class="panel-body panel-body-empty">
+
+					<ul id="red-list" class="sortable-list">
+						{% for e in "12345" %}
+						<li>
+							<div class="champion champion-left" style="display:none">
+								<img class="img-background img-responsive center-block picture-red" src="" alt="">
+								<h4><a class="summonerName-red" href="http://www.lolking.net/" target="_blank"></a></h4>
+								<img class="rank rank-red" src="{% static 'lolbet/img/rank/diamond.png' %}" alt="">
+								<img class="mastery img-rounded mastery-red" src="" alt="">
+								<img class="summoner1 img-rounded spell1-red" src="" alt="">
+								<img class="summoner2 img-rounded spell2-red" src="" alt="">
+							</div>
+						</li>
+						{% endfor %}
+					</ul>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Blue Team section -->
+		<div class="col-lg-2 col-md-2 col-xs-6 col-right">
+			<div class="panel panel-blue">
+
+				<div class="panel-heading">Blue Team</div>
+				<div class="panel-body panel-body-empty">
+				
+					<ul id="blue-list" class="sortable-list">
+						{% for e in "12345" %}
+						<li>
+							<div class="champion champion-right" style="display:none">
+								<img class="img-background img-responsive center-block picture-blue" src="" alt="">
+								<h4><a class="summonerName-blue" href="http://www.lolking.net/" target="_blank"></a></h4>
+								<img class="rank rank-blue" src="{% static 'lolbet/img/rank/diamond.png' %}" alt="">
+								<img class="mastery img-rounded mastery-blue" src="" alt="">
+								<img class="summoner1 img-rounded spell1-blue" src="" alt="">
+								<img class="summoner2 img-rounded spell2-blue" src="" alt="">
+							</div>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Red Modal -->
+	  <div class="modal" id="modal-red" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Bet on the Red Team</h4>
+	        </div>
+	        <div class="modal-body">
+				<div id="red-bet-body">
+					<div class="form-group center-block text-center" style="max-width:100px;">
+						<label for="amount-red">Amount:</label>
+						<select class="form-control" id="select-red">
+							{% for x in bet_range %}
+							<option value="{{x}}">{{x}}</option>
+							{% endfor %}
+							<option value="{{max_bet}}" selected>{{max_bet}}</option>
+						</select>
+					</div>
+
+				  <ul class="list-inline text-center">
+				  	<li><button class="btn btn-lolbet" onclick="betRed()">Confirm</button></li>
+				  	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-red-modal">Cancel</button></li>
+				  </ul>
+				</div>
+				<div id="red-bet-loading" style="display:none;">
+					<div class="spinner">
+					  <div class="double-bounce1"></div>
+					  <div class="double-bounce2"></div>
+					</div>
+				</div>
+				<div id="red-bet-message" style="display:none;">
+					
+				</div>
+	        </div>
+	      </div>
+
+	      
+	      
+	    </div>
+	  </div> <!-- Red Modal -->
+
+	  <!-- Blue Modal -->
+	  <div class="modal" id="modal-blue" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Bet on the Blue Team</h4>
+	        </div>
+	        <div class="modal-body">
+	        	<div id="blue-bet-body">
+	        		<div class="form-group center-block text-center" style="max-width:100px;">
+						<label for="amount-blue">Amount:</label>
+						<select class="form-control" id="select-blue">
+							{% for x in bet_range %}
+							<option value="{{x}}">{{x}}</option>
+							<option value="{{max_bet}}" selected>{{max_bet}}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+		          <ul class="list-inline text-center">
+			      	<li><button class="btn btn-lolbet" onclick="betBlue()">Confirm</button></li>
+			      	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-blue-modal">Cancel</button></li>
+			      </ul>
+	        	</div>
+				
+				<div id="blue-bet-loading" style="display:none;">
+					<div class="spinner">
+					  <div class="double-bounce1"></div>
+					  <div class="double-bounce2"></div>
+					</div>
+				</div>
+				<div id="blue-bet-message" style="display:none;">
+
+				</div>
+	        </div>
+	      </div>
+
+	      
+	      
+	    </div>
+	  </div> <!-- Blue Modal -->
+
+	
+</div>
+{% endblock %}
+
+
+{% block JS %}
+{% load static from staticfiles %}
+
+<!-- Chrono -->
+<script src="{% static 'lolbet/js/chrono.js' %}"></script>
+
+<!-- Local Variable -->
+<script>
+	var channel_name = '{{streamer.channel_name}}';
+	var game_ID = -1;
+</script>
+
+<!-- Stream Ajax -->
+<script src="{% static 'lolbet/js/stream_ajax.js' %}"></script>
+<!-- Quotes animation not IG -->
+<script src="{% static 'lolbet/js/quotes-animation.js' %}"></script>
+
+<!-- Sortable Jquery -->
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="{% static 'lolbet/js/sortable.js' %}"></script>
+{% endblock %}

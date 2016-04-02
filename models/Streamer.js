@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var Streamer = new Schema({
   name:   String,
-  channel_name:  String,
+  channelName:  String,
   online: Boolean,
   viewers: Number,
   preview: String,

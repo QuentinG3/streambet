@@ -22,6 +22,7 @@
     "passport-local-mongoose": "^4.0.0",
     "serve-favicon": "~2.3.0",
     "socket.io": "^1.4.5",
-    "swig": "^1.4.2"
+    "swig": "^1.4.2",
+    "twitch.tv": "^1.0.0"
   }
 }

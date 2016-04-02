@@ -16,6 +16,11 @@ module.exports = {
   /* Show profil section  */
   profil : function(req, res, next) {
     res.render('profil', {});
+  },
+
+  //TODO : check if user connected or not
+  recover : function(req, res, next) {
+    res.render('recover', {});
   }
 
 }

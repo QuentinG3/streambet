@@ -19,7 +19,7 @@ var streamerList = [
 	["Wings of Death","Wingsofdeath",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_wingsofdeath-320x180.jpg"],
     ["Gosu","mushisgosu",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-320x180.jpg"],
     ["Imaqtpie","imaqtpie",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg"],
-    ["Riot","riotgames",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg"],
+    ["Riot","riotgames",0,"https://static-cdn.jtvnw.net/previews-ttv/live_user_riotgames-320x180.jpg"],
 ];
 
 

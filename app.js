@@ -16,10 +16,8 @@ var apiUpdate = require('./api/apiUpdate');
 //apiUpdate.updateStreamers();
 
 var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
 
-//Magic line
+//Make the app use Swig to render file
 app.engine('html', swig.renderFile);
 
 // view engine setup

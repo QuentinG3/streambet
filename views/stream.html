@@ -248,6 +248,18 @@
 
 {% block JS %}
 
+<!-- Socket IO -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io();
+
+	socket.emit('room connection', '{{streamer.channelName}}');
+
+	socket.on('msg', function (data) {
+    alert(data);
+  });
+</script>
+
 <!-- Chrono -->
 <script src="/js/chrono.js"></script>
 

@@ -22,11 +22,14 @@ var streamerList = [
     ["Imaqtpie","imaqtpie",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg",[{name:"Imaqtpie",region:"na",summonerId:"19887289"}]],
     ["Riot","riotgames",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg"],
     ["Iwilldominate","iwilldominate",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg",[{name:"IWDominate3",region:"na",summonerId:"50529339"}]],
+    ["Taour","taourrr1030",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg",[{name:"EagleStick",region:"euw",summonerId:"27689318"}]],
+    ["Crvor","iamcrvor",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg",[{name:"crvor",region:"euw",summonerId:"18977877"}]],
+    ["Sylrus","sylrus",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg",[{name:"Pornstar Dovah",region:"euw",summonerId:"59837265"}]],
 ];
 
 
 async.each(streamerList,function(oneStreamer,callback){
-  var newStreamer = new streamer({name : oneStreamer[0],channelName: oneStreamer[1],online : false,viewers: oneStreamer[2],preview: oneStreamer[3],summoners:oneStreamer[4]});
+  var newStreamer = new streamer({name : oneStreamer[0],channelName: oneStreamer[1],online : false,viewers: oneStreamer[2],preview: oneStreamer[3],summoners:oneStreamer[4],game:null});
 
   newStreamer.save(function(err){
     if (err) return console.error("Error in streamer creation in database",err);

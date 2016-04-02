@@ -13,7 +13,8 @@ var swig = require('swig');
 var routes = require('./routes/index');
 var apiUpdate = require('./api/apiUpdate');
 
-apiUpdate.updateStreamers();
+//apiUpdate.updateStreamers();
+apiUpdate.updateCurrentGames();
 
 var app = express();
 var server = require('http').createServer(app);

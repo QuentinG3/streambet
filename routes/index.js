@@ -4,7 +4,7 @@ var swig  = require('swig');
 
 var base = require('./base');
 var account = require('./account');
-var lolbet = require('./lolbet')
+var lolbet = require('./lolbet');
 
 
 /* GET Home page. */
@@ -35,7 +35,7 @@ router.get('/recover', account.recover);
 router.get('/streamers', lolbet.streamers);
 
 /* GET stream page. */
-router.get('/stream', lolbet.stream);
+router.get('/stream/:name', lolbet.stream);
 
 /* GET Ranking page. */
 router.get('/ranking', lolbet.ranking);

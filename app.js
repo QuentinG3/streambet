@@ -11,6 +11,9 @@ var flash = require('connect-flash');
 var swig = require('swig');
 
 var routes = require('./routes/index');
+var apiUpdate = require('./api/apiUpdate');
+
+apiUpdate.updateStreamers();
 
 var app = express();
 var server = require('http').createServer(app);

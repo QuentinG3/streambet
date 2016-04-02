@@ -17,11 +17,11 @@
   background: linear-gradient($gold3, $gold1) /* Standard syntax */
 
 =gradient-lolbet2()
-  background: $gold2 /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient($gold3, $gold2) /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient($gold3, $gold2) /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient($gold3, $gold2) /* For Firefox 3.6 to 15 */
-  background: linear-gradient($gold3, $gold2) /* Standard syntax */
+  background: $gold3 /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient($gold1, $gold3) /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient($gold1, $gold3) /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient($gold1, $gold3) /* For Firefox 3.6 to 15 */
+  background: linear-gradient($gold1, $gold3) /* Standard syntax */
 
 //Gradient bi color
 =gradient2($color1,$color2)
@@ -35,6 +35,13 @@
 =text-gradient($color1,$color2,$color3,$color4)
   color: $color1 /* For browsers that do not support gradients */
   background: -webkit-linear-gradient($color1, $color2, $color3, $color4) /* For Safari 5.1 to 6.0 */
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+//Gradient for text with 2 colors
+=text-gradient2($color1,$color2)
+  color: $color1 /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient($color1, $color2) /* For Safari 5.1 to 6.0 */
   -webkit-background-clip: text
   -webkit-text-fill-color: transparent
 

@@ -30,15 +30,15 @@ button.btn-lolbet {
   background: -o-linear-gradient(#d38b39, #D39C2C);
   background: -moz-linear-gradient(#d38b39, #D39C2C);
   background: linear-gradient(#d38b39, #D39C2C);
-  color: black; }
+  color: white; }
 
 button.btn-lolbet:hover, button.btn-lolbet:focus {
-  background: #e6d4ac;
-  background: -webkit-linear-gradient(#d38b39, #e6d4ac);
-  background: -o-linear-gradient(#d38b39, #e6d4ac);
-  background: -moz-linear-gradient(#d38b39, #e6d4ac);
-  background: linear-gradient(#d38b39, #e6d4ac);
-  color: black; }
+  background: #d38b39;
+  background: -webkit-linear-gradient(#D39C2C, #d38b39);
+  background: -o-linear-gradient(#D39C2C, #d38b39);
+  background: -moz-linear-gradient(#D39C2C, #d38b39);
+  background: linear-gradient(#D39C2C, #d38b39);
+  color: white; }
 
 .navbar {
   border-radius: 0; }
@@ -255,18 +255,18 @@ p.stream-info span {
   padding-top: 25px; }
 
 .progress-bar-red {
-  background: #cc0000;
-  background: -webkit-linear-gradient(#660000, #cc0000);
-  background: -o-linear-gradient(#660000, #cc0000);
-  background: -moz-linear-gradient(#660000, #cc0000);
-  background: linear-gradient(#660000, #cc0000); }
+  background: #660000;
+  background: -webkit-linear-gradient(#cc0000, #660000);
+  background: -o-linear-gradient(#cc0000, #660000);
+  background: -moz-linear-gradient(#cc0000, #660000);
+  background: linear-gradient(#cc0000, #660000); }
 
 .progress-bar-blue {
-  background: #0000cc;
-  background: -webkit-linear-gradient(#000066, #0000cc);
-  background: -o-linear-gradient(#000066, #0000cc);
-  background: -moz-linear-gradient(#000066, #0000cc);
-  background: linear-gradient(#000066, #0000cc); }
+  background: #000066;
+  background: -webkit-linear-gradient(#0000cc, #000066);
+  background: -o-linear-gradient(#0000cc, #000066);
+  background: -moz-linear-gradient(#0000cc, #000066);
+  background: linear-gradient(#0000cc, #000066); }
 
 ul.sortable-list {
   list-style-type: none;
@@ -429,11 +429,39 @@ ul.nodeco {
   color: #080808;
   text-decoration: none; }
 
+.modal-header-red {
+  border-radius: 11px;
+  color: #9D9D9D;
+  text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
+  text-align: center;
+  background: #cc0000;
+  background: -webkit-linear-gradient(#660000, #cc0000);
+  background: -o-linear-gradient(#660000, #cc0000);
+  background: -moz-linear-gradient(#660000, #cc0000);
+  background: linear-gradient(#660000, #cc0000); }
+
+.modal-header-blue {
+  border-radius: 11px;
+  color: #9D9D9D;
+  text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
+  text-align: center;
+  background: #0000cc;
+  background: -webkit-linear-gradient(#000066, #0000cc);
+  background: -o-linear-gradient(#000066, #0000cc);
+  background: -moz-linear-gradient(#000066, #0000cc);
+  background: linear-gradient(#000066, #0000cc); }
+
 .modal-content {
   border-radius: 15px;
   background-color: #222222;
   font-weight: bold;
   color: #9D9D9D; }
+
+.modal-content-red {
+  border: solid 2px #660000; }
+
+.modal-content-blue {
+  border: solid 2px #000066; }
 
 .modal-body {
   padding: 20px 30px 20px 30px; }

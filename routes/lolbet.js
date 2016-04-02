@@ -1,15 +1,30 @@
+var Streamer = require('../models/Streamer');
+
 module.exports = {
 
-  //TODO : get streamer list
   /* Show the online lol streamer.  */
   streamers : function(req, res, next) {
-    res.render('streamers', {});
+    Streamer.find({online: true}, "channelName viewers preview", function(err,streamerList){
+      res.render('streamers', {streamer_list: streamerList});
+    });
   },
 
   //TODO : Get streamer info (summoners,game,etc) and bet info
   /* Show the stream, game info and bet system. */
   stream : function(req, res, next) {
-    res.render('stream', {});
+    //Getting the streamer name
+    var name = req.params.name;
+
+    //Database lookup
+    Streamer.findOne({channelName: name}, "channelName name ", function(err,streamer){
+      if(err) {
+        res.render('base', {});
+      }else if(streamer){
+        res.render('stream', {streamer: streamer, bet_range: [1,2,3,4,5,6,7,8,9,10]});
+      }else{
+        res.render('base', {});
+      }
+    });
   },
 
   //TODO : Get the best ranked account

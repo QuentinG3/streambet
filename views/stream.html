@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 <!-- Title -->
-{% block title %}{{streamer.channel_name}}{% endblock %}
+{% block title %}{{streamer.channelName}}{% endblock %}
 
 <!-- Content -->
 {% block content %}
@@ -15,11 +15,13 @@
 				<div class="panel-heading text-center"><i class="fa fa-bolt"></i> {{streamer.name}} <span id="streamer-info" style="display:none"></span> <i class="fa fa-bolt"></i></div>
 				<div class="panel-body panel-body-empty">
 					<div class="aspect-ratio-16-9">
-						<iframe class="element-to-stretch" src="http://www.twitch.tv/{{streamer.channel_name}}/embed" width="100%" height="100%" id="stream"></iframe>
+						<!-- TODO remove a -->
+						<iframe class="element-to-stretch" src="http://www.twitch.tv/{{streamer.channelName}}a/embed" width="100%" height="100%" id="stream"></iframe>
 					</div>
 				</div>
 			</div>
-			<div class="panel" id="looking">
+
+			<div class="panel" id="looking" >
 				<div class="panel-heading">
 					<i class="fa fa-search"></i> Looking for a ranked solo queue
 				</div>
@@ -35,7 +37,8 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div><!-- Looking -->
+
 			<div class="panel" id="bet-info" style="display:none;">
 				<div class="panel-heading">
 					<i class="fa fa-database"></i> Bet Info <span class="pull-right" id="chronotime">00:00</span>
@@ -43,41 +46,54 @@
 				<div class="panel-body">
 					<!-- Current bet info -->
 					<div class="row">
+						<!-- Bet on red -->
 						<div class="col-xs-3">
-							<button class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red" id="bet-red"></button>
-
-						</div>
-						<div class="col-xs-6 text-center">
-							<div class="row">
-								<div class="col-xs-5">
-									<i class="fa fa-database"></i> <span id="amount-red"></span>
-								</div>
-								<div class="col-xs-2">-</div>
-								<div class="col-xs-5">
-									<i class="fa fa-database"></i> <span id="amount-blue"></span>
-								</div>
+							<button class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red" id="bet-red">Go Red !</button>
+							<div class="text-center" style="display:none">
+								<h4>Red <span class="gold">Wins</span></h4>
+								<p>
+									<span id="red-gain"></span> <i class="fa gold fa-database"></i>
+								</p>
 							</div>
-							<div class="progress">
+						</div>
+						<div class="col-xs-6">
+							<!-- Bet amount -->
+							<div class="row">
+								<div class="col-xs-6 col-sm-5 col-sm-offset-1">
+									<span id="amount-red">0</span> <i class="fa gold fa-database"></i>
+								</div>
+								<div class="col-xs-6 col-sm-5" style="text-align:right;">
+									<span id="amount-blue">0</span> <i class="fa gold fa-database"></i>
+								</div>
+								<div class="col-xs-1"></div>
+							</div>
+							<!-- Progress bar -->
+							<div class="progress" style="margin-bottom: 0;">
 								<div class="progress-bar progress-bar-red" role="progressbar" style="width:50%">
-									<span id="percent-red"></span>%
 								</div>
 								<div class="progress-bar progress-bar-blue" role="progressbar" style="width:50%">
-									<span id="percent-blue"></span>%
 								</div>
 							</div>
-
-						</div>
+						</div><!-- col -->
+						<!-- Bet on blue -->
 						<div class="col-xs-3">
-							<button class="btn btn-bet btn-bet-blue center-block" data-toggle="modal" data-target="#modal-blue" id="bet-blue"></button>
+							<button class="btn btn-bet btn-bet-blue center-block" data-toggle="modal" data-target="#modal-blue" id="bet-blue">Go Blue !</button>
+							<div class="text-center" style="display:none">
+								<h4>Blue <span class="gold">Wins</span></h4>
+								<p>
+									<span id="blue-gain"></span> <i class="fa gold fa-database"></i>
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+			</div> <!-- BET -->
+
+		</div><!-- Col -->
 
 		<!-- Red Team section -->
 		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left">
-			<div class="panel panel-red">
+			<div class="panel panel-red" style="display:none">
 
 				<div class="panel-heading">Red Team</div>
 				<div class="panel-body panel-body-empty">
@@ -85,10 +101,10 @@
 					<ul id="red-list" class="sortable-list">
 						{% for e in "12345" %}
 						<li>
-							<div class="champion champion-left" style="display:none">
+							<div class="champion champion-left" >
 								<img class="img-background img-responsive center-block picture-red" src="" alt="">
 								<h4><a class="summonerName-red" href="http://www.lolking.net/" target="_blank"></a></h4>
-								<img class="rank rank-red" src="img/rank/diamond.png" alt="">
+								<img class="rank rank-red" src="/img/rank/diamond.png" alt="">
 								<img class="mastery img-rounded mastery-red" src="" alt="">
 								<img class="summoner1 img-rounded spell1-red" src="" alt="">
 								<img class="summoner2 img-rounded spell2-red" src="" alt="">
@@ -103,7 +119,7 @@
 
 		<!-- Blue Team section -->
 		<div class="col-lg-2 col-md-2 col-xs-6 col-right">
-			<div class="panel panel-blue">
+			<div class="panel panel-blue" style="display:none">
 
 				<div class="panel-heading">Blue Team</div>
 				<div class="panel-body panel-body-empty">
@@ -114,7 +130,7 @@
 							<div class="champion champion-right" style="display:none">
 								<img class="img-background img-responsive center-block picture-blue" src="" alt="">
 								<h4><a class="summonerName-blue" href="http://www.lolking.net/" target="_blank"></a></h4>
-								<img class="rank rank-blue" src="img/rank/diamond.png" alt="">
+								<img class="rank rank-blue" src="/img/rank/diamond.png" alt="">
 								<img class="mastery img-rounded mastery-blue" src="" alt="">
 								<img class="summoner1 img-rounded spell1-blue" src="" alt="">
 								<img class="summoner2 img-rounded spell2-blue" src="" alt="">
@@ -126,17 +142,27 @@
 			</div>
 		</div>
 
-	</div>
+	</div><!-- Stream and bet -->
+
+<!--
+	__  __           _       _
+ |  \/  |         | |     | |
+ | \  / | ___   __| | __ _| |
+ | |\/| |/ _ \ / _` |/ _` | |
+ | |  | | (_) | (_| | (_| | |
+ |_|  |_|\___/ \__,_|\__,_|_|
+-->
+
 
 	<!-- Red Modal -->
 	  <div class="modal" id="modal-red" role="dialog">
-	    <div class="modal-dialog">
+	    <div class="modal-dialog modal-sm">
 
 	      <!-- Modal content-->
-	      <div class="modal-content">
-	        <div class="modal-header">
+	      <div class="modal-content modal-content-red">
+	        <div class="modal-header modal-header-red">
 	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Bet on the Red Team</h4>
+	          <h4 class="modal-title">Bet on Red</h4>
 	        </div>
 	        <div class="modal-body">
 				<div id="red-bet-body">
@@ -146,7 +172,6 @@
 							{% for x in bet_range %}
 							<option value="{{x}}">{{x}}</option>
 							{% endfor %}
-							<option value="{{max_bet}}" selected>{{max_bet}}</option>
 						</select>
 					</div>
 
@@ -174,13 +199,13 @@
 
 	  <!-- Blue Modal -->
 	  <div class="modal" id="modal-blue" role="dialog">
-	    <div class="modal-dialog">
+	    <div class="modal-dialog modal-sm" >
 
 	      <!-- Modal content-->
-	      <div class="modal-content">
-	        <div class="modal-header">
+	      <div class="modal-content modal-content-blue">
+	        <div class="modal-header modal-header-blue">
 	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Bet on the Blue Team</h4>
+	          <h4 class="modal-title">Bet on Blue</h4>
 	        </div>
 	        <div class="modal-body">
 	        	<div id="blue-bet-body">
@@ -189,7 +214,6 @@
 						<select class="form-control" id="select-blue">
 							{% for x in bet_range %}
 							<option value="{{x}}">{{x}}</option>
-							<option value="{{max_bet}}" selected>{{max_bet}}</option>
 							{% endfor %}
 						</select>
 					</div>
@@ -218,26 +242,38 @@
 	  </div> <!-- Blue Modal -->
 
 
-</div>
+</div><!-- Container -->
 {% endblock %}
 
 
 {% block JS %}
 
+<!-- Socket IO -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io();
+
+	socket.emit('room connection', '{{streamer.channelName}}');
+
+	socket.on('msg', function (data) {
+    alert(data);
+  });
+</script>
+
 <!-- Chrono -->
-<script src="js/chrono.js"></script>
+<script src="/js/chrono.js"></script>
 
 <!-- Local Variable -->
 <script>
-	var channel_name = '{{streamer.channel_name}}';
+	var channel_name = '{{streamer.channelName}}';
 	var game_ID = -1;
 </script>
 
 <!-- Quotes animation not IG -->
-<script src="js/quotes-animation.js"></script>
+<script src="/js/quotes-animation.js"></script>
 
 <!-- Sortable Jquery -->
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src="js/sortable.js"></script>
+<script src="/js/sortable.js"></script>
 {% endblock %}

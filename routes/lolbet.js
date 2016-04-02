@@ -20,7 +20,7 @@ module.exports = {
       if(err) {
         res.render('base', {});
       }else if(streamer){
-        res.render('stream', {streamer: streamer});
+        res.render('stream', {streamer: streamer, bet_range: [1,2,3,4,5,6,7,8,9,10]});
       }else{
         res.render('base', {});
       }

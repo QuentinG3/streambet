@@ -22,11 +22,11 @@ span.twitch
 
 button.btn-lolbet
   +gradient-lolbet()
-  color: black
+  color: white
 
 button.btn-lolbet:hover, button.btn-lolbet:focus
   +gradient-lolbet2()
-  color: black
+  color: white
 
 //NAVIGATIONS
 .navbar
@@ -242,10 +242,10 @@ p.stream-info span
 
 //PROGRESS BAR
 .progress-bar-red
-  +gradient2($red1,$red2)
+  +gradient2($red2,$red1)
 
 .progress-bar-blue
-  +gradient2($blue1,$blue2)
+  +gradient2($blue2,$blue1)
 
 //SORTABLE
 ul.sortable-list
@@ -418,11 +418,31 @@ ul.nodeco
   text-decoration: none
 
 //MODAL
+.modal-header-red
+  border-radius: 11px
+  color: $navcolor
+  text-shadow: -1px 0 $navbg, 0 1px $navbg, 1px 0 $navbg, 0 -1px $navbg
+  text-align: center
+  +gradient2($red1,$red2)
+
+.modal-header-blue
+  border-radius: 11px
+  color: $navcolor
+  text-shadow: -1px 0 $navbg, 0 1px $navbg, 1px 0 $navbg, 0 -1px $navbg
+  text-align: center
+  +gradient2($blue1,$blue2)
+
 .modal-content
   border-radius: 15px
   background-color: $navbg
   font-weight: bold
   color: $navcolor
+
+.modal-content-red
+  border: solid 2px $red1
+
+.modal-content-blue
+  border: solid 2px $blue1
 
 .modal-body
   padding: 20px 30px 20px 30px

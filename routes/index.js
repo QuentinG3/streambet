@@ -9,14 +9,19 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET About page. */
+//TODO : Get this text from the database?
 router.get('/about', function(req, res, next) {
   res.render('about', {
+  about: ['Explaining what streambet is', 'Explaining what streambet could be', 'Explain who we are and why we developped streambet']
   });
 });
 
 /* GET FAQ page. */
 router.get('/faq', function(req, res, next) {
   res.render('faq', {
+    faq: [{id:1, title: "What is streambet ?", text: "response 1"},
+          {id:2, title: "Will i be able to bet real money ?", text: "response 2"},
+          {id:3, title: "How does the bet works ?", text: "response 3"}]
   });
 });
 

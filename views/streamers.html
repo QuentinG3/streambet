@@ -9,7 +9,6 @@
 
 <!-- Content -->
 {% block content %}
-{% load static from staticfiles %}
 <div class="container-fluid">
   <!-- Stream Wall for large screen -->
   <div class="block-grid-lg-5 block-grid-md-4 block-grid-sm-3 block-grid-xs-2 block-grid">
@@ -17,8 +16,8 @@
     {% for streamer in streamer_list %}
     <div class="block-grid-item">
         <div class="imagehover img-hover">
-          <a href="">
-          <img src="{{ streamer.preview}}" alt="Channel Preview">
+          <a href="/stream/{{ streamer.channel_name }}">
+          <img src="{{ streamer.preview }}" alt="Channel Preview">
           <div class="texthover">
             <p><i class="fa fa-play fa-lg"></i></p>
           </div>
@@ -30,8 +29,8 @@
 
     <div class="block-grid-item">
         <div class="imagehover img-hover">
-          <a href="">
-          <img src="{% static 'lolbet/img/new.png' %}" alt="">
+          <a href="/new_streamer">
+          <img src="img/new.png" alt="">
           <div class="texthover">
             <p><i class="fa fa-plus fa-lg"></i></p>
           </div>
@@ -48,7 +47,7 @@
     {% for streamer in streamer_list %}
     <div class="center-block" style="padding:10px">
         <div class="imagehover img-hover">
-          <a href="">
+          <a href="/stream/{{ streamer.channel_name }}">
           <img src="{{ streamer.preview}}" alt="Channel Preview">
           <div class="texthover">
             <p><i class="fa fa-play fa-lg"></i></p>
@@ -61,8 +60,8 @@
 
     <div class="center-block" style="padding:10px">
         <div class="imagehover img-hover">
-          <a href="">
-          <img src="{% static 'lolbet/img/new.png' %}" alt="">
+          <a href="/new_streamer">
+          <img src="img/new.png" alt="">
           <div class="texthover">
             <p><i class="fa fa-plus fa-lg"></i></p>
           </div>

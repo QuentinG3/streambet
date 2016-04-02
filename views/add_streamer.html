@@ -6,12 +6,12 @@
 <!-- Content -->
 {% block content %}
 <div class="container-fluid">
-  
+
   <div class="content-box center-box">
 
     <h2 class="text-center"><span class="gold bold">Add</span> a streamer</h2>
     <hr>
-    
+
     <form data-toggle="validator" role="form">
 
       <!-- Channel Name -->
@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- List containing the summoners of the streamer -->
       <div id="summonerList">
       </div>
@@ -54,7 +54,7 @@
       <div class="form-group text-center">
         <button type="button" class="btn btn-lolbet" onclick="addSummoner()" ><i class="fa fa-plus fa-lg"></i></button>
         <button type="button" class="btn btn-lolbet" onclick="deleteSummoner()" ><i class="fa fa-minus fa-lg"></i></button>
-      </div>   
+      </div>
 
       <!-- Submit -->
       <div class="form-group">
@@ -69,7 +69,6 @@
 
 <!-- Javascript -->
 {% block JS %}
-{% load static from staticfiles %}
 <!-- Add Streamer js -->
-<script src="{% static 'lolbet/js/add_streamer.js' %}"></script>
+<script src="js/add_streamer.js"></script>
 {% endblock %}

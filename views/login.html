@@ -22,8 +22,7 @@
     </div>
     {% endif %}
 
-    <form data-toggle="validator" role="form" data-disable="false" method="post" action="{% url 'register:login' %}">
-      {% csrf_token %}
+    <form data-toggle="validator" role="form" data-disable="false" method="post" action="TODO">
 
       <!-- Username -->
       <div class="form-group">
@@ -43,7 +42,7 @@
       <!-- Submit -->
       <div class="form-group">
         <button type="submit" class="btn btn-login center-block" style="margin-top:30px;"><i class="fa fa-sign-in fa-lg"></i> Login</button>
-        <a class="pull-right" style="margin-top:4px" href="{% url 'register:signup' %}">Not a member yet ?</a>
+        <a class="pull-right" style="margin-top:4px" href="/signup">Not a member yet ?</a>
       </div>
 
     </form>

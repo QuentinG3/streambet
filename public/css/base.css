@@ -344,6 +344,17 @@ ul.sortable-list {
     text-shadow: -1px 0 #000066, 0 1px #000066, 1px 0 #000066, 0 -1px #000066;
     width: 100%; }
 
+a.lolbet {
+  color: #337AB7;
+  font-weight: bold; }
+
+a.lolbet:hover, a.lolbet:focus {
+  color: #22527b;
+  text-decoration: none; }
+
+ul.nodeco {
+  list-style-type: none; }
+
 .panel {
   border-color: #D39C2C; }
 

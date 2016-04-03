@@ -1,44 +1,50 @@
 var Streamer = require('../models/Streamer');
 var Game = require('../models/Game');
 
+var tot100 = 0;
+var tot200 = 0;
+
 module.exports = function (io) {
+
   /* Listen on user connection */
   io.on('connection', function(socket){
 
-    console.log('a user connected');
-
+    /* Listen on room connection request. */
     socket.on('room connection', function(msg){
-      //Connect the socket to the room
+
+      //Verify the msg
+      //TODO
+
+      //Connect the socket to the room asked
       socket.join(msg);
 
-      //Game lookup
+      /* Lookup if there is a game for the channel. */
+      //Get the streamer
       Streamer.findOne({channelName: msg}, "_id", function(err,currentStreamer){
         if(err){
           console.log(err);
         }else if(currentStreamer){
-          //console.log(currentStreamer);
+          //Get the game
           Game.findOne({streamer: currentStreamer._id}, function(err,currentGame){
             if(err){
               console.log(err);
             }else if(currentGame){
               //TODO also send if user already bet or not
-              console.log(currentGame);
-              socket.emit('game', {game: currentGame});
-            }else{
-              console.log('no current game');
+              //Emit the current game
+              socket.emit('game', {game: currentGame, potential200: tot200, potential100: tot100, alreadyBet: false});
             }
-
           });
         }
+      });//End of lookup
 
-      });
-    });
+    });//End of room request listener
+
 
     socket.on('placeBet', function(msg){
       //Data
-      var team = msg.team;
+      var team = parseInt(msg.team);
       var user = socket.request.user;
-      var amount = msg.amount;
+      var amount = parseInt(msg.amount);
       var streamer = msg.streamer;
 
       console.log(user+" bet "+amount+" on team "+team+" on the game of "+streamer);
@@ -54,9 +60,39 @@ module.exports = function (io) {
       Change the game bet amount
       emit on the room streamer the new bet amount
       */
-      //io.to(streamer).emit('bet',{ amount200: amount200, amount100: amount100 });
+
+      var amount200 = 0;
+      var amount100 = 0;
+      var potential100 = 0;
+      var potential200 = 0;
+
+      if(team == 100){
+        potential100 = amount;
+        potential200 = -amount;
+
+        //TODO remove this test line
+        tot100 = tot100 + amount;
+        amount100 = tot100;
+        amount200 = tot200;
+      }else{
+        potential100 = -amount;
+        potential200 = amount;
+
+        //TODO remove this test line
+        tot200 = tot200 + amount;
+        amount200 = tot200;
+        amount100 = tot100;
+      }
+
+      //Update new amount to the room
+      io.to(streamer).emit('allBet',{ amount200: amount200, amount100: amount100});
+      //Update potential to socket
+      socket.emit('bet',{ amount200: amount200, amount100: amount100, potential200: potential200, potential100: potential100, alreadyBet: true });
     });
   });
+
+  /* Game update */
+  //TODO
 }
 
 /* Line to emit a message to a given room */

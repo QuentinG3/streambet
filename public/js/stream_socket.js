@@ -9,7 +9,6 @@ __      __        _       _     _
 TEAM_BLUE = 200;
 TEAM_RED = 100;
 
-//Pictures list
 //Blue Team
 var BlueTeam = document.getElementById("team-blue");
 var BluePicture = document.getElementsByClassName("picture-blue");
@@ -19,6 +18,12 @@ var BlueSpell2 = document.getElementsByClassName("spell2-blue");
 var BlueName = document.getElementsByClassName("summonerName-blue");
 var BlueRank = document.getElementsByClassName("rank-blue");
 var BlueBetAmount = document.getElementById("amount-blue");
+
+var BlueSelectedAmount = document.getElementById("select-blue");
+var BlueModal = document.getElementById("modal-blue");
+var BlueBetButton = document.getElementById("button-blue");
+var BluePotential = document.getElementById("potential-blue");
+var BlueGain = document.getElementById("gain-blue");
 
 //Red Team
 var RedTeam = document.getElementById("team-red");
@@ -30,25 +35,24 @@ var RedName = document.getElementsByClassName("summonerName-red");
 var RedRank = document.getElementsByClassName("rank-red");
 var RedBetAmount = document.getElementById("amount-red");
 
+var RedSelectedAmount = document.getElementById("select-red");
+var RedModal = document.getElementById("modal-red");
+var RedBetButton = document.getElementById("button-red");
+var RedPotential = document.getElementById("potential-red");
+var RedGain = document.getElementById("gain-red");
+
 //Info
 var looking = document.getElementById("looking");
 var bet_info = document.getElementById("bet-info");
 var streamer_info = document.getElementById("streamer-info");
 
-//Bet
-var BlueSelectedAmount = document.getElementById("select-blue");
-var BlueModal = document.getElementById("modal-blue");
-var RedSelectedAmount = document.getElementById("select-red");
-var RedModal = document.getElementById("modal-red");
-
-
 
 /*
- _____             _        _
-/ ____|           | |      | |
-| (___   ___   ___| | _____| |_
-\___ \ / _ \ / __| |/ / _ \ __|
-____) | (_) | (__|   <  __/ |_
+  _____             _        _
+ / ____|           | |      | |
+ | (___   ___   ___| | _____| |_
+ \___ \ / _ \ / __| |/ / _ \ __|
+ ____) | (_) | (__|   <  __/ |_
 |_____/ \___/ \___|_|\_\___|\__|
 
                              */
@@ -61,13 +65,14 @@ socket.emit('room connection', channel_name);
 
 //Listening game message
 socket.on('game', function (data) {
+  //updateBet amount
+  updateBetAmount(data.game.amount200, data.game.amount100, data.potential200, data.potential100, data.alreadyBet);
+
   //updateGame
   updateGame(data.game);
 
-  //updateBet amount
-  updateBetAmount(data.game.amount200, data.game.amount100);
-
-  //Update current user bet if need be TODO
+  //In game view
+  inGameView();
 });
 
 //Listening timeStamp change message
@@ -76,11 +81,104 @@ socket.on('timeStamp', function(data){
   updateTimeStamp(data);
 });
 
-//Listening timeStamp change message
+//Listening bet change message
+socket.on('allBet', function(data){
+  //updateBet
+  BlueBetAmount.innerHTML = data.amount200;
+  RedBetAmount.innerHTML = data.amount100;
+});
+
+//Listening bet change message
 socket.on('bet', function(data){
   //updateBet
-  updateBetAmount(data.amount200, data.amount100);
+  updateBetAmount(data.amount200, data.amount100, data.potential200, data.potential100, data.alreadyBet);
 });
+
+//Listening when game is finished
+socket.on('finishedGame', function(data){
+  //Process Bet
+  //TODO show new total
+
+  //No game view
+  noGameView();
+});
+
+
+/*
+ ____       _
+|  _ \     | |
+| |_) | ___| |_
+|  _ < / _ \ __|
+| |_) |  __/ |_
+|____/ \___|\__|
+*/
+
+function alreadyBetView(){
+  BlueBetButton.style.display = 'none';
+  RedBetButton.style.display = 'none';
+
+  BluePotential.style.display = 'inherit';
+  RedPotential.style.display = 'inherit';
+}
+
+function notAlreadyBetView(){
+  BlueBetButton.style.display = 'inherit';
+  RedBetButton.style.display = 'inherit';
+
+  BluePotential.style.display = 'none';
+  RedPotential.style.display = 'none';
+}
+
+function betRed(){
+  //Emit bet
+  var amount = RedSelectedAmount.options[RedSelectedAmount.selectedIndex].value;
+  socket.emit('placeBet', {streamer : channel_name, team: TEAM_RED, amount: amount} );
+
+  //Put the view in already bet mode ? TODO
+  alreadyBetView();
+
+  //Dismiss modal
+  $('#modal-red').modal('hide');
+}
+
+function betBlue(){
+  //Emit bet
+  var amount = BlueSelectedAmount.options[BlueSelectedAmount.selectedIndex].value;
+  socket.emit('placeBet', {streamer : channel_name, team: TEAM_BLUE, amount: amount} );
+
+  //Put the view in already bet mode ? TODO
+  alreadyBetView();
+
+  //Dismiss modal
+  $('#modal-blue').modal('hide');
+}
+
+function updateBetAmount(amountBlue, amountRed, potentialBlue, potentialRed, alreadyBet){
+
+  //Total
+  BlueBetAmount.innerHTML = amountBlue;
+  RedBetAmount.innerHTML = amountRed;
+
+  //Potential gain
+  if(potentialRed > 0){
+    BlueGain.innerHTML = potentialBlue;
+    RedGain.innerHTML = "+" + potentialRed;
+  }else if(potentialBlue > 0){
+    BlueGain.innerHTML = "+" + potentialBlue;
+    RedGain.innerHTML = potentialRed;
+  }else{
+    BlueGain.innerHTML = potentialBlue;
+    RedGain.innerHTML = potentialRed;
+  }
+
+  //Update current user bet if need be
+  if(alreadyBet){
+    alreadyBetView();
+  }else{
+    notAlreadyBetView();
+  }
+
+}
 
 
 /*
@@ -102,13 +200,40 @@ function updateTimeStamp(data){
   }
 }
 
+function noGameView(){
+  //Team invisible
+  BlueTeam.style.display = "none";
+  RedTeam.style.display = "none";
+
+  //Looking visible
+  looking.style.display = "inherit";
+
+  //Bet-info invisible
+  bet_info.style.display = "none";
+
+  //Streamer-info invisible
+  streamer_info.style.display = "none";
+}
+
+function inGameView(){
+  //Team visible
+  BlueTeam.style.display = "inherit";
+  RedTeam.style.display = "inherit";
+
+  //Looking invisible
+  looking.style.display = "none";
+
+  //Bet-info visible
+  bet_info.style.display = "inherit";
+
+  //Streamer-info visible
+  streamer_info.style.display = "inline-block";
+
+}
+
 function updateGame(object){
   //Start chrono
-  if(object.timestamp > 0){
-      chronoStart(object.timestamp);
-  }else{
-      chronoReset();
-  }
+  updateTimeStamp(object.timestamp)
 
   //Update current game
   var player = object.players;
@@ -175,43 +300,4 @@ function updateGame(object){
           b++;
       }
   };
-
-  //Team visible
-  BlueTeam.style.display = "inherit";
-  RedTeam.style.display = "inherit";
-
-  //Looking invisible
-  looking.style.display = "none";
-
-  //Bet-info visible
-  bet_info.style.display = "inherit";
-
-  //Streamer-info visible
-  streamer_info.style.display = "inline-block";
-
-}
-
-/*
- ____       _
-|  _ \     | |
-| |_) | ___| |_
-|  _ < / _ \ __|
-| |_) |  __/ |_
-|____/ \___|\__|
-*/
-function betRed(){
-  var amount = RedSelectedAmount.options[RedSelectedAmount.selectedIndex].value;
-  socket.emit('placeBet', {streamer : channel_name, team: TEAM_RED, amount: amount} );
-  $('#modal-red').modal('hide');
-}
-
-function betBlue(){
-  var amount = BlueSelectedAmount.options[BlueSelectedAmount.selectedIndex].value;
-  socket.emit('placeBet', {streamer : channel_name, team: TEAM_BLUE, amount: amount} );
-  $('#modal-blue').modal('hide');
-}
-
-function updateBetAmount(amountBlue, amountRed){
-  RedBetAmount.innerHTML = amountRed;
-  BlueBetAmount.innerHTML = amountBlue;
 }

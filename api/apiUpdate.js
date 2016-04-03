@@ -63,7 +63,6 @@ module.exports = {
                   LolApi.getCurrentGame(summonersName['summonerId'],summonersName['region'], function(err,res){
                     gameUpdate.updateTimeStamp(err,res,oneGame);
                   });
-
                 }
               });
             });
@@ -77,7 +76,25 @@ module.exports = {
   */
   processBet : function(){
     Game.find({},function(err,gameList){
-      console.log(gameList)
+        async.each(gameList,function(game,callback){
+          LolApi.getMatch(game['gameId'],game['region'],function(err,gameApi){
+            if(gameApi != null){
+              var winnerTeamId = -1;
+              for(var i =0;i<gameApi['teams'].length;i++){
+                var team = gameApi['teams'][i];
+                if(team['winner']){
+                  winnerTeamId = team['teamId'];
+                }
+              }
+              //Winning team is in var winnerTeamId
+              //HERE PROCESS BETS....
+              Game.remove({_id:game['_id']},function(err,removed){
+                if(err) return console.error('error when deleting game',error);
+                console.log("removed");
+              });
+            }
+          });
+        });
     });
 
   }

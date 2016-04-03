@@ -14,8 +14,8 @@ var routes = require('./routes/index');
 var apiUpdate = require('./api/apiUpdate');
 
 //apiUpdate.updateStreamers();
-apiUpdate.updateCurrentGames();
-//apiUpdate.processBet();
+//apiUpdate.updateCurrentGames();
+apiUpdate.processBet();
 
 var app = express();
 

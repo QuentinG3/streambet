@@ -1,4 +1,4 @@
-var Game = require('../../models/Game')
+var Streamer = require('../../models/Streamer')
 
 
 var updateNonOnlineStreamer = function(err,streamer){

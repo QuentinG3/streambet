@@ -1,10 +1,11 @@
 var Streamer = require('../models/Streamer');
+var base = require('./base');
 
 module.exports = {
 
   /* Show the online lol streamer.  */
   streamers : function(req, res, next) {
-    Streamer.find({online: true}, "channelName viewers preview", function(err,streamerList){
+    Streamer.find({online: true}, "channelName viewers preview",{ sort:{viewers : -1}}, function(err,streamerList){
       res.render('streamers', {streamer_list: streamerList});
     });
   },
@@ -18,11 +19,17 @@ module.exports = {
     //Database lookup
     Streamer.findOne({channelName: name}, "channelName name ", function(err,streamer){
       if(err) {
-        res.render('base', {});
+        //TODO res.redirect('/404');
+        var err = new Error('Not Found');
+        err.status = 404;
+        next(err);
       }else if(streamer){
         res.render('stream', {streamer: streamer, bet_range: [1,2,3,4,5,6,7,8,9,10]});
       }else{
-        res.render('base', {});
+        //TODO res.redirect('/404');
+        var err = new Error('Not Found');
+        err.status = 404;
+        next(err);
       }
     });
   },

@@ -33,6 +33,12 @@ module.exports = {
   /* Show a formulaire to contact the website admin  */
   contact : function(req, res, next) {
     res.render('contact', {});
+  },
+
+  /* 404 Page not found  */
+  page404 : function(req, res, next) {
+    //res.status(404);
+    res.render('404', {});
   }
 
 }

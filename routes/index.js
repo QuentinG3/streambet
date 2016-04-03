@@ -10,6 +10,9 @@ var lolbet = require('./lolbet');
 /* GET Home page. */
 router.get('/', base.home);
 
+/* GET 404 page. */
+router.get('/404', base.page404);
+
 /* GET About page. */
 router.get('/about', base.about);
 

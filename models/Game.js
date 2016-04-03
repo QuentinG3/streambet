@@ -19,6 +19,8 @@ var BannedChampions = new Schema({
 
 var Game = new Schema({
   gameId : String,
+  region:String,
+  summonersName:String,
   timestamp : Number,
   teamId : String,
   amount100 : Number,

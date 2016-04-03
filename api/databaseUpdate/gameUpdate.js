@@ -11,7 +11,7 @@ ALLOWED_QUEUE_TYPE = [4,410];
       if(ALLOWED_QUEUE_TYPE.indexOf(res['gameQueueConfigId'])!= -1){
         //console.log(listChampion);
         //We get the teamId of the summoner
-        newGame = new Game({gameId:res['gameId'],timestamp:res['gameStartTime'],amount100:0,amount200:0,streamer:streamer['_id']})
+        newGame = new Game({gameId:res['gameId'],timestamp:res['gameStartTime'],amount100:0,amount200:0,streamer:streamer['_id'],region:summonersName['region'],summonersName:summonersName['name']})
         for(var i=0;i<res['participants'].length;i++){
           var participant = res['participants'][i]
           if(participant['summonerId'] == summonersName['summonerId']){

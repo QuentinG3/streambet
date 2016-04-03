@@ -11,10 +11,6 @@ module.exports = function (io) {
       //Connect the socket to the room
       socket.join(msg);
 
-      //Console chat
-      //console.log('connect user to the room : '+msg);
-      //console.log('user : '+socket.request.user);
-
       //Game lookup
       Streamer.findOne({channelName: msg}, "_id", function(err,currentStreamer){
         if(err){
@@ -25,6 +21,7 @@ module.exports = function (io) {
             if(err){
               console.log(err);
             }else if(currentGame){
+              //TODO also send if user already bet or not
               console.log(currentGame);
               socket.emit('game', {game: currentGame});
             }else{
@@ -37,15 +34,28 @@ module.exports = function (io) {
       });
     });
 
-    socket.on('bet', function(msg){
-      console.log('');
+    socket.on('placeBet', function(msg){
+      //Data
+      var team = msg.team;
+      var user = socket.request.user;
+      var amount = msg.amount;
+      var streamer = msg.streamer;
+
+      console.log(user+" bet "+amount+" on team "+team+" on the game of "+streamer);
+
+      /*TODO :
+      Check is user is a real user,
+      Check if one of is room is the streamer room
+      Check if he already bet
+      Check if he has enough to bet
+      Check if he can bet that much
+
+      State that the user has bet
+      Change the game bet amount
+      emit on the room streamer the new bet amount
+      */
+      //io.to(streamer).emit('bet',{ amount200: amount200, amount100: amount100 });
     });
-
-    /*
-    socket.on('disconnect', function(){
-      console.log('user disconnected');
-    });*/
-
   });
 }
 

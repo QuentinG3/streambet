@@ -6,12 +6,8 @@ __      __        _       _     _
    \  / (_| | |  | | (_| | |_) | |  __/\__ \
     \/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
                                            */
-
-//Game Time out
-var gameTimeOut = 5000;
-
-//Champions list
-//var ChampionList = document.getElementsByClassName("champion");
+TEAM_BLUE = 200;
+TEAM_RED = 100;
 
 //Pictures list
 //Blue Team
@@ -39,6 +35,13 @@ var looking = document.getElementById("looking");
 var bet_info = document.getElementById("bet-info");
 var streamer_info = document.getElementById("streamer-info");
 
+//Bet
+var BlueSelectedAmount = document.getElementById("select-blue");
+var BlueModal = document.getElementById("modal-blue");
+var RedSelectedAmount = document.getElementById("select-red");
+var RedModal = document.getElementById("modal-red");
+
+
 
 /*
 _____            _        _
@@ -58,12 +61,25 @@ socket.emit('room connection', channel_name);
 
 //Listening game message
 socket.on('game', function (data) {
-  //Update current game if need be
+  //updateGame
   updateGame(data.game);
 
-  //updateBet
+  //updateBet amount
   updateBetAmount(data.game.amount200, data.game.amount100);
 
+  //Update current user bet if need be TODO
+});
+
+//Listening timeStamp change message
+socket.on('timeStamp', function(data){
+  //update timestamp
+  updateTimeStamp(data);
+});
+
+//Listening timeStamp change message
+socket.on('bet', function(data){
+  //updateBet
+  updateBetAmount(data.amount200, data.amount100);
 });
 
 
@@ -77,148 +93,125 @@ _____                        _    _           _       _
                                    | |
                                    |_|
 */
-function updateGame(object){
-  //Check gameID
-  if(gameID == object.gameId){
-      //Same game nothing to do
-      //Synchronise chrono
-      if(object.timestamp > 0){
-          chronoStart(object.timestamp);
-      }else{
-          chronoReset();
-      }
+function updateTimeStamp(data){
+  //Start chrono
+  if(data > 0){
+      chronoStart(data);
   }else{
-    game_ID = object.gameId;
-    if(game_ID > -1){
-
-        //Start chrono
-        if(object.timestamp > 0){
-            chronoStart(object.timestamp);
-        }else{
-            chronoReset();
-        }
-
-
-        //Update current game
-        var player = object.players;
-        var bannedChamp = object.bannedChampions;
-
-        //Update streamer info
-        streamer_info.innerHTML = "- " + object.streamerSummonerName + " (" + object.region+")";
-
-        var r = 0;
-        var b = 0;
-
-        for (var i = 0; i < player.length; i++) {
-            //Red team
-            if(player[i].teamId == 100){
-                //Set picture
-                RedPicture[r].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
-                //Set name
-                if(parseInt(object.streamerSummonerId) == parseInt(player[i].summonerId)){
-                    RedName[r].innerHTML = '<i class="fa fa-video-camera" style="color:#6441A5;"></i> : '+player[i].summonerName;
-
-                }else{
-                    RedName[r].innerHTML = player[i].summonerName;
-                }
-                //Set Summoner link
-                RedName[r].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
-                //Set Mastery
-                if(player[i].finalMasteryId < 0){
-                    RedMastery[r].src = "/static/lolbet/img/no-mastery.png";
-                }else{
-                    RedMastery[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/"+player[i].finalMasteryId+".png";
-                }
-                //Set spell1 spell2
-                RedSpell1[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
-                RedSpell2[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
-                //Set rank
-                RedRank[r].src = "/img/rank/"+player[i].rank+".png"
-                r++;
-            }
-
-            //Blue team
-            if(player[i].teamId == 200){
-                //Set picture
-                BluePicture[b].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
-                //Set name
-                if(parseInt(object.streamerSummonerId) == parseInt(player[i].summonerId)){
-                    BlueName[b].innerHTML = '<i class="fa fa-video-camera" style="color:#6441A5;"></i> : '+player[i].summonerName;
-                }else{
-                    BlueName[b].innerHTML = player[i].summonerName;
-                }
-                //Set Summoner link
-                BlueName[b].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
-                //Set Mastery
-                if(player[i].finalMasteryId < 0){
-                    BlueMastery[b].src = "/static/lolbet/img/no-mastery.png";
-                }else{
-                    BlueMastery[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/"+player[i].finalMasteryId+".png";
-                }
-                //Set spell1 spell2
-                BlueSpell1[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
-                BlueSpell2[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
-                //Set rank
-                BlueRank[b].src = "/img/rank/"+player[i].rank+".png"
-                b++;
-            }
-        };
-
-        /*
-        //Champion visible
-        for (var i = 0; i < ChampionList.length; i++) {
-            ChampionList[i].style.display = "inherit";
-        };*/
-
-        //Team visible
-        BlueTeam.style.display = "inherit";
-        RedTeam.style.display = "inherit";
-
-        //Looking invisible
-        looking.style.display = "none";
-
-        //Bet-info visible
-        bet_info.style.display = "inherit";
-
-        //Streamer-info visible
-        streamer_info.style.display = "inline-block";
-
-    }else{
-        //Suppress current game
-        /*
-        //Champion invisible
-        for (var i = 0; i < ChampionList.length; i++) {
-            ChampionList[i].style.display = "none";
-        };*/
-
-        //Team visible
-        BlueTeam.style.display = "none";
-        RedTeam.style.display = "none";
-
-        //Looking visible
-        looking.style.display = "inherit";
-
-        //Bet-info invisible
-        bet_info.style.display = "none";
-
-        //Streamer-info invisible
-        streamer_info.style.display = "none";
-    }
+      chronoReset();
   }
+}
+
+function updateGame(object){
+  //Start chrono
+  if(object.timestamp > 0){
+      chronoStart(object.timestamp);
+  }else{
+      chronoReset();
+  }
+
+  //Update current game
+  var player = object.players;
+  var bannedChamp = object.bannedChampions;
+
+  //Update streamer info
+  streamer_info.innerHTML = "- " + object.summonersName + " (" + object.region+")";
+
+  //Champion index
+  var r = 0;
+  var b = 0;
+
+  for (var i = 0; i < player.length; i++) {
+      //Red team
+      if(player[i].teamId == TEAM_RED){
+          //Set picture
+          RedPicture[r].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
+          //Set name
+          if(parseInt(object.streamerSummonerId) == parseInt(player[i].summonerId)){
+              RedName[r].innerHTML = '<i class="fa fa-video-camera" style="color:#6441A5;"></i> : '+player[i].summonerName;
+
+          }else{
+              RedName[r].innerHTML = player[i].summonerName;
+          }
+          //Set Summoner link
+          RedName[r].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
+          //Set Mastery
+          if(player[i].finalMasteryId < 0){
+              RedMastery[r].src = "/static/lolbet/img/no-mastery.png";
+          }else{
+              RedMastery[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/"+player[i].finalMasteryId+".png";
+          }
+          //Set spell1 spell2
+          RedSpell1[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
+          RedSpell2[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
+          //Set rank
+          RedRank[r].src = "/img/rank/"+player[i].rank+".png"
+          r++;
+      }
+
+      //Blue team
+      if(player[i].teamId == TEAM_BLUE){
+          //Set picture
+          BluePicture[b].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
+          //Set name
+          if(parseInt(object.streamerSummonerId) == parseInt(player[i].summonerId)){
+              BlueName[b].innerHTML = '<i class="fa fa-video-camera" style="color:#6441A5;"></i> : '+player[i].summonerName;
+          }else{
+              BlueName[b].innerHTML = player[i].summonerName;
+          }
+          //Set Summoner link
+          BlueName[b].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
+          //Set Mastery
+          if(player[i].finalMasteryId < 0){
+              BlueMastery[b].src = "/static/lolbet/img/no-mastery.png";
+          }else{
+              BlueMastery[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/"+player[i].finalMasteryId+".png";
+          }
+          //Set spell1 spell2
+          BlueSpell1[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
+          BlueSpell2[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
+          //Set rank
+          BlueRank[b].src = "/img/rank/"+player[i].rank+".png"
+          b++;
+      }
+  };
+
+  //Team visible
+  BlueTeam.style.display = "inherit";
+  RedTeam.style.display = "inherit";
+
+  //Looking invisible
+  looking.style.display = "none";
+
+  //Bet-info visible
+  bet_info.style.display = "inherit";
+
+  //Streamer-info visible
+  streamer_info.style.display = "inline-block";
 
 }
 
 /*
-____       _     _    _           _       _
-|  _ \     | |   | |  | |         | |     | |
-| |_) | ___| |_  | |  | |_ __   __| | __ _| |_ ___
-|  _ < / _ \ __| | |  | | '_ \ / _` |/ _` | __/ _ \
-| |_) |  __/ |_  | |__| | |_) | (_| | (_| | ||  __/
-|____/ \___|\__|  \____/| .__/ \__,_|\__,_|\__\___|
-                       | |
-                       |_|
+____       _
+|  _ \     | |
+| |_) | ___| |_
+|  _ < / _ \ __|
+| |_) |  __/ |_
+|____/ \___|\__|
 */
-function updateBetAmount(amountRed, amountBlue){
+function betRed(){
+  var amount = RedSelectedAmount.options[RedSelectedAmount.selectedIndex].value;
+  socket.emit('placeBet', {streamer : channel_name, team: TEAM_RED, amount: amount} );
+  $('#modal-red').modal('hide');
+}
+
+function betBlue(){
+  var amount = BlueSelectedAmount.options[BlueSelectedAmount.selectedIndex].value;
+  socket.emit('placeBet', {streamer : channel_name, team: TEAM_BLUE, amount: amount} );
+  $('#modal-blue').modal('hide');
+}
+
+function updateBetAmount(amountBlue, amountRed){
   RedBetAmount.innerHTML = amountRed;
   BlueBetAmount.innerHTML = amountBlue;
 }

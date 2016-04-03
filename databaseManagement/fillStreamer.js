@@ -21,7 +21,7 @@ var streamerList = [
     {name:"7151921",region:"na",summonerId:"70423058"},{name:"G U CK F O S U",region:"na",summonerId:"22277779"}]],
     ["Imaqtpie","imaqtpie",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg",[{name:"Imaqtpie",region:"na",summonerId:"19887289"}]],
     ["Riot","riotgames",0,"https://static-cdn.jtvnw.net/previews-ttv/live_user_riotgames-320x180.jpg"],
-    ["Iwilldominate","iwilldominate",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_iwilldominate-320x180.jpg",[{name:"IWDominate3",region:"na",summonerId:"50529339"[{name:"IWDominate3",region:"na",summonerId:"50529339"}]],
+    ["Iwilldominate","iwilldominate",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_iwilldominate-320x180.jpg",[{name:"IWDominate3",region:"na",summonerId:"50529339"},{name:"IWDominate3",region:"na",summonerId:"50529339"}]],
     ["Taour","taourrr1030",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_taourrr1030-320x180.jpg",[{name:"EagleStick",region:"euw",summonerId:"27689318"}]],
     ["Crvor","iamcrvor",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_iamcrvor-320x180.jpg",[{name:"crvor",region:"euw",summonerId:"18977877"}]],
     ["Sylrus","sylrus",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_sylrus-320x180.jpg",[{name:"Pornstar Dovah",region:"euw",summonerId:"59837265"}]],

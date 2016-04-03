@@ -48,7 +48,7 @@
 					<div class="row">
 						<!-- Bet on red -->
 						<div class="col-xs-3">
-							<button class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red" id="bet-red">Go Red !</button>
+							<button class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red">Go Red !</button>
 							<div class="text-center" style="display:none">
 								<h4>Red <span class="gold">Wins</span></h4>
 								<p>
@@ -60,10 +60,10 @@
 							<!-- Bet amount -->
 							<div class="row">
 								<div class="col-xs-6 col-sm-5 col-sm-offset-1">
-									<span id="amount-red">0</span> <i class="fa gold fa-database"></i>
+									<span id="amount-red"></span> <i class="fa gold fa-database"></i>
 								</div>
 								<div class="col-xs-6 col-sm-5" style="text-align:right;">
-									<span id="amount-blue">0</span> <i class="fa gold fa-database"></i>
+									<span id="amount-blue"></span> <i class="fa gold fa-database"></i>
 								</div>
 								<div class="col-xs-1"></div>
 							</div>
@@ -77,7 +77,7 @@
 						</div><!-- col -->
 						<!-- Bet on blue -->
 						<div class="col-xs-3">
-							<button class="btn btn-bet btn-bet-blue center-block" data-toggle="modal" data-target="#modal-blue" id="bet-blue">Go Blue !</button>
+							<button class="btn btn-bet btn-bet-blue center-block" data-toggle="modal" data-target="#modal-blue">Go Blue !</button>
 							<div class="text-center" style="display:none">
 								<h4>Blue <span class="gold">Wins</span></h4>
 								<p>
@@ -93,7 +93,7 @@
 
 		<!-- Red Team section -->
 		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left">
-			<div class="panel panel-red" style="display:none">
+			<div class="panel panel-red" id="team-red" style="display:none">
 
 				<div class="panel-heading">Red Team</div>
 				<div class="panel-body panel-body-empty">
@@ -119,7 +119,7 @@
 
 		<!-- Blue Team section -->
 		<div class="col-lg-2 col-md-2 col-xs-6 col-right">
-			<div class="panel panel-blue" style="display:none">
+			<div class="panel panel-blue" id="team-blue" style="display:none">
 
 				<div class="panel-heading">Blue Team</div>
 				<div class="panel-body panel-body-empty">
@@ -127,7 +127,7 @@
 					<ul id="blue-list" class="sortable-list">
 						{% for e in "12345" %}
 						<li>
-							<div class="champion champion-right" style="display:none">
+							<div class="champion champion-right">
 								<img class="img-background img-responsive center-block picture-blue" src="" alt="">
 								<h4><a class="summonerName-blue" href="http://www.lolking.net/" target="_blank"></a></h4>
 								<img class="rank rank-blue" src="/img/rank/diamond.png" alt="">
@@ -250,24 +250,18 @@
 
 <!-- Socket IO -->
 <script src="/socket.io/socket.io.js"></script>
-<script>
-	var socket = io();
-
-	socket.emit('room connection', '{{streamer.channelName}}');
-
-	socket.on('msg', function (data) {
-    alert(data);
-  });
-</script>
-
-<!-- Chrono -->
-<script src="/js/chrono.js"></script>
 
 <!-- Local Variable -->
 <script>
 	var channel_name = '{{streamer.channelName}}';
-	var game_ID = -1;
+	var gameID = -1;
 </script>
+
+<!-- Realtime behavior -->
+<script src="/js/stream_socket.js"></script>
+
+<!-- Chrono -->
+<script src="/js/chrono.js"></script>
 
 <!-- Quotes animation not IG -->
 <script src="/js/quotes-animation.js"></script>

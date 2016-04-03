@@ -278,7 +278,8 @@ ul.sortable-list {
   width: 100%;
   padding-bottom: 59%; }
   .champion img.img-background {
-    position: absolute; }
+    position: absolute;
+    -webkit-filter: contrast(80%); }
   .champion img.mastery {
     width: 15%;
     height: 25.42%;
@@ -294,7 +295,7 @@ ul.sortable-list {
   .champion img.rank {
     width: 18%;
     position: absolute;
-    top: 5px; }
+    top: 25%; }
   .champion h4 {
     font-size: 120%;
     position: absolute;
@@ -303,6 +304,7 @@ ul.sortable-list {
     .champion h4 a {
       color: white; }
     .champion h4 a:hover, .champion h4 a:focus {
+      color: #337AB7;
       text-decoration: none; }
 
 .champion-left {
@@ -321,7 +323,7 @@ ul.sortable-list {
   .champion-left img.summoner2 {
     right: 22%; }
   .champion-left img.rank {
-    right: 3%; }
+    left: 3%; }
   .champion-left h4 {
     left: 5px;
     text-align: left;
@@ -337,7 +339,7 @@ ul.sortable-list {
   .champion-right img.summoner2 {
     left: 22%; }
   .champion-right img.rank {
-    left: 3%; }
+    right: 3%; }
   .champion-right h4 {
     right: 5px;
     text-align: right;

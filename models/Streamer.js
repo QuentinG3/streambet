@@ -2,14 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 
-var Game = new Schema({
-  gameId : String,
-  timestamp : Number,
-  teamId : String,
-  amount100 : Number,
-  amount200 : Number,
-});
-
 var Summoner = new Schema({
   name:   String,
   region:  String,

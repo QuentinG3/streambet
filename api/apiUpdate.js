@@ -9,9 +9,11 @@ var Streamer = require('../models/Streamer')
 var Game = require('../models/Game')
 
 var streamerUpdate = require('./databaseUpdate/streamerUpdate')
+var gameUpdate = require('./databaseUpdate/gameUpdate')
 
 LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
-FINAL_MASTERIES_LIST = [6161,6162,6164,6261,6262,6263,6361,6362,6363]
+
+
 
 module.exports = {
   /*
@@ -31,71 +33,52 @@ module.exports = {
     });
 
   },
+  /*
+  Function to update the create the new game in which the streamers(summonersName) are. Only one game at a time per streamer.
+  (Also used to update timestamp that wasn't set up the first time we check the api)
+  */
   updateCurrentGames : function(){
+    //Getting the list of all streamer to lookup there summmonersName
     Streamer.find({},function(err,streamersList){
+
+      //Getting the list of champions and spells once for the whole method(static)
       LolApi.Static.getChampionList({dataById:true}, function(err,listChampion){
-      LolApi.Static.getSummonerSpellList({dataById:true}, function(err,spellList){
-      async.each(streamersList,function(streamer,callback){
-        async.each(streamer['summoners'],function(summonersName,callback){
-          Game.count({streamer:streamer['_id']},function(err,count){
-            //We update the game only if the streamer doesn't have a game already
-            if(count<1){
-              //We request the API
-              LolApi.getCurrentGame(summonersName['summonerId'],summonersName['region'], function(err,res){
-                //We check that the user is in a game
-                if(res != undefined){
-                  //We check that the user is in a ranked game(dynamic)
-                  if(res['gameQueueConfigId'] == 410){
-                    //console.log(listChampion);
-                    //We get the teamId of the summoner
-                    newGame = new Game({gameId:res['gameId'],timestamp:res['gameStartTime'],amount100:0,amount200:0,streamer:streamer['_id']})
-                    for(var i=0;i<res['participants'].length;i++){
-                      if(res['participants'][i]['summonerId'] == summonersName['summonerId']){
-                        newGame.teamId = res['participants'][i]['teamId'];
-                      }
-                    }
-                    //We get the bannedChampions
-                    var bannedChampionList = [];
-                    for(var i=0;i<res['bannedChampions'].length;i++){
-                        bannedChampionList.push({name:listChampion['data'][res['bannedChampions'][i]['championId']]['key'],teamId:res['bannedChampions'][i]['teamId']});
-                    }
-                    newGame.bannedChampions=bannedChampionList;
+        LolApi.Static.getSummonerSpellList({dataById:true}, function(err,spellList){
 
-                    //We get the players in the game
-                    var playerList = [];
-                    for(var i=0;i<res['participants'].length;i++){
-                        participant = res['participants'][i];
-                        finalMastery = -1;
-                        //Getting the masteries of the player
-                        for(var j=0;j<participant['masteries'].length;j++){
-                          mastery = participant['masteries'][j];
-                          if (FINAL_MASTERIES_LIST.indexOf(mastery['masteryId'])){
-                            finalMastery = mastery['masteryId'];
-                          }
-                        }
-                        playerList.push({summonerName:participant['summonerName'],summonerId:participant['summonerId'],teamId:participant['teamId'],
-                                          championName:listChampion['data'][participant['championId']]['key'],
-                                          spell1:spellList['data'][participant['spell1Id']]['key'],
-                                          spell2:spellList['data'][participant['spell2Id']]['key'],
-                                          rank:"Silver",
-                                          finalMasteryId:finalMastery});
-                    }
-                     newGame.players = playerList;
+          //Looping trought all the streamer and their summonersName with async method
+          async.each(streamersList,function(streamer,callback){
+            async.each(streamer['summoners'],function(summonersName,callback){
 
-                    //We create the game
-                    newGame.save(function(err){
-                      if (err) return console.error("Error when creating the game",err);
-                      console.log("newGame well saved");
-                    });
-                  }
+              //If there is a game for the streamer alreaady we don't check it
+              Game.findOne({streamer:streamer['_id']},function(err,oneGame){
+                //We update the game only if the streamer doesn't have a game already
+                if(oneGame == null){
+                  //We request the API
+                  LolApi.getCurrentGame(summonersName['summonerId'],summonersName['region'], function(err,res){
+                    gameUpdate.createNewGame(err,res,summonersName,streamer,spellList,listChampion);
+                  });
+                }
+                //If the timestamp wasn't set in the API yet we try to update it
+                else if(oneGame['timestamp'] == 0){
+                  LolApi.getCurrentGame(summonersName['summonerId'],summonersName['region'], function(err,res){
+                    gameUpdate.updateTimeStamp(err,res,oneGame);
+                  });
+
                 }
               });
-            }
+            });
           });
         });
       });
-      });
-      });
     });
+  },
+  /*Function that check the game currently in the database to see if there are over.
+  If there are done give the reward to those who bet on it and take the points from those that lose the bet
+  */
+  processBet : function(){
+    Game.find({},function(err,gameList){
+      console.log(gameList)
+    });
+
   }
 }

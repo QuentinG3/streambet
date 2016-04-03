@@ -1,4 +1,4 @@
-var Streamer = require('../../models/Streamer')
+var Game = require('../../models/Game')
 
 
 var updateNonOnlineStreamer = function(err,streamer){
@@ -35,8 +35,11 @@ var updateStreamer = function(err,streamInfo,streamer){
     }
   }
 
+
 module.exports = {
   updateNonOnlineStreamer : updateNonOnlineStreamer,
   updateOnlineStreamer : updateOnlineStreamer,
-  updateStreamer,updateStreamer
+  updateStreamer:updateStreamer
+
+
 }

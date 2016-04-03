@@ -15,7 +15,7 @@ var apiUpdate = require('./api/apiUpdate');
 
 //apiUpdate.updateStreamers();
 apiUpdate.updateCurrentGames();
-
+//apiUpdate.processBet();
 
 var app = express();
 

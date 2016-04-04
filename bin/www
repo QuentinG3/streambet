@@ -7,7 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('streambet:server');
 var http = require('http');
-
 /**
  * Get port from environment and store in Express.
  */
@@ -21,8 +20,11 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-var io = require('socket.io').listen(server);
-require('../sockets/base.js')(io);
+var io = app.io
+io.attach(server)
+
+//require('../sockets/base.js')(io);
+
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -91,4 +93,4 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-module.exports = server;
+//module.exports = server;

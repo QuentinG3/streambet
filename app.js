@@ -1,4 +1,5 @@
 var express = require('express');
+var socket_io    = require( "socket.io" );
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -11,11 +12,21 @@ var flash = require('connect-flash');
 var swig = require('swig');
 
 var routes = require('./routes/index');
-var apiRoutines = require('./api/apiRoutines');
 
-//apiRoutines.startApiRoutineLoop();
+
+var apiRoutines = require('./api/apiRoutines');
+var socketIOManagement = require('./sockets/base');
+
 
 var app = express();
+
+var io = socket_io();
+app.io = io;
+
+//Start socket io
+socketIOManagement.startSocketIO(io);
+//Starting api update routines
+apiRoutines.startApiRoutineLoop(io);
 
 //Make the app use Swig to render file
 app.engine('html', swig.renderFile);

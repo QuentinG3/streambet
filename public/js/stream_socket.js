@@ -73,6 +73,12 @@ socket.on('game', function (data) {
   //updateBet amount
   userBetTeam = data.betTeam;
   userBetAmount = data.betAmount;
+  if (userBetAmount == 0){
+    notAlreadyBetView();
+  }
+  else{
+    alreadyBetView();
+  }
   updateBetAmount(data.game.amount200, data.game.amount100);
 
   //updateGame
@@ -85,7 +91,7 @@ socket.on('game', function (data) {
 //Listening timeStamp change message
 socket.on('timeStamp', function(data){
   //update timestamp
-  updateTimeStamp(data);
+  updateTimeStamp(data.timeStamp);
 });
 
 //Listening bet change message

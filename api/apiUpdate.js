@@ -32,7 +32,6 @@ module.exports = {
       //For each streamer we request the twitch API asyncroniously.
       async.each(streamersList,function(streamer,callback){
         //Calling the api
-
         twitch("streams/"+streamer['channelName'],function(err,streamInfo){
           streamerUpdate.updateStreamer(err,streamInfo,streamer,callback);
           });
@@ -47,7 +46,7 @@ module.exports = {
   Function to update the create the new game in which the streamers(summonersName) are. Only one game at a time per streamer.
   (Also used to update timestamp that wasn't set up the first time we check the api)
   */
-  updateCurrentGames : function(callbackFinal,smallLimitAPI,bigLimitAPI){
+  updateCurrentGames : function(callbackFinal,smallLimitAPI,bigLimitAPI,io){
     //Getting the list of all streamer to lookup there summmonersName
     Streamer.find({online:true},function(err,streamersList){
       doubleLoopDebug(streamersList)
@@ -60,7 +59,7 @@ module.exports = {
             async.each(streamer['summoners'],function(summonersName,callbackSummoners){
                 doubleLoopDebug(streamer['name'] +" "+ summonersName['name']);
               //If there is a game for the streamer alreaady we don't check it
-              Game.findOne({streamer:streamer['_id']},function(err,oneGame){
+              Game.findOne({streamer:streamer['_id'],summonersName:summonersName['name']},function(err,oneGame){
                 //We update the game only if the streamer doesn't have a game already
                 if(oneGame == null){
                   debugUpdateCurrentGameDebug("No game found in DB for " + streamer['name'] +" "+ summonersName['name']);
@@ -70,7 +69,7 @@ module.exports = {
                     bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
                       debugUpdateCurrentGameDebug("Remaining requests " + remainingRequestsSmall);
                       LolApi.getCurrentGame(summonersName['summonerId'],summonersName['region'], function(err,res){
-                        gameUpdate.createNewGame(err,res,summonersName,streamer,spellList,listChampion,callbackSummoners);
+                        gameUpdate.createNewGame(err,res,summonersName,streamer,spellList,listChampion,callbackSummoners,io);
                       });
                     });
                 });
@@ -81,7 +80,7 @@ module.exports = {
                   smallLimitAPI.removeTokens(1, function(err, remainingRequestsSmall) {
                     bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
                       LolApi.getCurrentGame(summonersName['summonerId'],summonersName['region'], function(err,res){
-                        gameUpdate.updateTimeStamp(err,res,oneGame,callbackSummoners,streamer,summonersName);
+                        gameUpdate.updateTimeStamp(err,res,oneGame,callbackSummoners,streamer,summonersName,io);
                       });
                     });
                 });
@@ -105,12 +104,12 @@ module.exports = {
   /*Function that check the game currently in the database to see if there are over.
   If there are done give the reward to those who bet on it and take the points from those that lose the bet
   */
-  processBet : function(callbackFinal,smallLimitAPI,bigLimitAPI){
+  processBet : function(callbackFinal,smallLimitAPI,bigLimitAPI,io){
     Game.find({},function(err,gameList){
         async.each(gameList,function(game,callback){
           smallLimitAPI.removeTokens(1, function(err,remainingRequestsSmall) {
             bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
-              LolApi.getMatch(game['gameId'],game['region'],function(err,gameApi){
+              LolApi.getMatch(game['gameId'],false,game['region'],function(err,gameApi){
                 if(err != "Error: Error getting match: 404 Not Found" && err != null){
                   processBetDebug(err);
                 }
@@ -128,6 +127,8 @@ module.exports = {
                   //HERE PROCESS BETS....
                   Game.remove({_id:game['_id']},function(err,removed){
                     if(err) return console.error('error when deleting game',error);
+
+                    io.to(game['channelName']).emit('finishedGame',{});
                     processBetDebug("Game with id "+ game['gameId'] + " removed from database");
                     callback();
                   });
@@ -135,7 +136,7 @@ module.exports = {
                 else{
                 processBetDebug("Game with id "+ game['gameId'] + " is still running");
                 callback();
-                }
+              }
               });
             });
           });

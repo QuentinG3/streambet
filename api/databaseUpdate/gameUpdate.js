@@ -7,18 +7,19 @@ var debugUpdateCurrentGameDebug = require('debug')('debugUpdateCurrentGame');
 FINAL_MASTERIES_LIST = [6161,6162,6164,6261,6262,6263,6361,6362,6363];
 ALLOWED_QUEUE_TYPE = [4,410];
 
-  var createNewGame = function(err,res,summonersName,streamer,spellList,listChampion,callback){
+  var createNewGame = function(err,res,summonersName,streamer,spellList,listChampion,callback,io){
+
     if (err != "Error: Error getting current game: 404 Not Found" && err != null){
       debugUpdateCurrentGameDebug("Error other than 404 game no found happened when requesting api for game for "+ streamer['name'] + " " + summonersName['name'] + err);
     }
     //We check that the user is in a game
     if(res != undefined){
-      debugUpdateCurrentGameDebug("Game found for "+ streamer['name'] + " " + summonersName['name']);
+      debugUpdateCurrentGameDebug("Game found in API for "+ streamer['name'] + " " + summonersName['name']);
       //We check that the user is in a ranked game(dynamic)
       if(ALLOWED_QUEUE_TYPE.indexOf(res['gameQueueConfigId'])!= -1){
         //console.log(listChampion);
         //We get the teamId of the summoner
-        newGame = new Game({gameId:res['gameId'],timestamp:res['gameStartTime'],amount100:0,amount200:0,streamer:streamer['_id'],region:summonersName['region'],summonersName:summonersName['name']})
+        newGame = new Game({gameId:res['gameId'],bet:[],channelName:streamer['channelName'],timestamp:res['gameStartTime'],amount100:0,amount200:0,streamer:streamer['_id'],region:summonersName['region'],summonersName:summonersName['name']})
         for(var i=0;i<res['participants'].length;i++){
           var participant = res['participants'][i]
           if(participant['summonerId'] == summonersName['summonerId']){
@@ -49,7 +50,7 @@ ALLOWED_QUEUE_TYPE = [4,410];
                               championName:listChampion['data'][participant['championId']]['key'],
                               spell1:spellList['data'][participant['spell1Id']]['key'],
                               spell2:spellList['data'][participant['spell2Id']]['key'],
-                              rank:"Silver",
+                              rank:"silver",
                               finalMasteryId:finalMastery});
         }
          newGame.players = playerList;
@@ -57,6 +58,7 @@ ALLOWED_QUEUE_TYPE = [4,410];
         //We create the game
         newGame.save(function(err){
           if (err) return console.error("Error when creating the game",err);
+          io.to(streamer['channelName']).emit('game',{game: newGame, betTeam:0,betAmount:0});
           debugUpdateCurrentGameDebug("newGame well saved");
           callback();
         });
@@ -74,17 +76,18 @@ ALLOWED_QUEUE_TYPE = [4,410];
 
 
 
-  var updateTimeStamp = function(err,res,oneGame,callback,streamer,summonerName){
+  var updateTimeStamp = function(err,res,oneGame,callback,streamer,summonersName,io){
     if(err){
       callback();
-      return console.error("Error when updateing timestamp of a game (api reqeust error?)",err);
+      return console.error("Error when updating timestamp of a game (API request error?)",err);
     }
     Game.findByIdAndUpdate(oneGame['_id'],{$set : {timestamp:res['gameStartTime']}},function(err){
       if(err){
         callback();
         return console.error("error when updateing the timestamp",error);
       }
-      debugUpdateCurrentGameDebug("Updated timestamp for "+ streamer['name'] + " " + summonersName['name']);
+      io.to(streamer['channelName']).emit('timeStamp',{timeStamp: res['gameStartTime']});
+      debugUpdateCurrentGameDebug("Updated timestamp for "+ streamer['name'] + " " + summonersName['name'] + " (might still be 0)");
       callback();
     });
   }

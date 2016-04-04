@@ -81,8 +81,6 @@ startSocketIO = function (io) {
     });
   });
 
-  /* Game update */
-  //TODO
 }
 
 /* Line to emit a message to a given room */

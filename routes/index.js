@@ -28,6 +28,9 @@ router.get('/login', account.login);
 /* GET Signup page. */
 router.get('/signup', account.signup);
 
+/* POST Signup page. */
+router.post('/signup', account.registerAccount);
+
 /* GET Profil page. */
 router.get('/profil', account.profil);
 

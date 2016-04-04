@@ -31,6 +31,7 @@ var User = new Schema({
     birth_date: {type: Date, required: true}
 });
 
+// Add { password: String } to schema
 User.plugin(require('mongoose-bcrypt'));
 
 User.methods.division = function(){
@@ -56,6 +57,5 @@ User.methods.division = function(){
 		return BRONZE
   }
 }
-User.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User', User);

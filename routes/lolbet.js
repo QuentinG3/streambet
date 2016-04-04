@@ -6,7 +6,7 @@ module.exports = {
   /* Show the online lol streamer.  */
   streamers : function(req, res, next) {
     Streamer.find({online: true}, "channelName viewers preview",{ sort:{viewers : -1}}, function(err,streamerList){
-      res.render('streamers', {streamer_list: streamerList});
+      res.render('streamers', {streamer_list: streamerList, isAuthenticated: req.isAuthenticated(), user: req.user});
     });
   },
 

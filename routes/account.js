@@ -1,4 +1,5 @@
 var User = require('../models/User');
+var passport = require('passport');
 
 var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var username_regex = /^[_A-z0-9]{3,}$/;
@@ -108,24 +109,19 @@ module.exports = {
             }
 
             if(valid){
+              //Create user in db
+              var newUser = new User({name: username, username: username.toLowerCase(), password: password, email: email.toLowerCase(), birth_date: birthDate});
+              newUser.save(function(err){
+                if (err) return console.error("Error in user creation in database",err);
+                console.log("User well saved");
+                //connect user
+                passport.authenticate('local')(req, res, function () {
+                  console.log("authenticated");
+                  res.redirect('/' + req.user.username);
+                });
 
-              //Encrypt Password
-              User.encryptPassword('anotherSecret', function(err, encryptedPassword) {
-                if(err){
-                  console.log(err);
-                }else{
-                  //Create user in db
-                  var newUser = new User({name: username, username: username.toLowerCase(), password: encryptedPassword, email: email.toLowerCase(), birth_date: birthDate});
-                  newUser.save(function(err){
-                    if (err) return console.error("Error in user creation in database",err);
-                    console.log("User well saved");
-                  });
-                }
               });
-              //connect user
-              //TODO
-              //Redirect to home page
-              res.redirect('/');
+
             }else{
               //Render signup page with errors and user inputs
               res.render('signup', {

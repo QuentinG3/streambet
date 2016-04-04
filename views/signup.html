@@ -22,7 +22,8 @@
     </div>
     {% endif %}
 
-    <form data-toggle="validator" role="form" method="post" action="TODO">
+    <!-- TODO validator -->
+    <form data-toggle="validatore" role="form" method="post" name="signupForm" action="">
       <!-- Email -->
       <div class="form-group">
         <label for="inputEmail" class="control-label"><i class="fa fa-envelope gold"></i> Email</label>
@@ -80,8 +81,8 @@
           <!-- Set min and max year -->
           <script>
           var year = new Date().getFullYear();
-          document.getElementById("inputYear").setAttribute("min", year-100 )
-          document.getElementById("inputYear").setAttribute("max", year-1 )
+          document.getElementById("inputYear").setAttribute("min", year-150 )
+          document.getElementById("inputYear").setAttribute("max", year )
           </script>
 
         </div><!-- Row -->

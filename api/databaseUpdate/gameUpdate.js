@@ -9,7 +9,6 @@ ALLOWED_QUEUE_TYPE = [4,410];
 
   var createNewGame = function(err,res,summonersName,streamer,spellList,listChampion,callback){
     if (err != "Error: Error getting current game: 404 Not Found" && err != null){
-      console.log(err);
       debugUpdateCurrentGameDebug("Error other than 404 game no found happened when requesting api for game for "+ streamer['name'] + " " + summonersName['name'] + err);
     }
     //We check that the user is in a game
@@ -75,7 +74,7 @@ ALLOWED_QUEUE_TYPE = [4,410];
 
 
 
-  var updateTimeStamp = function(err,res,oneGame,callback){
+  var updateTimeStamp = function(err,res,oneGame,callback,streamer,summonerName){
     if(err){
       callback();
       return console.error("Error when updateing timestamp of a game (api reqeust error?)",err);

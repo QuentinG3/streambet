@@ -2,8 +2,6 @@
 var twitch = require("twitch.tv");
 var LolApi = require('leagueapi');
 
-
-
 var async = require("async");
 
 //Models import
@@ -110,34 +108,35 @@ module.exports = {
   processBet : function(callbackFinal,smallLimitAPI,bigLimitAPI){
     Game.find({},function(err,gameList){
         async.each(gameList,function(game,callback){
-          smallLimitAPI.removeTokens(1, function(err,remainingRequests) {
+          smallLimitAPI.removeTokens(1, function(err,remainingRequestsSmall) {
             bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
-            LolApi.getMatch(game['gameId'],game['region'],function(err,gameApi){
-              if(err != "Error: Error getting match: 404 Not Found" && err != null){
-                processBetDebug(err);
-              }
-              if(gameApi != undefined){
-                var winnerTeamId = -1;
-                for(var i =0;i<gameApi['teams'].length;i++){
-                  var team = gameApi['teams'][i];
-                  if(team['winner']){
-                    winnerTeamId = team['teamId'];
-                  }
+              LolApi.getMatch(game['gameId'],game['region'],function(err,gameApi){
+                if(err != "Error: Error getting match: 404 Not Found" && err != null){
+                  processBetDebug(err);
                 }
-                processBetDebug("Game with game id "+ game['gameId'] + " is done with winner " + winnerTeamId);
+                if(gameApi != undefined){
+                  var winnerTeamId = -1;
+                  for(var i =0;i<gameApi['teams'].length;i++){
+                    var team = gameApi['teams'][i];
+                    if(team['winner']){
+                      winnerTeamId = team['teamId'];
+                    }
+                  }
+                  processBetDebug("Game with game id "+ game['gameId'] + " is done with winner " + winnerTeamId);
 
-                //Winning team is in var winnerTeamId
-                //HERE PROCESS BETS....
-                Game.remove({_id:game['_id']},function(err,removed){
-                  if(err) return console.error('error when deleting game',error);
-                  processBetDebug("Game with id "+ game['gameId'] + " removed from database");
-                  callback();
-                });
-              }
-              else{
-              processBetDebug("Game with id "+ game['gameId'] + " is still running");
-              callback();
-              }
+                  //Winning team is in var winnerTeamId
+                  //HERE PROCESS BETS....
+                  Game.remove({_id:game['_id']},function(err,removed){
+                    if(err) return console.error('error when deleting game',error);
+                    processBetDebug("Game with id "+ game['gameId'] + " removed from database");
+                    callback();
+                  });
+                }
+                else{
+                processBetDebug("Game with id "+ game['gameId'] + " is still running");
+                callback();
+                }
+              });
             });
           });
         },function(err){

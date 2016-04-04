@@ -25,7 +25,7 @@ var updateOnlineStreamer = function(err,streamer,streamerInfo,callback){
 
 var updateStreamer = function(err,streamInfo,streamer,callback){
   if (err) return console.error("Error in twitch api request "+ err,err);
-  if(stream != null){
+  if(streamer != null){
 
     if (streamInfo['stream'] == null){
       debugUpdateStreamerDebug(streamer['channelName']+" is not online");

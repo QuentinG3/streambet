@@ -13,6 +13,9 @@ if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
 mongoose.connect(mongodb_connection_string);
 
 var streamerList = [
+
+  ["GoBGG", "gobgg", 0, "http://static-cdn.jtvnw.net/previews-ttv/live_user_gobgg-320x180.jpg",[{name:"GoB GG",region:"euw",summonerId:"18998522"}]],
+  ["SirhcEz", "SirhcEz", 0, "http://static-cdn.jtvnw.net/previews-ttv/live_user_sirhcez-320x180.jpg",[{name:"Liquid SirhcEz",region:"na",summonerId:"20526961"}]],
 	["Night Blue","Nightblue3",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_nightblue3-320x180.jpg",[{name:"Nightblue3",region:"na",summonerId:"25850956"},{name:"EU Flamingo",region:"euw",summonerId:"77348710"},{name:"NB3",region:"na",summonerId:"52839418"},{name:"NB3",region:"euw",summonerId:"52839418"}]],
 	["Good Guy Garry","GoodGuyGarry",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_goodguygarry-320x180.jpg",[{name:"Bronze 5 Haircut",region:"na",summonerId:"72720995"}]],
 	["Scarra","Scarra",0,"http://static-cdn.jtvnw.net/previews-ttv/live_user_scarra-320x180.jpg"],

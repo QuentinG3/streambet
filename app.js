@@ -11,11 +11,9 @@ var flash = require('connect-flash');
 var swig = require('swig');
 
 var routes = require('./routes/index');
-var apiUpdate = require('./api/apiUpdate');
+var apiRoutines = require('./api/apiRoutines');
 
-//apiUpdate.updateStreamers();
-//apiUpdate.updateCurrentGames();
-apiUpdate.processBet();
+apiRoutines.startApiRoutineLoop();
 
 var app = express();
 

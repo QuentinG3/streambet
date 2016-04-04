@@ -1,12 +1,20 @@
 var Game = require('../../models/Game')
 
+//debugs
+var debugUpdateCurrentGameDebug = require('debug')('debugUpdateCurrentGame');
+
+
 FINAL_MASTERIES_LIST = [6161,6162,6164,6261,6262,6263,6361,6362,6363];
 ALLOWED_QUEUE_TYPE = [4,410];
 
-  var createNewGame = function(err,res,summonersName,streamer,spellList,listChampion){
-
+  var createNewGame = function(err,res,summonersName,streamer,spellList,listChampion,callback){
+    if (err != "Error: Error getting current game: 404 Not Found" && err != null){
+      console.log(err);
+      debugUpdateCurrentGameDebug("Error other than 404 game no found happened when requesting api for game for "+ streamer['name'] + " " + summonersName['name'] + err);
+    }
     //We check that the user is in a game
     if(res != undefined){
+      debugUpdateCurrentGameDebug("Game found for "+ streamer['name'] + " " + summonersName['name']);
       //We check that the user is in a ranked game(dynamic)
       if(ALLOWED_QUEUE_TYPE.indexOf(res['gameQueueConfigId'])!= -1){
         //console.log(listChampion);
@@ -50,17 +58,36 @@ ALLOWED_QUEUE_TYPE = [4,410];
         //We create the game
         newGame.save(function(err){
           if (err) return console.error("Error when creating the game",err);
-          console.log("newGame well saved");
+          debugUpdateCurrentGameDebug("newGame well saved");
+          callback();
         });
       }
+      else{
+        debugUpdateCurrentGameDebug(streamer['name'] + " " + summonersName['name'] + " not in an allowed queue type");
+        callback();
+      }
+    }
+    else{
+    debugUpdateCurrentGameDebug("No game found in API for "+ streamer['name'] + " " + summonersName['name']);
+      callback();
     }
   }
 
 
-  var updateTimeStamp = function(err,res,oneGame){
+
+  var updateTimeStamp = function(err,res,oneGame,callback){
+    if(err){
+      callback();
+      return console.error("Error when updateing timestamp of a game (api reqeust error?)",err);
+    }
     Game.findByIdAndUpdate(oneGame['_id'],{$set : {timestamp:res['gameStartTime']}},function(err){
-      if(err) return console.error("error when updateing the timestamp",error);
-    })
+      if(err){
+        callback();
+        return console.error("error when updateing the timestamp",error);
+      }
+      debugUpdateCurrentGameDebug("Updated timestamp for "+ streamer['name'] + " " + summonersName['name']);
+      callback();
+    });
   }
 
 module.exports = {

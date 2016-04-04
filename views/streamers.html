@@ -41,7 +41,7 @@
             <p><i class="fa fa-play fa-lg"></i></p>
           </div>
           </a>
-          <p class="stream-info">{{ streamer.channel_name }} <span class="pull-right"> {{ streamer.viewers_repr }} <i class="fa fa-user"></i></span></p>
+          <p class="stream-info">{{ streamer.channel_name }} <span class="pull-right"> {{ streamer.viewersComma() }} <i class="fa fa-user"></i></span></p>
         </div>
     </div>
     {% endfor %}

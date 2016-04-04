@@ -9,6 +9,9 @@ __      __        _       _     _
 TEAM_BLUE = 200;
 TEAM_RED = 100;
 
+var userBetAmount = 0;
+var userBetTeam = 0;
+
 //Blue Team
 var BlueTeam = document.getElementById("team-blue");
 var BluePicture = document.getElementsByClassName("picture-blue");
@@ -24,6 +27,7 @@ var BlueModal = document.getElementById("modal-blue");
 var BlueBetButton = document.getElementById("button-blue");
 var BluePotential = document.getElementById("potential-blue");
 var BlueGain = document.getElementById("gain-blue");
+var BlueProgress = document.getElementById("progress-blue");
 
 //Red Team
 var RedTeam = document.getElementById("team-red");
@@ -40,6 +44,7 @@ var RedModal = document.getElementById("modal-red");
 var RedBetButton = document.getElementById("button-red");
 var RedPotential = document.getElementById("potential-red");
 var RedGain = document.getElementById("gain-red");
+var RedProgress = document.getElementById("progress-red");
 
 //Info
 var looking = document.getElementById("looking");
@@ -66,7 +71,9 @@ socket.emit('room connection', channel_name);
 //Listening game message
 socket.on('game', function (data) {
   //updateBet amount
-  updateBetAmount(data.game.amount200, data.game.amount100, data.potential200, data.potential100, data.alreadyBet);
+  userBetTeam = data.betTeam;
+  userBetAmount = data.betAmount;
+  updateBetAmount(data.game.amount200, data.game.amount100);
 
   //updateGame
   updateGame(data.game);
@@ -82,16 +89,9 @@ socket.on('timeStamp', function(data){
 });
 
 //Listening bet change message
-socket.on('allBet', function(data){
-  //updateBet
-  BlueBetAmount.innerHTML = data.amount200;
-  RedBetAmount.innerHTML = data.amount100;
-});
-
-//Listening bet change message
 socket.on('bet', function(data){
   //updateBet
-  updateBetAmount(data.amount200, data.amount100, data.potential200, data.potential100, data.alreadyBet);
+  updateBetAmount(data.amount200, data.amount100);
 });
 
 //Listening when game is finished
@@ -131,10 +131,12 @@ function notAlreadyBetView(){
 
 function betRed(){
   //Emit bet
-  var amount = RedSelectedAmount.options[RedSelectedAmount.selectedIndex].value;
+  var amount = parseInt(RedSelectedAmount.options[RedSelectedAmount.selectedIndex].value);
   socket.emit('placeBet', {streamer : channel_name, team: TEAM_RED, amount: amount} );
 
-  //Put the view in already bet mode ? TODO
+  //Put the view in already bet mode
+  userBetTeam = TEAM_RED;
+  userBetAmount = amount;
   alreadyBetView();
 
   //Dismiss modal
@@ -143,39 +145,54 @@ function betRed(){
 
 function betBlue(){
   //Emit bet
-  var amount = BlueSelectedAmount.options[BlueSelectedAmount.selectedIndex].value;
+  var amount = parseInt(BlueSelectedAmount.options[BlueSelectedAmount.selectedIndex].value);
   socket.emit('placeBet', {streamer : channel_name, team: TEAM_BLUE, amount: amount} );
 
-  //Put the view in already bet mode ? TODO
+  //Put the view in already bet mode
+  userBetTeam = TEAM_BLUE;
+  userBetAmount = amount;
   alreadyBetView();
 
   //Dismiss modal
   $('#modal-blue').modal('hide');
 }
 
-function updateBetAmount(amountBlue, amountRed, potentialBlue, potentialRed, alreadyBet){
+function updateBetAmount(amountBlue, amountRed){
 
   //Total
   BlueBetAmount.innerHTML = amountBlue;
   RedBetAmount.innerHTML = amountRed;
+  var bluePercent = 50;
+  var redPercent = 50;
 
-  //Potential gain
-  if(potentialRed > 0){
-    BlueGain.innerHTML = potentialBlue;
-    RedGain.innerHTML = "+" + potentialRed;
-  }else if(potentialBlue > 0){
-    BlueGain.innerHTML = "+" + potentialBlue;
-    RedGain.innerHTML = potentialRed;
-  }else{
-    BlueGain.innerHTML = potentialBlue;
-    RedGain.innerHTML = potentialRed;
+  if(amountBlue > 0 || amountRed > 0){
+    var bluePercent = (amountBlue/(amountBlue+amountRed))*100;
+    var redPercent = 100 - bluePercent;
   }
 
-  //Update current user bet if need be
-  if(alreadyBet){
-    alreadyBetView();
-  }else{
-    notAlreadyBetView();
+  //Progress bar
+  BlueProgress.style.width = bluePercent + "%";
+  RedProgress.style.width = redPercent + "%";
+
+  //Potential gain
+  if(userBetTeam != 0 && userBetAmount != 0){
+    if(userBetTeam == TEAM_RED){
+      if(amountBlue > 0){
+        BlueGain.innerHTML = -userBetAmount;
+      }else{
+        BlueGain.innerHTML = 0;
+      }
+      RedGain.innerHTML = Math.ceil((userBetAmount/amountRed)*amountBlue);
+    }else{
+      if(amountRed > 0){
+        RedGain.innerHTML = -userBetAmount;
+      }else{
+        RedGain.innerHTML = 0;
+      }
+      BlueGain.innerHTML = Math.ceil((userBetAmount/amountBlue)*amountRed);
+    }
+
+
   }
 
 }

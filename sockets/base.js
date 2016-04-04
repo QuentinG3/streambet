@@ -31,7 +31,7 @@ module.exports = function (io) {
             }else if(currentGame){
               //TODO also send if user already bet or not
               //Emit the current game
-              socket.emit('game', {game: currentGame, potential200: tot200, potential100: tot100, alreadyBet: false});
+              socket.emit('game', {game: currentGame, betTeam: 0, betAmount: 0});
             }
           });
         }
@@ -47,8 +47,6 @@ module.exports = function (io) {
       var amount = parseInt(msg.amount);
       var streamer = msg.streamer;
 
-      console.log(user+" bet "+amount+" on team "+team+" on the game of "+streamer);
-
       /*TODO :
       Check is user is a real user,
       Check if one of is room is the streamer room
@@ -63,21 +61,13 @@ module.exports = function (io) {
 
       var amount200 = 0;
       var amount100 = 0;
-      var potential100 = 0;
-      var potential200 = 0;
 
       if(team == 100){
-        potential100 = amount;
-        potential200 = -amount;
-
         //TODO remove this test line
         tot100 = tot100 + amount;
         amount100 = tot100;
         amount200 = tot200;
       }else{
-        potential100 = -amount;
-        potential200 = amount;
-
         //TODO remove this test line
         tot200 = tot200 + amount;
         amount200 = tot200;
@@ -85,9 +75,7 @@ module.exports = function (io) {
       }
 
       //Update new amount to the room
-      io.to(streamer).emit('allBet',{ amount200: amount200, amount100: amount100});
-      //Update potential to socket
-      socket.emit('bet',{ amount200: amount200, amount100: amount100, potential200: potential200, potential100: potential100, alreadyBet: true });
+      io.to(streamer).emit('bet',{ amount200: amount200, amount100: amount100});
     });
   });
 

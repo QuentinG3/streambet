@@ -77,17 +77,58 @@
       <!-- USER -->
       <!-- TODO Add when user is connected -->
       <hr class="visible-xs" style="margin:5px">
-        <!-- Login and signup on normal screen -->
-        <ul class="nav navbar-nav navbar-right hidden-xs">
-          <li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';" style="margin-right:8px"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
-          <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
-        </ul>
-        <!-- Login and signup on small screen -->
-        <ul class="list-inline text-center visible-xs">
-          <li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';" style="margin-right:8px"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
-          <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
-        </ul>
-      </div><!-- nav content -->
+      {% if not isAuthenticated %}
+      <!-- Login and signup on normal screen -->
+      <ul class="nav navbar-nav navbar-right hidden-xs">
+        <li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';" style="margin-right:8px"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
+        <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
+      </ul>
+      <!-- Login and signup on small screen -->
+      <ul class="list-inline text-center visible-xs">
+        <li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';" style="margin-right:8px"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
+        <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
+      </ul>
+      {% else %}
+      <!-- User informations on normal screen -->
+      <ul class="nav navbar-nav navbar-right hidden-xs">
+        <!-- Name -->
+        <li class="dropdown nav-dropdown"><a class="dropdown-toggle dropdown-username" data-toggle="dropdown" href="#">
+          <span class="username">
+            {{ user.name }}
+          </span>
+          <span class="pull-right" style="height:30px;">
+            <img src="/img/rank/{{user.division()}}.png" width="30" alt="rank">
+            <i class="fa fa-caret-down"></i>
+          </span></a>
+          <!-- Links -->
+          <ul class="dropdown-menu dropdown-menu-inverse">
+            <li {% block profil %}{% endblock %}>
+              <a href="/profil"><i class="pull-right fa fa-user fa-lg" style="padding-top:3px"></i>Profil</a>
+            </li>
+            <li>
+              <a href="/logoff"><i class="pull-right fa fa-sign-out fa-lg" style="padding-top:3px"></i>Log off</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <!-- User informations on small screen -->
+      <!-- Name -->
+      <p class="navbar-text visible-xs text-center" style="font-weight:bold;">
+        {{ user.name }}
+        <img src="/img/rank/{{user.division()}}.png" width="30" alt="rank">
+      </p>
+      <hr class="visible-xs" style="margin:5px">
+
+      <!-- Links -->
+      <ul class="nav navbar-nav navbar-right visible-xs">
+        <li {% block profil.m %}{% endblock %}>
+          <a href="/profil">Profil <i class="pull-right fa fa-user fa-lg" style="padding-top:3px"></i></a>
+        </li>
+        <li>
+          <a href="/logoff">Log off <i class="pull-right fa fa-sign-out fa-lg" style="padding-top:3px"></i></a>
+        </li>
+      </ul>
+      {% endif %}
 
     </div><!-- Container Fluid -->
   </nav>

@@ -13,7 +13,7 @@ var swig = require('swig');
 var routes = require('./routes/index');
 var apiRoutines = require('./api/apiRoutines');
 
-apiRoutines.startApiRoutineLoop();
+//apiRoutines.startApiRoutineLoop();
 
 var app = express();
 
@@ -55,10 +55,47 @@ mongoose.connect(mongodb_connection_string);
 
 
 // passport config
+var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var User = require('./models/User');
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    if(email_regex.test(username)){
+      //Get user with his username
+      User.findOne({ email: username.toLowerCase() }, function (err, user) {
+        if (err) { return done(err); }
+        if (!user) {
+          return done(null, false, { message: 'Incorrect username.' });
+        }
+        if (!user.verifyPasswordSync(password)) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+      });
+    }else{
+      //Get user with his username
+      User.findOne({ username: username.toLowerCase() }, function (err, user) {
+        if (err) { return done(err); }
+        if (!user) {
+          return done(null, false, { message: 'Incorrect username.' });
+        }
+        if (!user.verifyPasswordSync(password)) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+      });
+    }
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findOne({_id: id}, function(err, user) {
+    done(err, user);
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

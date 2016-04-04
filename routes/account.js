@@ -12,6 +12,33 @@ module.exports = {
     res.render('login', {});
   },
 
+  /* Log the user */
+  logUser : function(req, res, next) {
+    var error_list = [];
+
+    //Data
+    var username = req.body.username;
+    var password = req.body.password;
+
+    //Verficiation
+    var valid = true;
+    //username
+    if (!username || username == ""){
+      valid = false;
+      error_list.push("Enter a username.");
+    }
+    //password
+    if (!password || password == ""){
+      valid = false;
+      error_list.push("Enter a password.");
+    }
+
+    passport.authenticate('local')(req, res, function () {
+      res.redirect('/');
+    });
+
+  },
+
   //TODO : Function Signup and check if user connected or not
   /* Show signup section  */
   signup : function(req, res, next) {
@@ -69,7 +96,7 @@ module.exports = {
       //Valid birthdate
       if(birthDate.getFullYear() != parseInt(year) || birthDate.getMonth() != (parseInt(month)-1) || birthDate.getDate() != parseInt(day)){
         valid = false;
-        error_list.push("Enter a valid birthdate1.");
+        error_list.push("Enter a valid birthdate.");
       }else{
         var now = new Date();
         var tooOld = new Date(now.year-150,0,1);
@@ -113,11 +140,9 @@ module.exports = {
               var newUser = new User({name: username, username: username.toLowerCase(), password: password, email: email.toLowerCase(), birth_date: birthDate});
               newUser.save(function(err){
                 if (err) return console.error("Error in user creation in database",err);
-                console.log("User well saved");
                 //connect user
                 passport.authenticate('local')(req, res, function () {
-                  console.log("authenticated");
-                  res.redirect('/' + req.user.username);
+                  res.redirect('/');
                 });
 
               });
@@ -151,6 +176,11 @@ module.exports = {
   //TODO : check if user connected or not
   recover : function(req, res, next) {
     res.render('recover', {});
+  },
+
+  logoff : function(req, res, next) {
+    req.logout();
+    res.redirect('/');
   }
 
 }

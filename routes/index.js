@@ -25,6 +25,9 @@ router.get('/contact', base.contact);
 /* GET Login page. */
 router.get('/login', account.login);
 
+/* POST Login page. */
+router.post('/login', account.logUser);
+
 /* GET Signup page. */
 router.get('/signup', account.signup);
 
@@ -33,6 +36,9 @@ router.post('/signup', account.registerAccount);
 
 /* GET Profil page. */
 router.get('/profil', account.profil);
+
+/* GET logout page. */
+router.get('/logoff', account.logoff);
 
 /* GET Recover account page. */
 router.get('/recover', account.recover);

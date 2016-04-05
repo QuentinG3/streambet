@@ -24,12 +24,16 @@ SILVER = "silver"
 BRONZE = "bronze"
 
 var User = new Schema({
-    username: String,
-    password: String,
-    mail: String,
-    elo: Number,
-    birth_date: Date
+  name : {type: String, unique: true, required: true},
+  username: {type: String, unique: true, required: true},
+  email: {type: String, unique: true, required: true},
+  elo: {type: Number, default: DEFAULT_ELO},
+  birth_date: {type: Date, required: true}
+
 });
+
+// Add { password: String } to schema
+User.plugin(require('mongoose-bcrypt'));
 
 User.methods.division = function(){
   if (this.elo >= CHALLENGER_ELO){

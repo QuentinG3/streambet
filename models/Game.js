@@ -29,7 +29,6 @@ var Game = new Schema({
   summonersName:String,
   timestamp : Number,
   channelName: String,
-  teamId : String,
   amount100 : Number,
   amount200 : Number,
   streamer : {type: mongoose.Schema.Types.ObjectId, ref: 'Streamer'},

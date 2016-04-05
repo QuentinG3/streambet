@@ -1,4 +1,5 @@
 var User = require('../models/User');
+var Streamer = require('../models/Streamer');
 var passport = require('passport');
 
 var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
@@ -189,10 +190,14 @@ module.exports = {
 
   /* Show profil section.  */
   profil : function(req, res, next) {
-    if (!req.isAuthenticated())
+    if (!req.isAuthenticated()){
       res.redirect('/');
-    else
-      res.render('profil', {isAuthenticated: req.isAuthenticated(), user: req.user});
+    }else{
+      Streamer.find(function(err,streamer_list){
+        if(err) return console.log(err);
+          res.render('profil', {streamer_list: streamer_list, isAuthenticated: req.isAuthenticated(), user: req.user});
+      })
+    }
   },
 
   /* Recover the user password. */

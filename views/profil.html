@@ -104,7 +104,7 @@
                   </a>
                 </label>
                 <!-- TODO : good format -->
-                <p class="info">{{ user.profil.birth_date }}</p>
+                <p class="info">{{ user.birth_date }}</p>
               </div>
 
               <!-- Birth date EDIT -->
@@ -120,7 +120,7 @@
                     <!-- Day -->
                     <!-- TODO : only day -->
                     <div class="form-group col-xs-3" style="padding:0;margin:0;">
-                      <input type="number" name="day" data-error="Invalid day" min="1" max="31" class="form-control text-center" id="inputDay" placeholder="dd" style="padding:0" value="{{ user.profil.birth_date }}" required>
+                      <input type="number" name="day" data-error="Invalid day" min="1" max="31" class="form-control text-center" id="inputDay" placeholder="dd" style="padding:0" value="{{ user.birth_date }}" required>
                       <div class="help-block with-errors"></div>
                     </div>
 
@@ -129,7 +129,7 @@
                     <!-- Month -->
                     <!-- TODO : only month -->
                     <div class="form-group col-xs-3" style="padding:0;margin:0;">
-                      <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ user.profil.birth_date }}" required>
+                      <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ user.birth_date }}" required>
                       <div class="help-block with-errors"></div>
                     </div>
 
@@ -138,7 +138,7 @@
                     <!-- Year -->
                     <!-- TODO : only year -->
                     <div class="form-group col-xs-4" style="padding:0;margin:0;">
-                      <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ user.profil.birth_date }}" required>
+                      <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ user.birth_date }}" required>
                       <div class="help-block with-errors"></div>
                     </div>
 
@@ -156,7 +156,7 @@
               <!-- Elo -->
               <div class="form-group">
                 <label><i class="fa fa-trophy gold"></i>  General elo</label>
-                <p class="info">{{ user.profil.elo }}</p>
+                <p class="info">{{ user.elo }}</p>
               </div>
 
             </div><!-- col -->
@@ -166,7 +166,7 @@
               <!-- Name -->
               <div class="form-group">
                 <label><i class="fa fa-user gold"></i>  Name</label>
-                <p class="info">{{ user.profil.name }}</p>
+                <p class="info">{{ user.name }}</p>
               </div>
               <!-- Password -->
               <div class="form-group" id="infoPassword">
@@ -243,16 +243,16 @@
         <div class="col-sm-6 text-center">
           <h4 class="underline"><i class="fa fa-star gold"></i> General rank <i class="fa fa-star gold"></i></h4>
           <p style="padding-left:15px;">
-            {{ user.profil.elo }}
-            <img src="img/rank/{{user.profil.division}}.png" width="30" alt="rank">
+            {{ user.elo }}
+            <img src="img/rank/{{user.division()}}.png" width="30" alt="rank">
           </p>
         </div>
         <!-- Max rank -->
         <div class="col-sm-6 text-center">
           <h4 class="underline"><i class="fa fa-star gold"></i> Max rank <i class="fa fa-star gold"></i></h4>
           <p style="padding-left:15px;">
-            {{ user.profil.elo }}
-            <img src="img/rank/{{user.profil.division}}.png" width="30" alt="rank">
+            {{ user.elo }}
+            <img src="img/rank/{{user.division()}}.png" width="30" alt="rank">
           </p>
         </div>
       </div>
@@ -265,8 +265,8 @@
            <p class="text-center" style="width:100%;padding:0;">
             <a href="stream/{{streamer.channel_name}}">{{ streamer.name }} </a>
             <i class="fa fa-caret-right gold"></i>
-            {{ user.profil.elo }}
-            <img src="img/rank/{{user.profil.division}}.png" width="30" alt="rank">
+            {{ user.elo }}
+            <img src="img/rank/{{user.division()}}.png" width="30" alt="rank">
           </p>
         </div>
         {% endfor %}

@@ -193,7 +193,7 @@ module.exports = {
     if (!req.isAuthenticated()){
       res.redirect('/');
     }else{
-      Streamer.find(function(err,streamer_list){
+      Streamer.find({}, "channelName name",{ sort:{name : 1}},function(err,streamer_list){
         if(err) return console.log(err);
           res.render('profil', {streamer_list: streamer_list, isAuthenticated: req.isAuthenticated(), user: req.user});
       })

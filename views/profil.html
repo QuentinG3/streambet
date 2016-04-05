@@ -103,8 +103,7 @@
                     <i class="fa fa-pencil-square-o fa-lg"></i>
                   </a>
                 </label>
-                <!-- TODO : good format -->
-                <p class="info">{{ user.birth_date }}</p>
+                <p class="info">{{ user.bDay() }}</p>
               </div>
 
               <!-- Birth date EDIT -->
@@ -120,7 +119,7 @@
                     <!-- Day -->
                     <!-- TODO : only day -->
                     <div class="form-group col-xs-3" style="padding:0;margin:0;">
-                      <input type="number" name="day" data-error="Invalid day" min="1" max="31" class="form-control text-center" id="inputDay" placeholder="dd" style="padding:0" value="{{ user.birth_date }}" required>
+                      <input type="number" name="day" data-error="Invalid day" min="1" max="31" class="form-control text-center" id="inputDay" placeholder="dd" style="padding:0" value="{{ user.day() }}" required>
                       <div class="help-block with-errors"></div>
                     </div>
 
@@ -129,7 +128,7 @@
                     <!-- Month -->
                     <!-- TODO : only month -->
                     <div class="form-group col-xs-3" style="padding:0;margin:0;">
-                      <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ user.birth_date }}" required>
+                      <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ user.month() }}" required>
                       <div class="help-block with-errors"></div>
                     </div>
 
@@ -138,7 +137,7 @@
                     <!-- Year -->
                     <!-- TODO : only year -->
                     <div class="form-group col-xs-4" style="padding:0;margin:0;">
-                      <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ user.birth_date }}" required>
+                      <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ user.birth_date.getFullYear() }}" required>
                       <div class="help-block with-errors"></div>
                     </div>
 
@@ -263,7 +262,7 @@
         {% for streamer in streamer_list %}
         <div class="block-grid-item" style="padding-top:0;">
            <p class="text-center" style="width:100%;padding:0;">
-            <a href="stream/{{streamer.channel_name}}">{{ streamer.name }} </a>
+            <a href="stream/{{streamer.channelName}}">{{ streamer.name }} </a>
             <i class="fa fa-caret-right gold"></i>
             {{ user.elo }}
             <img src="img/rank/{{user.division()}}.png" width="30" alt="rank">

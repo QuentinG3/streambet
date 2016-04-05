@@ -28,7 +28,20 @@
 					<!-- Loading animation while no bet to show -->
 					<div id="looking">
 						<p class="text-center">
-							<!-- TODO summoner name -->
+							<!-- If no summoner -->
+							{% if streamer.summoners.length == 0 %}
+							<span style="color:red;">a: {{streamer}} ( no summoners registered for "{{streamer.name}}" ) </span>
+							<!-- If only 1 summoner -->
+							{% elseif streamer.summoners.length == 1 %}
+							{% for summoner in streamer.summoners %}
+							<span class="quote">{{summoner.name}} ({{summoner.region|upper}})</span>
+							{% endfor %}
+							{% else %}
+							<!-- If more than 1 summoner -->
+							{% for summoner in streamer.summoners %}
+							<span class="quotes">{{summoner.name}} ({{summoner.region|upper}})</span>
+							{% endfor %}
+							{% endif %}
 						</p>
 						<div class="spinner">
 						  <div class="double-bounce1"></div>
@@ -102,7 +115,7 @@
 						<li>
 							<div class="champion champion-left" >
 								<img class="img-background img-responsive center-block picture-red" src="" alt="">
-								<h4><a class="summonerName-red" href="http://www.lolking.net/" target="_blank"></a></h4>
+								<h4><a class="summonerName-red" title="" href="http://www.lolking.net/" target="_blank"></a></h4>
 								<img class="rank rank-red" src="" alt="">
 								<img class="mastery img-rounded mastery-red" src="" alt="">
 								<img class="summoner1 img-rounded spell1-red" src="" alt="">
@@ -128,7 +141,7 @@
 						<li>
 							<div class="champion champion-right">
 								<img class="img-background img-responsive center-block picture-blue" src="" alt="">
-								<h4><a class="summonerName-blue" href="http://www.lolking.net/" target="_blank"></a></h4>
+								<h4><a class="summonerName-blue" title="" href="http://www.lolking.net/" target="_blank"></a></h4>
 								<img class="rank rank-blue" src="" alt="">
 								<img class="mastery img-rounded mastery-blue" src="" alt="">
 								<img class="summoner1 img-rounded spell1-blue" src="" alt="">

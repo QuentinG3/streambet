@@ -20,12 +20,7 @@ ALLOWED_QUEUE_TYPE = [4,410];
         //console.log(listChampion);
         //We get the teamId of the summoner
         newGame = new Game({gameId:res['gameId'],bet:[],channelName:streamer['channelName'],timestamp:res['gameStartTime'],amount100:0,amount200:0,streamer:streamer['_id'],region:summonersName['region'],summonersName:summonersName['name']})
-        for(var i=0;i<res['participants'].length;i++){
-          var participant = res['participants'][i]
-          if(participant['summonerId'] == summonersName['summonerId']){
-            newGame.teamId = participant['teamId'];
-          }
-        }
+
         //We get the bannedChampions
         var bannedChampionList = [];
         for(var i=0;i<res['bannedChampions'].length;i++){

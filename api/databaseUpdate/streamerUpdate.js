@@ -34,16 +34,19 @@ var updateStreamer = function(err,streamInfo,streamer,callback){
     else if (streamInfo['stream']['game'] != "League of Legends"){
 
       debugUpdateStreamerDebug(streamer['channelName']+" not playing League of legends");
-      Streamer.findById(streamer['id'],updateNonOnlineStreamer(err,streamer,streamInfo,callback));
+      Streamer.findById(streamer['id'],updateNonOnlineStreamer(err,streamer,callback));
     }
     else{
       debugUpdateStreamerDebug(streamer['channelName']+" is online");
       Streamer.findById(streamer['id'],function(err,streamDb){
         updateOnlineStreamer(err,streamDb,streamInfo,callback);
       });
-      }
     }
   }
+  else{
+    callback();
+  }
+}
 
 
 module.exports = {

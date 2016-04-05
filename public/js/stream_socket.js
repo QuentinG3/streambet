@@ -275,12 +275,8 @@ function updateGame(object){
           //Set picture
           RedPicture[r].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
           //Set name
-          if(parseInt(object.streamerSummonerId) == parseInt(player[i].summonerId)){
-              RedName[r].innerHTML = '<i class="fa fa-video-camera" style="color:#6441A5;"></i> : '+player[i].summonerName;
-
-          }else{
-              RedName[r].innerHTML = player[i].summonerName;
-          }
+          RedName[r].innerHTML = player[i].summonerName;
+          RedName[r].title = player[i].summonerName;
           //Set Summoner link
           RedName[r].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
           //Set Mastery
@@ -302,11 +298,8 @@ function updateGame(object){
           //Set picture
           BluePicture[b].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
           //Set name
-          if(parseInt(object.streamerSummonerId) == parseInt(player[i].summonerId)){
-              BlueName[b].innerHTML = '<i class="fa fa-video-camera" style="color:#6441A5;"></i> : '+player[i].summonerName;
-          }else{
-              BlueName[b].innerHTML = player[i].summonerName;
-          }
+          BlueName[b].innerHTML = player[i].summonerName;
+          BlueName[b].title = player[i].summonerName;
           //Set Summoner link
           BlueName[b].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
           //Set Mastery

@@ -24,20 +24,24 @@ var updateOnlineStreamer = function(err,streamer,streamerInfo,callback){
 }
 
 var updateStreamer = function(err,streamInfo,streamer,callback){
-  if (streamInfo['stream'] == null){
-    debugUpdateStreamerDebug(streamer['channelName']+" is not online");
-    Streamer.findById(streamer['id'],updateNonOnlineStreamer(err,streamer,callback));
-    }
-  else if (streamInfo['stream']['game'] != "League of Legends"){
+  if (err) return console.error("Error in twitch api request "+ err,err);
+  if(streamer != null){
 
-    debugUpdateStreamerDebug(streamer['channelName']+" not playing League of legends");
-    Streamer.findById(streamer['id'],updateNonOnlineStreamer(err,streamer,streamInfo,callback));
-  }
-  else{
-    debugUpdateStreamerDebug(streamer['channelName']+" is online");
-    Streamer.findById(streamer['id'],function(err,streamDb){
-      updateOnlineStreamer(err,streamDb,streamInfo,callback);
-    });
+    if (streamInfo['stream'] == null){
+      debugUpdateStreamerDebug(streamer['channelName']+" is not online");
+      Streamer.findById(streamer['id'],updateNonOnlineStreamer(err,streamer,callback));
+      }
+    else if (streamInfo['stream']['game'] != "League of Legends"){
+
+      debugUpdateStreamerDebug(streamer['channelName']+" not playing League of legends");
+      Streamer.findById(streamer['id'],updateNonOnlineStreamer(err,streamer,streamInfo,callback));
+    }
+    else{
+      debugUpdateStreamerDebug(streamer['channelName']+" is online");
+      Streamer.findById(streamer['id'],function(err,streamDb){
+        updateOnlineStreamer(err,streamDb,streamInfo,callback);
+      });
+      }
     }
   }
 

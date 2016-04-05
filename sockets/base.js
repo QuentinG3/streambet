@@ -4,7 +4,9 @@ var Game = require('../models/Game');
 var tot100 = 0;
 var tot200 = 0;
 
-module.exports = function (io) {
+
+
+startSocketIO = function (io) {
 
   /* Listen on user connection */
   io.on('connection', function(socket){
@@ -83,3 +85,7 @@ module.exports = function (io) {
 
 /* Line to emit a message to a given room */
 //io.to('room name').emit('msg',{ object: 'msg' });
+
+module.exports = {
+  startSocketIO : startSocketIO
+}

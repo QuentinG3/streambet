@@ -59,7 +59,7 @@ var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var User = require('./models/User');
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    if(email_regex.test(username)){
+    if (email_regex.test(username)){
       //Get user with his username
       User.findOne({ email: username.toLowerCase() }, function (err, user) {
         if (err) { return done(err); }

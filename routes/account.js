@@ -6,10 +6,12 @@ var username_regex = /^[_A-z0-9]{3,}$/;
 
 module.exports = {
 
-  //TODO : Function login and check if user connected or not
   /* Show login section  */
   login : function(req, res, next) {
-    res.render('login', {});
+    if (!req.isAuthenticated())
+      res.render('login', {});
+    else
+      res.redirect('/');
   },
 
   /* Log the user */
@@ -33,16 +35,38 @@ module.exports = {
       error_list.push("Enter a password.");
     }
 
-    passport.authenticate('local')(req, res, function () {
-      res.redirect('/');
-    });
+    if(!valid){
+      res.render('login', {username: username, error_list: error_list});
+    }else{
+      //passport login user
+      passport.authenticate('local', function(err, user, info) {
+        //Error
+        if (err) {
+          return next(err); // will generate a 500 error
+        }
+        //Fail to log user
+        if (! user) {
+          error_list.push("Username/email or password invalid.");
+          return res.render('login', {username: username, error_list: error_list});
+        }
+        //Login user
+        req.login(user, loginErr => {
+          if (loginErr) {
+            return next(loginErr);
+          }
+          return res.redirect('/');
+        });
+      })(req, res, next);
+    }
 
   },
 
-  //TODO : Function Signup and check if user connected or not
   /* Show signup section  */
   signup : function(req, res, next) {
-    res.render('signup', {});
+    if (!req.isAuthenticated())
+      res.render('signup', {});
+    else
+      res.redirect('/');
   },
 
   /* Register a new account  */
@@ -112,10 +136,6 @@ module.exports = {
       }
     }
 
-    console.log(email + " " + username + " " + password + " " + confirm + " " + day + " " + month + " " + year);
-
-
-
     //Database Verification
     //Email and username
     User.findOne({email: email.toLowerCase()}, function(err,emailCheck){
@@ -167,17 +187,24 @@ module.exports = {
 
   },
 
-  //TODO : Check if user connected or not, and provide user info
-  /* Show profil section  */
+  /* Show profil section.  */
   profil : function(req, res, next) {
-    res.render('profil', {});
+    if (!req.isAuthenticated())
+      res.redirect('/');
+    else
+      res.render('profil', {isAuthenticated: req.isAuthenticated(), user: req.user});
   },
 
-  //TODO : check if user connected or not
+  /* Recover the user password. */
+  //TODO do the post for this section
   recover : function(req, res, next) {
-    res.render('recover', {});
+    if (!req.isAuthenticated())
+      res.render('recover', {});
+    else
+      res.redirect('/');
   },
 
+  /* Log off the user. */
   logoff : function(req, res, next) {
     req.logout();
     res.redirect('/');

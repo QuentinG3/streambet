@@ -14,7 +14,9 @@ module.exports = {
         'Explaining what streambet is',
         'Explaining what streambet could be',
         'Explain who we are and why we developped streambet'
-      ]
+      ],
+      isAuthenticated: req.isAuthenticated(),
+      user: req.user
     });
   },
 
@@ -26,19 +28,21 @@ module.exports = {
         {id:1, title: "What is streambet ?", text: "response 1"},
         {id:2, title: "Will i be able to bet real money ?", text: "response 2"},
         {id:3, title: "How does the bet works ?", text: "response 3"}
-      ]
+      ],
+      isAuthenticated: req.isAuthenticated(),
+      user: req.user
     });
   },
 
   /* Show a formulaire to contact the website admin  */
   contact : function(req, res, next) {
-    res.render('contact', {});
+    res.render('contact', {isAuthenticated: req.isAuthenticated(),user: req.user});
   },
 
   /* 404 Page not found  */
   page404 : function(req, res, next) {
     //res.status(404);
-    res.render('404', {});
+    res.render('404', {isAuthenticated: req.isAuthenticated(),user: req.user});
   }
 
 }

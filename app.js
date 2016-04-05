@@ -52,7 +52,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
 app.use('/', routes);
-
 //Database connection
 mongodb_connection_string = '127.0.0.1:27017/streambet';
 if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){

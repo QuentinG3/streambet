@@ -28,6 +28,7 @@ var entierUpdateRoutine = function(io){
     }
 },
 function(err, results) {
+  if (err) console.error("Error in entier routine "+ err,err);
     console.log("Done with whole api update routines");
     setTimeout(function(){entierUpdateRoutine(io);},INTERVAL_BETWEEN_UPDATE_SECONDS*1000);
 });

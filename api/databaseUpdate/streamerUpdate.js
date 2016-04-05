@@ -8,7 +8,7 @@ var updateNonOnlineStreamer = function(err,streamer,callback){
     streamer.online = false;
     streamer.viewers = 0;
     streamer.save(function(err){
-      if (err) throw consonle.error("Error when saving the non online streamer",err);
+      if (err) console.error("Error when saving the non online streamer",err);
       callback();
     });
 }
@@ -18,14 +18,14 @@ var updateOnlineStreamer = function(err,streamer,streamerInfo,callback){
     streamer.online = true;
     streamer.viewers = streamerInfo['stream']['viewers'];
     streamer.save(function(err){
-    if (err) throw consonle.error("Error when saving the online streamer",err);
+    if (err) console.error("Error when saving the online streamer",err);
     callback();
     });
 }
 
 var updateStreamer = function(err,streamInfo,streamer,callback){
-  if (err) return console.error("Error in twitch api request "+ err,err);
-  if(streamer != null){
+  if (err) console.error("Error in twitch api request "+ err,err);
+  if(streamInfo != null){
 
     if (streamInfo['stream'] == null){
       debugUpdateStreamerDebug(streamer['channelName']+" is not online");

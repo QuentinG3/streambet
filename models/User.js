@@ -15,13 +15,13 @@ SILVER_ELO = 900
 
 DEFAULT_ELO = 1200
 
-CHALLENGER = "challenger"
-MASTER = "master"
-DIAMOND = "diamond"
-PLATINUM = "platinum"
-GOLD = "gold"
-SILVER = "silver"
-BRONZE = "bronze"
+CHALLENGER = "CHALLENGER"
+MASTER = "MASTER"
+DIAMOND = "DIAMOND"
+PLATINUM = "PLATINUM"
+GOLD = "GOLD"
+SILVER = "SILVER"
+BRONZE = "BRONZE"
 
 var User = new Schema({
   name : {type: String, unique: true, required: true},

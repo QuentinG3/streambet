@@ -10,9 +10,9 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 var swig = require('swig');
+var session = require('express-session');
 
 var routes = require('./routes/index');
-
 
 var apiRoutines = require('./api/apiRoutines');
 var socketIOManagement = require('./sockets/base');
@@ -35,24 +35,6 @@ app.engine('html', swig.renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(require('express-session')({
-    secret: process.env.SESSION_SECRET || 'keyboard monkey',
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(flash());
-
-app.use('/', routes);
-//Database connection
 mongodb_connection_string = '127.0.0.1:27017/streambet';
 if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
   mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
@@ -62,6 +44,39 @@ if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
   process.env.OPENSHIFT_APP_NAME;
 }
 mongoose.connect(mongodb_connection_string);
+
+var MongoStore = require('connect-mongo')(session);
+var mongoS = new MongoStore({ mongooseConnection: mongoose.connection })
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'keyboard monkey',
+    resave: false,
+    saveUninitialized: false,
+    store: mongoS
+}));
+var passportSocketIo = require("passport.socketio");
+io.use(passportSocketIo.authorize({
+  cookieParser: cookieParser,       // the same middleware you registrer in express
+  key:          'connect.sid',       // the name of the cookie where express/connect stores its session_id
+  secret:       'keyboard monkey',    // the session_secret to parse the cookie
+  store:        mongoS     // we NEED to use a sessionstore. no memorystore please
+  //success:      onAuthorizeSuccess,  // *optional* callback on success - read more below
+  //fail:         onAuthorizeFail,     // *optional* callback on fail/error - read more below
+}));
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash());
+
+app.use('/', routes);
+//Database connection
 
 
 // passport config

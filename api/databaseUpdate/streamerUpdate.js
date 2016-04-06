@@ -1,7 +1,7 @@
 var Streamer = require('../../models/Streamer')
 
 //debugs
-var debugUpdateStreamerDebug = require('debug')('updateStreamer');
+var UpdateStreamerDebug = require('debug')('updateStreamer');
 
 var updateNonOnlineStreamer = function(err,streamer,callback){
     if(err) return console.error("Error in non online streamer update",err);
@@ -28,16 +28,16 @@ var updateStreamer = function(err,streamInfo,streamer,callback){
   if(streamInfo != null){
 
     if (streamInfo['stream'] == null){
-      debugUpdateStreamerDebug(streamer['channelName']+" is not online");
+      UpdateStreamerDebug(streamer['channelName']+" is not online");
       Streamer.findById(streamer['id'],updateNonOnlineStreamer(err,streamer,callback));
       }
     else if (streamInfo['stream']['game'] != "League of Legends"){
 
-      debugUpdateStreamerDebug(streamer['channelName']+" not playing League of legends");
+      UpdateStreamerDebug(streamer['channelName']+" not playing League of legends");
       Streamer.findById(streamer['id'],updateNonOnlineStreamer(err,streamer,callback));
     }
     else{
-      debugUpdateStreamerDebug(streamer['channelName']+" is online");
+      UpdateStreamerDebug(streamer['channelName']+" is online");
       Streamer.findById(streamer['id'],function(err,streamDb){
         updateOnlineStreamer(err,streamDb,streamInfo,callback);
       });

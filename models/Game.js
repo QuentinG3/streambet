@@ -1,11 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Bet = new Schema({
-  teamIdWin : String,
-  amount:Number,
-  user : {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
-});
 
 var Players = new Schema({
   summonerName: String,
@@ -29,12 +24,9 @@ var Game = new Schema({
   summonersName:String,
   timestamp : Number,
   channelName: String,
-  amount100 : Number,
-  amount200 : Number,
   streamer : {type: mongoose.Schema.Types.ObjectId, ref: 'Streamer'},
   bannedChampions :[BannedChampions],
-  players:[Players],
-  bets:[Bet]
+  players:[Players]
 });
 
 

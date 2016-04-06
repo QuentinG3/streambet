@@ -7,6 +7,8 @@ var async = require("async");
 //Models import
 var Streamer = require('../models/Streamer')
 var Game = require('../models/Game')
+var Bet = require('../models/Bet')
+var User = require('../models/User')
 
 var streamerUpdate = require('./databaseUpdate/streamerUpdate')
 var gameUpdate = require('./databaseUpdate/gameUpdate')
@@ -107,7 +109,7 @@ module.exports = {
   */
   processBet : function(callbackFinal,smallLimitAPI,bigLimitAPI,io){
     Game.find({},function(err,gameList){
-        async.each(gameList,function(game,callback){
+        async.each(gameList,function(game,callbackGame){
           smallLimitAPI.removeTokens(1, function(err,remainingRequestsSmall) {
             bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
               LolApi.getMatch(game['gameId'],false,game['region'],function(err,gameApi){
@@ -126,17 +128,68 @@ module.exports = {
 
                   //Winning team is in var winnerTeamId
                   //HERE PROCESS BETS....
-                  Game.remove({_id:game['_id']},function(err,removed){
-                    if(err) return console.error('error when deleting game',error);
+                  Bet.find({game:game['_id']},function(errorBets,allBets){
+                    totalAmount100 = 0;
+                    totalAmount200 = 0;
+                    for(var i=0;i<allBets.length;i++){
+                      oneBet = allBets[i];
+                      if(oneBet['teamIdWin'] == 100){
+                        totalAmount100 += oneBet['amount'];
+                      }
+                      else if(oneBet['teamIdWin'] == 200){
+                        totalAmount200 += oneBet['amount'];
+                      }
+                    }
 
-                    io.to(game['channelName']).emit('finishedGame',{});
-                    processBetDebug("Game with id "+ game['gameId'] + " removed from database");
-                    callback();
+                    processBetDebug("TotalAmount100 = " + totalAmount100);
+                    processBetDebug("TotalAmount200 = " + totalAmount200);
+
+                    async.each(allBets,function(singleBet,callbackBet){
+                      gainAmount = 0;
+                      amountBet = singleBet['amount'];
+                      processBetDebug("user = " + singleBet['user']);
+                      processBetDebug("amountBet = " + amountBet);
+                      processBetDebug("winnerTeamId == singleBet['teamIdWin'] " + (winnerTeamId == singleBet['teamIdWin']));
+                      processBetDebug("winnerTeamId = "+ winnerTeamId);
+                      if(winnerTeamId == singleBet['teamIdWin']){
+                        processBetDebug("winnerTeamId == 100 " + (winnerTeamId == "100"));
+                        if(winnerTeamId == "100"){
+                          gainAmount = Math.ceil((amountBet/totalAmount100)*totalAmount200);
+                        }
+                        else{
+                          gainAmount = Math.ceil((amountBet/totalAmount200)*totalAmount100);
+                        }
+                      }
+                      else{
+                        gainAmount = (amountBet*-1);
+                      }
+                      processBetDebug(gainAmount);
+                      User.update({_id:singleBet['user']},{$inc:{elo:gainAmount}},function(errorUpdateEloUser){
+                        processBetDebug("Error when updateing user : "+err);
+                        processBetDebug("Done updating User");
+                        callbackBet();
+
+                      });
+
+                    },function(errAsyncBet){
+                      //Remove bets
+                      Bet.remove({game:game['_id']},function(errorBetsRemove){
+                        processBetDebug(errorBetsRemove);
+                        processBetDebug("Bets removed");
+
+                        Game.remove({_id:game['_id']},function(err,removed){
+                          if(err) return console.error('error when deleting game',error);
+                          io.to(game['channelName']).emit('finishedGame',{winner:winnerTeamId});
+                          processBetDebug("Game with id "+ game['gameId'] + " removed from database");
+                          callbackGame();
+                        });
+                      });
+                    });
                   });
                 }
                 else{
                 processBetDebug("Game with id "+ game['gameId'] + " is still running");
-                callback();
+                callbackGame();
               }
               });
             });

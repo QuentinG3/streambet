@@ -3,6 +3,8 @@ var User = require('../models/User');
 var Game = require('../models/Game');
 var Bet = require('../models/Bet');
 
+var async = require("async");
+
 //debugs
 var debugRegisterBet = require('debug')('debugRegisterBet');
 

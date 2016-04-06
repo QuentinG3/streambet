@@ -1,6 +1,7 @@
 var User = require('../models/User');
 var Streamer = require('../models/Streamer');
 var passport = require('passport');
+var validator = require("email-validator");
 
 var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var username_regex = /^[_A-z0-9]{3,}$/;
@@ -87,7 +88,7 @@ module.exports = {
     //Verification
     var valid = true;
     //Email
-    if(!email || email == "" || !email_regex.test(email)){
+    if(!email || email == "" || !validator.validate(email)){
       valid = false;
       error_list.push("Enter a valid email.");
     }
@@ -210,7 +211,7 @@ module.exports = {
       var email = req.body.email;
 
       //Verification
-      if(!email || email == "" || !email_regex.test(email)){
+      if(!email || email == "" || !validator.validate(email)){
         valid = false;
         error_list.push("Enter a valid email.");
       }

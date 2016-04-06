@@ -22,6 +22,9 @@ router.get('/faq', base.faq);
 /* GET Contact page. */
 router.get('/contact', base.contact);
 
+/* POST Contact page. */
+router.post('/contact', base.sendContactMail);
+
 /* GET Login page. */
 router.get('/login', account.login);
 

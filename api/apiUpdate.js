@@ -20,7 +20,7 @@ var doubleLoopDebug = require('debug')('doubleLoop');
 var processBetDebug = require('debug')('processBet');
 
 LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
-
+//LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
 
 
 module.exports = {
@@ -158,7 +158,18 @@ module.exports = {
                         }
                       }
                       else{
-                        gainAmount = (amountBet*-1);
+                        if(singleBet['teamIdWin'] == "100"){
+                          if(totalAmount200 > 0)
+                            gainAmount = (amountBet*-1);
+                          else
+                            gainAmount = 0;
+                        }else{
+                          if(totalAmount100 > 0)
+                            gainAmount = (amountBet*-1);
+                          else
+                            gainAmount = 0;
+                        }
+
                       }
                       processBetDebug(gainAmount);
                       User.update({_id:singleBet['user']},{$inc:{elo:gainAmount}},function(errorUpdateEloUser){
@@ -173,7 +184,10 @@ module.exports = {
 
                         Game.remove({_id:game['_id']},function(err,removed){
                           if(err) return console.error('error when deleting game',error);
-                          io.to(game['channelName']).emit('finishedGame',{winner:winnerTeamId});
+                          io.to(game['channelName']).emit('finishedGame',{
+                            winner:winnerTeamId,
+                            amount100:totalAmount100,
+                            amount200:totalAmount200});
                           processBetDebug("Game with id "+ game['gameId'] + " removed from database");
                           callbackGame();
                         });

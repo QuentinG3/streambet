@@ -12,8 +12,8 @@ var streamerUpdate = require('./databaseUpdate/streamerUpdate')
 var gameUpdate = require('./databaseUpdate/gameUpdate')
 
 //debugs
-var debugUpdateStreamerDebug = require('debug')('updateStreamer');
-var debugUpdateCurrentGameDebug = require('debug')('updateCurrentGame');
+var UpdateStreamerDebug = require('debug')('updateStreamer');
+var UpdateCurrentGameDebug = require('debug')('updateCurrentGame');
 var doubleLoopDebug = require('debug')('doubleLoop');
 var processBetDebug = require('debug')('processBet');
 
@@ -36,7 +36,7 @@ module.exports = {
           streamerUpdate.updateStreamer(err,streamInfo,streamer,callback);
           });
         },function(err){
-          debugUpdateStreamerDebug("Done updating streamers");
+          UpdateStreamerDebug("Done updating streamers");
           callbackFinal(null, "one");
         });
     });
@@ -62,12 +62,12 @@ module.exports = {
               Game.findOne({streamer:streamer['_id'],summonersName:summonersName['name']},function(err,oneGame){
                 //We update the game only if the streamer doesn't have a game already
                 if(oneGame == null){
-                  debugUpdateCurrentGameDebug("No game found in DB for " + streamer['name'] +" "+ summonersName['name']);
+                  UpdateCurrentGameDebug("No game found in DB for " + streamer['name'] +" "+ summonersName['name']);
 
 
                   smallLimitAPI.removeTokens(1, function(err, remainingRequestsSmall) {
                     bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
-                      debugUpdateCurrentGameDebug("Remaining requests " + remainingRequestsSmall);
+                      UpdateCurrentGameDebug("Remaining requests " + remainingRequestsSmall);
                       //We request the API
                       LolApi.getCurrentGame(summonersName['summonerId'],summonersName['region'], function(err,currentGame){
                         gameUpdate.createNewGame(err,currentGame,summonersName,streamer,spellList,listChampion,callbackSummoners,io,smallLimitAPI,bigLimitAPI);
@@ -77,7 +77,7 @@ module.exports = {
                 }
                 //If the timestamp wasn't set in the API yet we try to update it
                 else if(oneGame['timestamp'] == 0){
-                  debugUpdateCurrentGameDebug("Updating timestamp for " + streamer['name']);
+                  UpdateCurrentGameDebug("Updating timestamp for " + streamer['name']);
                   smallLimitAPI.removeTokens(1, function(err, remainingRequestsSmall) {
                     bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
                       LolApi.getCurrentGame(summonersName['summonerId'],summonersName['region'], function(err,res){
@@ -87,7 +87,7 @@ module.exports = {
                 });
                 }
                 else{
-                  debugUpdateCurrentGameDebug(streamer['name'] +" "+ summonersName['name']+"already in a game in DB");
+                  UpdateCurrentGameDebug(streamer['name'] +" "+ summonersName['name']+"already in a game in DB");
                   callbackSummoners();
                 }
               });
@@ -95,7 +95,7 @@ module.exports = {
               callbackStreamer();
             });
           },function(err){
-            debugUpdateCurrentGameDebug("Done updating current games");
+            UpdateCurrentGameDebug("Done updating current games");
             callbackFinal(null, "two");
           });
         });

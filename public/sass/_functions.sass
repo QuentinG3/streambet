@@ -17,11 +17,11 @@
   background: linear-gradient($gold3, $gold1) /* Standard syntax */
 
 =gradient-lolbet2()
-  background: $gold3 /* For browsers that do not support gradients */
-  background: -webkit-linear-gradient($gold1, $gold3) /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient($gold1, $gold3) /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient($gold1, $gold3) /* For Firefox 3.6 to 15 */
-  background: linear-gradient($gold1, $gold3) /* Standard syntax */
+  background: darken($gold1,15%) /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(darken($gold3,15%), darken($gold1,15%)) /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(darken($gold3,15%), darken($gold1,15%)) /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(darken($gold3,15%), darken($gold1,15%)) /* For Firefox 3.6 to 15 */
+  background: linear-gradient(darken($gold3,15%), darken($gold1,15%)) /* Standard syntax */
 
 //Gradient bi color
 =gradient2($color1,$color2)

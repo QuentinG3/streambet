@@ -33,11 +33,11 @@ button.btn-lolbet {
   color: white; }
 
 button.btn-lolbet:hover, button.btn-lolbet:focus {
-  background: #d38b39;
-  background: -webkit-linear-gradient(#D39C2C, #d38b39);
-  background: -o-linear-gradient(#D39C2C, #d38b39);
-  background: -moz-linear-gradient(#D39C2C, #d38b39);
-  background: linear-gradient(#D39C2C, #d38b39);
+  background: #946d1f;
+  background: -webkit-linear-gradient(#9d6423, #946d1f);
+  background: -o-linear-gradient(#9d6423, #946d1f);
+  background: -moz-linear-gradient(#9d6423, #946d1f);
+  background: linear-gradient(#9d6423, #946d1f);
   color: white; }
 
 .navbar {
@@ -326,44 +326,48 @@ ul.sortable-list {
       color: #337AB7;
       text-decoration: none; }
 
-.champion-left {
-  border-bottom: solid 1px #660000; }
-  .champion-left img.img-background {
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: "FlipH"; }
-  .champion-left img.mastery {
-    left: 3%; }
-  .champion-left img.summoner1 {
-    right: 3%; }
-  .champion-left img.summoner2 {
-    right: 22%; }
-  .champion-left img.rank {
-    left: 3%; }
-  .champion-left h4 {
-    left: 5px;
-    text-align: left;
-    text-shadow: -1px 0 #660000, 0 1px #660000, 1px 0 #660000, 0 -1px #660000;
-    width: 100%; }
+.champion-left img.img-background {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH"; }
+.champion-left img.mastery {
+  left: 3%; }
+.champion-left img.summoner1 {
+  right: 3%; }
+.champion-left img.summoner2 {
+  right: 22%; }
+.champion-left img.rank {
+  left: 3%; }
+.champion-left h4 {
+  left: 5px;
+  text-align: left;
+  width: 100%; }
 
-.champion-right {
+.champion-right img.mastery {
+  right: 3%; }
+.champion-right img.summoner1 {
+  left: 3%; }
+.champion-right img.summoner2 {
+  left: 22%; }
+.champion-right img.rank {
+  right: 3%; }
+.champion-right h4 {
+  right: 5px;
+  text-align: right;
+  width: 100%; }
+
+.champion-red {
+  border-bottom: solid 1px #660000; }
+  .champion-red h4 {
+    text-shadow: -1px 0 #660000, 0 1px #660000, 1px 0 #660000, 0 -1px #660000; }
+
+.champion-blue {
   border-bottom: solid 1px #000066; }
-  .champion-right img.mastery {
-    right: 3%; }
-  .champion-right img.summoner1 {
-    left: 3%; }
-  .champion-right img.summoner2 {
-    left: 22%; }
-  .champion-right img.rank {
-    right: 3%; }
-  .champion-right h4 {
-    right: 5px;
-    text-align: right;
-    text-shadow: -1px 0 #000066, 0 1px #000066, 1px 0 #000066, 0 -1px #000066;
-    width: 100%; }
+  .champion-blue h4 {
+    text-shadow: -1px 0 #000066, 0 1px #000066, 1px 0 #000066, 0 -1px #000066; }
 
 a.lolbet {
   color: #337AB7;

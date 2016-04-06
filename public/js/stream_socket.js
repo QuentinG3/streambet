@@ -50,6 +50,8 @@ var RedProgress = document.getElementById("progress-red");
 var looking = document.getElementById("looking");
 var bet_info = document.getElementById("bet-info");
 var streamer_info = document.getElementById("streamer-info");
+var wonAmount = document.getElementById("wonAmount");
+var lostAmount = document.getElementById("lostAmount");
 
 
 /*
@@ -104,6 +106,14 @@ socket.on('bet', function(data){
 socket.on('finishedGame', function(data){
   //Process Bet
   //TODO show new total
+
+  //Won/lose amount
+  //wonAmount.innerHTML = amount;
+  //lostAmount.innerHTML = amount;
+
+  //Modal Win or Lose :
+  //$("#WinModal").modal({backdrop: false});
+  //$("#LoseModal").modal({backdrop: false});
 
   //No game view
   noGameView();

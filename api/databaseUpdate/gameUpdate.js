@@ -105,7 +105,7 @@ ALLOWED_QUEUE_TYPE = [4,410];
         return console.error("error when updateing the timestamp",error);
       }
       io.to(streamer['channelName']).emit('timeStamp',{timeStamp: currentGame['gameStartTime']});
-      debugUpdateCurrentGameDebug("Updated timestamp for "+ streamer['name'] + " " + summonersName['name'] + " (might still be 0)");
+      UpdateCurrentGameDebug("Updated timestamp for "+ streamer['name'] + " " + summonersName['name'] + " (might still be 0)");
       callback();
     });
   }

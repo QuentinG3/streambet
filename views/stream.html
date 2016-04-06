@@ -30,7 +30,7 @@
 						<p class="text-center">
 							<!-- If no summoner -->
 							{% if streamer.summoners.length == 0 %}
-							<span style="color:red;">a: {{streamer}} ( no summoners registered for "{{streamer.name}}" ) </span>
+							<span style="color:red;">( no summoners registered for "{{streamer.name}}" ) </span>
 							<!-- If only 1 summoner -->
 							{% elseif streamer.summoners.length == 1 %}
 							{% for summoner in streamer.summoners %}

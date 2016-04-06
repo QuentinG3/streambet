@@ -80,23 +80,24 @@ startSocketIO = function (io) {
       var amount = parseInt(msg.amount);
       var channelName = msg.streamer;
 
-      User.findOne(userId,function(errUser,userDb){
-        if (errUser) return io.to(channelName).emit('bet',{error:"Internal server error for user", amount200: -1, amount100: -1});
-          else if (userDb == null){
-             return socket.emit('bet',{success:false,error:"Could not find the user"});
+
+      User.findOne({_id: userId},function(errUser,userDb){
+        if (errUser) return socket.emit('betResponse',{success: false, error:"Internal server error for user"});
+          else if (!userDb){
+             return socket.emit('betResponse',{success:false,error:"Could not find the user"});
           }
           else{
            debugRegisterBet("User exists");
            Streamer.findOne({channelName: channelName},function(errStreamer,streamerDb){
              if (errStreamer) return socket.emit('betResponse',{success:false,error:"Internal server error for streamer"});
-             else if (streamerDb==null){
-               return socket.emit('betResponse',{success:false,error:"Could not find the user"});
+             else if (!streamerDb){
+               return socket.emit('betResponse',{success:false,error:"Could not find the streamer"});
              }
              else{
                debugRegisterBet("Streamer exist");
                Game.findOne({streamer:streamerDb._id},function(errGame,gameDb){
                  if (errGame) return socket.emit('betResponse',{success:false,error:"Internal server error for game"});
-                 else if (gameDb == null){
+                 else if (!gameDb){
                    return socket.emit('betResponse',{success:false,error:"This streamer has no game"});
                  }
                  else{
@@ -122,7 +123,6 @@ startSocketIO = function (io) {
                             Bet.find({game:gameDb._id,teamIdWin:100},function(errFindBet100,bet100){
                               Bet.find({game:gameDb._id,teamIdWin:200},function(errFindBet200,bet200){
                                 for(var i=0;i<bet100.length;i++){
-
                                   amount100 += bet100[i]['amount']
                                 }
                                 for(var i=0;i<bet200.length;i++){
@@ -137,18 +137,18 @@ startSocketIO = function (io) {
                         });
                       }
                         else{
-                          debugRegisterBet("User doens't have enought money to bet");
-                          io.to(channelName).emit('bet',{error:"You don't have enought money to bet", amount200: -1, amount100: -1});
+                          debugRegisterBet("You don't have that much stream coin");
+                          socket.emit('betResponse',{success:false, error:"You don't have enought money to bet"});
                         }
                       }
                       else{
-                        debugRegisterBet("Can't bet after the 5 minuts mark");
-                        io.to(channelName).emit('bet',{error:"You can't bet after the 5 minuts mark", amount200: -1, amount100: -1});
+                        debugRegisterBet("Can't bet after the 5 minuts mark.");
+                        socket.emit('betResponse',{success:false, error:"You can't bet after the 5 minuts mark"});
                       }
                    }
                    else{
-                     debugRegisterBet("The id of the winning team does not exist");
-                     io.to(channelName).emit('bet',{error:"The id of the winning team does not exist", amount200: -1, amount100: -1});
+                     debugRegisterBet("This team does not exist.");
+                     socket.emit('betResponse',{success:false, error:"The id of the winning team does not exist"});
                    }
                  /*}
                  else{

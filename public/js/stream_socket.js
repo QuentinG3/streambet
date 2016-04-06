@@ -121,8 +121,9 @@ socket.on('bet', function(data){
 socket.on('betResponse', function(data){
   //Bet accepted
   if(data.success){
-    successView();
     alreadyBetView();
+    successView();
+
   }else{
     messageErrorView(data.error);
   }
@@ -308,7 +309,6 @@ function updateBetAmount(amountBlue, amountRed){
       }
       BlueGain.innerHTML = Math.ceil((userBetAmount/amountBlue)*amountRed);
     }
-
 
   }
 

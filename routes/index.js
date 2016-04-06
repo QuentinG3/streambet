@@ -37,6 +37,9 @@ router.post('/signup', account.registerAccount);
 /* GET Profil page. */
 router.get('/profil', account.profil);
 
+/* POST Profil page. */
+router.post('/profil', account.changeProfil);
+
 /* GET logout page. */
 router.get('/logoff', account.logoff);
 

@@ -112,7 +112,7 @@ button.btn-bet-blue:hover, button.btn-bet-blue:focus {
   width: 160px; }
 
 a.dropdown-username {
-  padding: 10px 5px 10px 5px !important;
+  padding: 5px 5px 5px 5px !important;
   height: 50px; }
 
 span.username {
@@ -120,6 +120,11 @@ span.username {
   display: block;
   float: left;
   padding: 5px 0px 5px 0px !important; }
+
+div.user-overflow {
+  width: 135px;
+  overflow: hidden;
+  text-overflow: ellipsis; }
 
 .dropdown-menu-inverse {
   background-color: #222222; }
@@ -164,6 +169,18 @@ i.gold {
   background: -webkit-linear-gradient(#D39C2C, #e6d4ac, #d38b39, #eae1c9);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent; }
+
+p.small-user-text {
+  font-weight: bold;
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis; }
+
+i.user-caret {
+  top: 16.5px;
+  right: 5px;
+  position: absolute;
+  margin: 0; }
 
 body {
   font-family: body_font;
@@ -300,7 +317,9 @@ ul.sortable-list {
     font-size: 120%;
     position: absolute;
     top: -2px;
-    width: 100%; }
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; }
     .champion h4 a {
       color: white; }
     .champion h4 a:hover, .champion h4 a:focus {

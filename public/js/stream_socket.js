@@ -50,6 +50,8 @@ var RedProgress = document.getElementById("progress-red");
 var looking = document.getElementById("looking");
 var bet_info = document.getElementById("bet-info");
 var streamer_info = document.getElementById("streamer-info");
+var wonAmount = document.getElementById("wonAmount");
+var lostAmount = document.getElementById("lostAmount");
 
 
 /*
@@ -105,6 +107,14 @@ socket.on('bet', function(data){
 socket.on('finishedGame', function(data){
   //Process Bet
   //TODO show new total
+
+  //Won/lose amount
+  //wonAmount.innerHTML = amount;
+  //lostAmount.innerHTML = amount;
+
+  //Modal Win or Lose :
+  //$("#WinModal").modal({backdrop: false});
+  //$("#LoseModal").modal({backdrop: false});
 
   //No game view
   noGameView();
@@ -276,12 +286,8 @@ function updateGame(object){
           //Set picture
           RedPicture[r].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
           //Set name
-          if(parseInt(object.streamerSummonerId) == parseInt(player[i].summonerId)){
-              RedName[r].innerHTML = '<i class="fa fa-video-camera" style="color:#6441A5;"></i> : '+player[i].summonerName;
-
-          }else{
-              RedName[r].innerHTML = player[i].summonerName;
-          }
+          RedName[r].innerHTML = player[i].summonerName;
+          RedName[r].title = player[i].summonerName;
           //Set Summoner link
           RedName[r].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
           //Set Mastery
@@ -303,11 +309,8 @@ function updateGame(object){
           //Set picture
           BluePicture[b].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
           //Set name
-          if(parseInt(object.streamerSummonerId) == parseInt(player[i].summonerId)){
-              BlueName[b].innerHTML = '<i class="fa fa-video-camera" style="color:#6441A5;"></i> : '+player[i].summonerName;
-          }else{
-              BlueName[b].innerHTML = player[i].summonerName;
-          }
+          BlueName[b].innerHTML = player[i].summonerName;
+          BlueName[b].title = player[i].summonerName;
           //Set Summoner link
           BlueName[b].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
           //Set Mastery

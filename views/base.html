@@ -92,14 +92,14 @@
       <!-- User informations on normal screen -->
       <ul class="nav navbar-nav navbar-right hidden-xs">
         <!-- Name -->
-        <li class="dropdown nav-dropdown"><a class="dropdown-toggle dropdown-username" data-toggle="dropdown" href="#">
-          <span class="username">
-            {{ user.name }}
-          </span>
-          <span class="pull-right" style="height:30px;">
-            <img src="/img/rank/{{user.division()}}.png" width="30" alt="rank">
-            <i class="fa fa-caret-down"></i>
-          </span></a>
+        <li class="dropdown nav-dropdown"><a class="dropdown-toggle dropdown-username" data-toggle="dropdown" href="#" >
+            <div class="user-overflow">
+               {{ user.name }}
+              <br>
+              <span class="gold" style="font-size:80%;">{{ user.elo }} <i class="fa gold fa-database"></i></span>
+            </div>
+            <i class="pull-right fa fa-lg fa-angle-down user-caret"></i>
+          </a>
           <!-- Links -->
           <ul class="dropdown-menu dropdown-menu-inverse">
             <li {% block profil %}{% endblock %}>
@@ -113,9 +113,12 @@
       </ul>
       <!-- User informations on small screen -->
       <!-- Name -->
-      <p class="navbar-text visible-xs text-center" style="font-weight:bold;">
-        {{ user.name }}
-        <img src="/img/rank/{{user.division()}}.png" width="30" alt="rank">
+      <p class="navbar-text visible-xs text-center small-user-text">
+        <span>
+           {{ user.name }}
+          <br>
+          <span class="gold" style="font-size:80%;">{{ user.elo }} <i class="fa gold fa-database"></i></span>
+        </span>
       </p>
       <hr class="visible-xs" style="margin:5px">
 

@@ -193,10 +193,132 @@ module.exports = {
     if (!req.isAuthenticated()){
       res.redirect('/');
     }else{
-      Streamer.find(function(err,streamer_list){
+      Streamer.find({}, "channelName name",{ sort:{name : 1}},function(err,streamer_list){
         if(err) return console.log(err);
           res.render('profil', {streamer_list: streamer_list, isAuthenticated: req.isAuthenticated(), user: req.user});
       })
+    }
+  },
+
+  changeProfil : function(req, res, next) {
+    var error_list = [];
+    var valid = true;
+
+    /* Edit email */
+    if (req.body.email_edit != undefined){
+      //Data
+      var email = req.body.email;
+
+      //Verification
+      if(!email || email == "" || !email_regex.test(email)){
+        valid = false;
+        error_list.push("Enter a valid email.");
+      }
+
+      if(valid){
+        User.findOne({email: email.toLowerCase()}, function(err,emailCheck){
+          if(err) console.log(err);
+          else{
+            if(emailCheck != null && emailCheck.username != req.user.username){
+              valid = false;
+              error_list.push("This email is already taken.");
+              res.render('profil', {error_list: error_list, isAuthenticated: req.isAuthenticated, user: req.user});
+            }else{
+              //Update user
+              User.update(req.user, {email: email}, function(err, doc){
+                if(err) console.log(err)
+                else{
+                  res.redirect('/profil');
+                }
+              });
+            }
+          }
+        });
+
+      }
+    /* Edit  birthday */
+    }else if(req.body.birthdate_edit != undefined){
+      var day = req.body.day;
+      var month = req.body.month;
+      var year = req.body.year;
+      var birthDate = null;
+
+      //Birthdate
+      if(!day || !month || !year || day == "" || month == "" || year == ""){
+        valid = false;
+        error_list.push("Verify your age.");
+      }else{
+        birthDate = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
+        //Valid birthdate
+        if(birthDate.getFullYear() != parseInt(year) || birthDate.getMonth() != (parseInt(month)-1) || birthDate.getDate() != parseInt(day)){
+          valid = false;
+          error_list.push("Enter a valid birthdate.");
+        }else{
+          var now = new Date();
+          var tooOld = new Date(now.year-150,0,1);
+
+          //user between 0 and 150
+          if(birthDate.getTime() > now.getTime()){
+            valid = false;
+            error_list.push("Enter a valid birthdate.");
+          }else if(birthDate.getTime() < tooOld.getTime()){
+            valid = false;
+            error_list.push("You can't be that old.");
+          }
+        }
+      }
+
+      if(valid){
+        //update user
+        User.update(req.user, {birth_date: birthDate}, function(err, doc){
+          if(err) console.log(err)
+          else{
+            res.redirect('/profil');
+          }
+        });
+      }
+
+    /* Edit password */
+    }else if(req.body.password_edit != undefined){
+      var password = req.body.password;
+      var confirm = req.body.confirm;
+
+      //Password
+      if(!password || password == ""){
+        valid = false;
+        error_list.push("Enter a password.");
+      }else if (password.length < 3){
+        valid = false;
+        error_list.push("Your password must contain at least 3 characters.");
+      }
+      //Confirm
+      if(!confirm || confirm == ""){
+        valid = false;
+        error_list.push("Enter your password confirmation.");
+      }else if(password != confirm){
+        valid = false;
+        error_list.push("Passwords doesn't match.");
+      }
+
+      if(valid){
+        //Encrypt password
+        User.encryptPassword(password, function(err, encryptedValue) {
+        	if (!err) {
+            //Update user
+            User.update(req.user, {password: encryptedValue}, function(err, doc){
+              if(err) console.log(err)
+              else{
+                res.redirect('/profil');
+              }
+            });
+        	}
+        });
+
+      }
+    }
+
+    if(!valid){
+      res.render('profil', {error_list: error_list, isAuthenticated: req.isAuthenticated, user: req.user});
     }
   },
 

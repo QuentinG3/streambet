@@ -16,7 +16,7 @@ module.exports = {
     var name = req.params.name;
 
     //Database lookup
-    Streamer.findOne({channelName: name}, "channelName name ", function(err,streamer){
+    Streamer.findOne({channelName: name}, "channelName name summoners", function(err,streamer){
       if(err) {
         //TODO res.redirect('/404');
         var err = new Error('Not Found');

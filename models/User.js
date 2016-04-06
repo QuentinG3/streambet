@@ -35,6 +35,36 @@ var User = new Schema({
 // Add { password: String } to schema
 User.plugin(require('mongoose-bcrypt'));
 
+User.methods.bDay = function(){
+  var day = this.birth_date.getDate();
+  if (day < 10){
+    day = "0" + day.toString();
+  }
+  var month = this.birth_date.getMonth() + 1;
+  if (month < 10){
+    month = "0" + month.toString();
+  }
+  var year = this.birth_date.getFullYear();
+
+  return day + " / " + month + " / " + year;
+}
+
+User.methods.day = function(){
+  var day = this.birth_date.getDate();
+  if (day < 10){
+    day = "0" + day.toString();
+  }
+  return day;
+}
+
+User.methods.month = function(){
+  var month = this.birth_date.getMonth() + 1;
+  if (month < 10){
+    month = "0" + month.toString();
+  }
+  return month;
+}
+
 User.methods.division = function(){
   if (this.elo >= CHALLENGER_ELO){
     return CHALLENGER
@@ -58,6 +88,5 @@ User.methods.division = function(){
 		return BRONZE
   }
 }
-User.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('User', User);

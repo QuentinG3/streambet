@@ -91,7 +91,7 @@ button.btn-bet-blue:hover, button.btn-bet-blue:focus
 
 //Username
 a.dropdown-username
-  padding: 10px 5px 10px 5px !important
+  padding: 5px 5px 5px 5px !important
   height: 50px
 
 span.username
@@ -99,6 +99,11 @@ span.username
   display: block
   float: left
   padding: 5px 0px 5px 0px !important
+
+div.user-overflow
+  width: 135px
+  overflow: hidden
+  text-overflow: ellipsis
 
 //Inverse dropdown
 .dropdown-menu-inverse
@@ -140,6 +145,19 @@ span.gold
 //fa color
 i.gold
   +text-gradient($gold1,$gold2,$gold3,$gold4)
+
+p.small-user-text
+  font-weight: bold
+  overflow: hidden
+  width: 100%
+  text-overflow: ellipsis
+
+//fa user
+i.user-caret
+  top: 16.5px
+  right: 5px
+  position: absolute
+  margin: 0
 
 //Background
 body
@@ -287,6 +305,8 @@ ul.sortable-list
     position: absolute
     top: -2px
     width: 100%
+    overflow: hidden
+    text-overflow: ellipsis
 
     a
       color: white

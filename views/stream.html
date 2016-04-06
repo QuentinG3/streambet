@@ -30,7 +30,7 @@
 						<p class="text-center">
 							<!-- If no summoner -->
 							{% if streamer.summoners.length == 0 %}
-							<span style="color:red;">a: {{streamer}} ( no summoners registered for "{{streamer.name}}" ) </span>
+							<span style="color:red;">( no summoners registered for "{{streamer.name}}" ) </span>
 							<!-- If only 1 summoner -->
 							{% elseif streamer.summoners.length == 1 %}
 							{% for summoner in streamer.summoners %}
@@ -60,7 +60,7 @@
 					<div class="row">
 						<!-- Bet on red -->
 						<div class="col-xs-3">
-							<button id="button-red" data-backdrop="static" class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red">Go Red !</button>
+							<button id="button-red" class="btn btn-bet btn-bet-red center-block" onclick="redModal()">Go Red !</button>
 							<div id="potential-red" class="text-center" style="display:none">
 								<h4>Red <span class="gold">Wins</span></h4>
 								<p>
@@ -89,7 +89,7 @@
 						</div><!-- col -->
 						<!-- Bet on blue -->
 						<div class="col-xs-3">
-							<button id="button-blue" data-backdrop="static" class="btn btn-bet btn-bet-blue center-block" data-toggle="modal" data-target="#modal-blue">Go Blue !</button>
+							<button id="button-blue" class="btn btn-bet btn-bet-blue center-block" onclick="blueModal()">Go Blue !</button>
 							<div id="potential-blue" class="text-center" style="display:none">
 								<h4>Blue <span class="gold">Wins</span></h4>
 								<p>
@@ -236,13 +236,13 @@
 
 						<!-- Message window -->
 						<div id="bet-message-red" style="display:none;">
-							<div class="alert alert-danger" style="display:none;">
-							  <strong>Error!</strong> <span id="error-red"></span>
+							<div id="error-red" class="alert alert-danger" style="display:none;">
+							  <strong>Error!</strong> <span id="error-msg-red"></span>
 							</div>
-							<div class="text-center" id="success-blue">
+							<div class="text-center" id="success-red">
 								<i class="fa fa-check fa-4x gold"></i>
 							</div>
-							<button class="center-block btn btn-lolbet" data-dismiss="modal" id="dismiss-red-modal">Confirm</button>
+							<button class="center-block btn btn-lolbet" data-dismiss="modal" style="margin-top:20px;" id="dismiss-red-modal">Confirm</button>
 						</div>
 	        </div>
 	      </div>
@@ -290,13 +290,13 @@
 
 						<!-- Message window -->
 						<div id="bet-message-blue" style="display:none;">
-							<div class="alert alert-danger" style="display:none;">
-							  <strong>Error!</strong> <span id="error-blue"></span>
+							<div id="error-blue" class="alert alert-danger" style="display:none;">
+							  <strong>Error!</strong> <span id="error-msg-blue"></span>
 							</div>
 							<div class="text-center" id="success-blue">
 								<i class="fa fa-check fa-4x gold"></i>
 							</div>
-							<button class="center-block btn btn-lolbet" data-dismiss="modal" id="dismiss-blue-modal">Confirm</button>
+							<button class="center-block btn btn-lolbet" data-dismiss="modal" style="margin-top:20px;" id="dismiss-blue-modal">Confirm</button>
 						</div>
 	        </div>
 	      </div>

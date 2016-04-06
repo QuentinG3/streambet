@@ -29,6 +29,14 @@ var BluePotential = document.getElementById("potential-blue");
 var BlueGain = document.getElementById("gain-blue");
 var BlueProgress = document.getElementById("progress-blue");
 
+var BlueBody = document.getElementById("bet-body-blue");
+var BlueLoading = document.getElementById("bet-loading-blue");
+var BlueMessage = document.getElementById("bet-message-blue");
+var BlueError = document.getElementById("error-blue");
+var BlueMsgError = document.getElementById("error-msg-blue");
+var BlueSuccess = document.getElementById("success-blue");
+
+
 //Red Team
 var RedTeam = document.getElementById("team-red");
 var RedPicture = document.getElementsByClassName("picture-red");
@@ -45,6 +53,13 @@ var RedBetButton = document.getElementById("button-red");
 var RedPotential = document.getElementById("potential-red");
 var RedGain = document.getElementById("gain-red");
 var RedProgress = document.getElementById("progress-red");
+
+var RedBody = document.getElementById("bet-body-red");
+var RedLoading = document.getElementById("bet-loading-red");
+var RedMessage = document.getElementById("bet-message-red");
+var RedError = document.getElementById("error-red");
+var RedMsgError = document.getElementById("error-msg-red");
+var RedSuccess = document.getElementById("success-red");
 
 //Info
 var looking = document.getElementById("looking");
@@ -103,6 +118,17 @@ socket.on('bet', function(data){
   updateBetAmount(data.amount200, data.amount100);
 });
 
+socket.on('betResponse', function(data){
+  //Bet accepted
+  if(data.success){
+    alreadyBetView();
+    successView();
+
+  }else{
+    messageErrorView(data.error);
+  }
+});
+
 //Listening when game is finished
 socket.on('finishedGame', function(data){
   //Process Bet
@@ -146,6 +172,77 @@ function notAlreadyBetView(){
   RedPotential.style.display = 'none';
 }
 
+function bodyView(){
+  RedBody.style.display = "inherit";
+  BlueBody.style.display = "inherit";
+
+  RedLoading.style.display = "none";
+  BlueLoading.style.display = "none";
+
+  RedMessage.style.display = "none";
+  BlueMessage.style.display = "none";
+}
+
+function loadingView(){
+  RedBody.style.display = "none";
+  BlueBody.style.display = "none";
+
+  RedLoading.style.display = "inherit";
+  BlueLoading.style.display = "inherit";
+
+  RedMessage.style.display = "none";
+  BlueMessage.style.display = "none";
+}
+
+function messageErrorView(message){
+  RedBody.style.display = "none";
+  BlueBody.style.display = "none";
+
+  RedLoading.style.display = "none";
+  BlueLoading.style.display = "none";
+
+  RedMessage.style.display = "inherit";
+  BlueMessage.style.display = "inherit";
+
+  RedError.style.display = "inherit";
+  BlueError.style.display = "inherit";
+
+  RedMsgError.innerHTML = message;
+  BlueMsgError.innerHTML = message;
+
+  RedSuccess.style.display = "none";
+  BlueSuccess.style.display = "none";
+}
+
+function successView(){
+  RedBody.style.display = "none";
+  BlueBody.style.display = "none";
+
+  RedLoading.style.display = "none";
+  BlueLoading.style.display = "none";
+
+  RedMessage.style.display = "inherit";
+  BlueMessage.style.display = "inherit";
+
+  RedError.style.display = "none";
+  BlueError.style.display = "none";
+
+  RedSuccess.style.display = "inherit";
+  BlueSuccess.style.display = "inherit";
+}
+
+function redModal(){
+  bodyView();
+
+  $("#modal-red").modal({backdrop: "static"});
+}
+
+function blueModal(){
+  bodyView();
+
+  $("#modal-blue").modal({backdrop: "static"});
+}
+
 function betRed(){
   //Emit bet
   var amount = parseInt(RedSelectedAmount.options[RedSelectedAmount.selectedIndex].value);
@@ -154,10 +251,12 @@ function betRed(){
   //Put the view in already bet mode
   userBetTeam = TEAM_RED;
   userBetAmount = amount;
-  alreadyBetView();
+  //alreadyBetView();
 
-  //Dismiss modal
-  $('#modal-red').modal('hide');
+  //Modal in loading State
+  loadingView();
+
+  //Follow socket.on("betResponse");
 }
 
 function betBlue(){
@@ -168,10 +267,12 @@ function betBlue(){
   //Put the view in already bet mode
   userBetTeam = TEAM_BLUE;
   userBetAmount = amount;
-  alreadyBetView();
+  //alreadyBetView();
 
-  //Dismiss modal
-  $('#modal-blue').modal('hide');
+  //Modal in loading State
+  loadingView();
+
+  //Follow socket.on("betResponse");
 }
 
 function updateBetAmount(amountBlue, amountRed){
@@ -208,7 +309,6 @@ function updateBetAmount(amountBlue, amountRed){
       }
       BlueGain.innerHTML = Math.ceil((userBetAmount/amountBlue)*amountRed);
     }
-
 
   }
 

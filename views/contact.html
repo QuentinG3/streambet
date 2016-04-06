@@ -13,27 +13,52 @@
 
     <h2 class="text-center"><span class="gold bold">Contact</span> us</h2>
     <hr>
-    
-    <form data-toggle="validator" role="form">
+
+    {% if error_list %}
+    <div class="alert alert-danger" style="padding-left:0">
+      <ul>
+      {% for error in error_list %}
+        <li><strong>{{ error }}</strong></li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if success %}
+    <div class="alert alert-success" style="padding-left:0">
+      <ul>
+        <li><strong>We received your message. Thank you.</strong></li>
+      </ul>
+    </div>
+    {% endif %}
+
+    <form data-toggle="validator" role="form" method="post" action="">
 
       <!-- Name -->
       <div class="form-group">
         <label for="inputName" class="control-label"><i class="fa fa-user gold"></i> Name</label>
-        <input type="text" data-error="Enter your name" class="form-control" id="inputName" placeholder="Name" required>
+        <input type="text" name="name" data-minlength="3" data-error="Enter your name" class="form-control" id="inputName" placeholder="Name" value="{{ name }}" required>
         <div class="help-block with-errors"></div>
       </div>
 
       <!-- Email -->
       <div class="form-group">
         <label for="inputEmail" class="control-label"><i class="fa fa-envelope gold"></i> Email</label>
-        <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com" data-error="Enter a valid email address." required>
+        <input type="email" name="email" class="form-control" id="inputEmail" placeholder="example@email.com" data-error="Enter a valid email address." value="{{ email }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Company -->
+      <div class="form-group company">
+        <label for="inputCompany" class="control-label"><i class="fa fa-fort-awesome gold"></i> Company</label>
+        <input type="text" name="company" class="form-control" id="inputCompany" placeholder="company">
         <div class="help-block with-errors"></div>
       </div>
 
       <!-- Message -->
       <div class="form-group">
         <label for="inputMessage" class="control-label"><i class="fa fa-align-left gold"></i> Message</label>
-        <textarea type="text" data-error="Enter your message" rows="4" class="form-control" id="inputMessage" placeholder="Enter your message" required></textarea>
+        <textarea type="text" name="message" data-minlength="15" data-error="Enter your message" rows="4" class="form-control" id="inputMessage" placeholder="Enter your message" required>{{ message }}</textarea>
         <div class="help-block with-errors"></div>
       </div>
 

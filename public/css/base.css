@@ -490,6 +490,9 @@ ul.nodeco {
 .close, .close:hover, .close:focus {
   color: white; }
 
+div.company {
+  display: none; }
+
 footer {
   background-color: #222222;
   border-top: solid 1px #080808;

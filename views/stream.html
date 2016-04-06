@@ -60,7 +60,7 @@
 					<div class="row">
 						<!-- Bet on red -->
 						<div class="col-xs-3">
-							<button id="button-red" class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red">Go Red !</button>
+							<button id="button-red" data-backdrop="static" class="btn btn-bet btn-bet-red center-block" data-toggle="modal" data-target="#modal-red">Go Red !</button>
 							<div id="potential-red" class="text-center" style="display:none">
 								<h4>Red <span class="gold">Wins</span></h4>
 								<p>
@@ -89,7 +89,7 @@
 						</div><!-- col -->
 						<!-- Bet on blue -->
 						<div class="col-xs-3">
-							<button id="button-blue" class="btn btn-bet btn-bet-blue center-block" data-toggle="modal" data-target="#modal-blue">Go Blue !</button>
+							<button id="button-blue" data-backdrop="static" class="btn btn-bet btn-bet-blue center-block" data-toggle="modal" data-target="#modal-blue">Go Blue !</button>
 							<div id="potential-blue" class="text-center" style="display:none">
 								<h4>Blue <span class="gold">Wins</span></h4>
 								<p>
@@ -165,42 +165,85 @@
 |_|  |_|\___/ \__,_|\__,_|_|
 -->
 
+		<!-- Win modal -->
+		<div id="WinModal" class="modal" data-easein="bounceIn" tabindex="-1" role="dialog" aria-labelledby="WinAnimation" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h3 class=" text-center modal-title"><span class="gold">Congrat</span>ulation !</h3>
+					</div>
+					<div class="modal-body">
+						<h4 class="text-center">You won <span class="gold" id="wonAmount"></span> <i class="fa fa-database gold"></i> !</h4>
+						<button class="center-block btn btn-lolbet" style="margin-top:15px;" data-dismiss="modal" aria-hidden="true">Ok !</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Lose modal -->
+		<div id="LoseModal" class="modal" data-easein="slideDownIn" tabindex="-1" role="dialog" aria-labelledby="LoseAnimation" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h3 class=" text-center modal-title"><span class="gold">Oh</span> no ...</h3>
+					</div>
+					<div class="modal-body">
+						<h4 class="text-center">You lost <span class="gold" id="lostAmount"></span> <i class="fa fa-database gold"></i></h4>
+						<button class="center-block btn btn-lolbet" style="margin-top:15px;" data-dismiss="modal" aria-hidden="true">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 
 	<!-- Red Modal -->
-	  <div class="modal" id="modal-red" role="dialog">
-	    <div class="modal-dialog modal-sm">
+		<div class="modal" id="modal-red" role="dialog">
+			<div class="modal-dialog modal-sm">
 
 	      <!-- Modal content-->
 	      <div class="modal-content modal-content-red">
 	        <div class="modal-header modal-header-red">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
 	          <h4 class="modal-title">Bet on Red</h4>
 	        </div>
 	        <div class="modal-body">
-				<div id="red-bet-body">
-					<div class="form-group center-block text-center" style="max-width:100px;">
-						<label for="amount-red">Amount:</label>
-						<select class="form-control" id="select-red">
-							{% for x in bet_range %}
-							<option value="{{x}}">{{x}}</option>
-							{% endfor %}
-						</select>
-					</div>
+						<!-- Bet window -->
+						<div id="bet-body-red">
+							<div class="form-group center-block text-center" style="max-width:100px;">
+								<label for="amount-red">Amount:</label>
+								<select class="form-control" id="select-red">
+									{% for x in bet_range %}
+									<option value="{{x}}">{{x}}</option>
+									{% endfor %}
+								</select>
+							</div>
 
-				  <ul class="list-inline text-center">
-				  	<li><button class="btn btn-lolbet" onclick="betRed()">Confirm</button></li>
-				  	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-red-modal">Cancel</button></li>
-				  </ul>
-				</div>
-				<div id="red-bet-loading" style="display:none;">
-					<div class="spinner">
-					  <div class="double-bounce1"></div>
-					  <div class="double-bounce2"></div>
-					</div>
-				</div>
-				<div id="red-bet-message" style="display:none;">
+						  <ul class="list-inline text-center">
+						  	<li><button class="btn btn-lolbet" onclick="betRed()">Confirm</button></li>
+						  	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-red-modal">Cancel</button></li>
+						  </ul>
+						</div>
 
-				</div>
+						<!-- Loading window -->
+						<div id="bet-loading-red" style="display:none;">
+							<div class="spinner">
+							  <div class="double-bounce1"></div>
+							  <div class="double-bounce2"></div>
+							</div>
+						</div>
+
+						<!-- Message window -->
+						<div id="bet-message-red" style="display:none;">
+							<div class="alert alert-danger" style="display:none;">
+							  <strong>Error!</strong> <span id="error-red"></span>
+							</div>
+							<div class="text-center" id="success-blue">
+								<i class="fa fa-check fa-4x gold"></i>
+							</div>
+							<button class="center-block btn btn-lolbet" data-dismiss="modal" id="dismiss-red-modal">Confirm</button>
+						</div>
 	        </div>
 	      </div>
 
@@ -216,35 +259,45 @@
 	      <!-- Modal content-->
 	      <div class="modal-content modal-content-blue">
 	        <div class="modal-header modal-header-blue">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
 	          <h4 class="modal-title">Bet on Blue</h4>
 	        </div>
 	        <div class="modal-body">
-	        	<div id="blue-bet-body">
+						<!-- Bet window -->
+	        	<div id="bet-body-blue">
 	        		<div class="form-group center-block text-center" style="max-width:100px;">
-						<label for="amount-blue">Amount:</label>
-						<select class="form-control" id="select-blue">
-							{% for x in bet_range %}
-							<option value="{{x}}">{{x}}</option>
-							{% endfor %}
-						</select>
-					</div>
+								<label for="amount-blue">Amount:</label>
+								<select class="form-control" id="select-blue">
+									{% for x in bet_range %}
+									<option value="{{x}}">{{x}}</option>
+									{% endfor %}
+								</select>
+							</div>
 
 		          <ul class="list-inline text-center">
-			      	<li><button class="btn btn-lolbet" onclick="betBlue()">Confirm</button></li>
-			      	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-blue-modal">Cancel</button></li>
-			      </ul>
+				      	<li><button class="btn btn-lolbet" onclick="betBlue()">Confirm</button></li>
+				      	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-blue-modal">Cancel</button></li>
+				      </ul>
 	        	</div>
 
-				<div id="blue-bet-loading" style="display:none;">
-					<div class="spinner">
-					  <div class="double-bounce1"></div>
-					  <div class="double-bounce2"></div>
-					</div>
-				</div>
-				<div id="blue-bet-message" style="display:none;">
+						<!-- Loading window -->
+						<div id="bet-loading-blue" style="display:none;">
+							<div class="spinner">
+							  <div class="double-bounce1"></div>
+							  <div class="double-bounce2"></div>
+							</div>
+						</div>
 
-				</div>
+						<!-- Message window -->
+						<div id="bet-message-blue" style="display:none;">
+							<div class="alert alert-danger" style="display:none;">
+							  <strong>Error!</strong> <span id="error-blue"></span>
+							</div>
+							<div class="text-center" id="success-blue">
+								<i class="fa fa-check fa-4x gold"></i>
+							</div>
+							<button class="center-block btn btn-lolbet" data-dismiss="modal" id="dismiss-blue-modal">Confirm</button>
+						</div>
 	        </div>
 	      </div>
 
@@ -259,7 +312,6 @@
 
 
 {% block JS %}
-
 <!-- Socket IO -->
 <script src="/socket.io/socket.io.js"></script>
 
@@ -280,4 +332,9 @@
 <!-- Sortable Jquery -->
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="/js/sortable.js"></script>
+
+<!-- Win and Lose animation -->
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js'></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js"></script>
+<script type="text/javascript" src="/js/modal-animation.js"></script>
 {% endblock %}

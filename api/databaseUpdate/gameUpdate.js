@@ -76,7 +76,13 @@ ALLOWED_QUEUE_TYPE = [4,410];
               //We create the game
               newGame.save(function(err){
                 if (err) return console.error("Error when creating the game",err);
-                io.to(streamer['channelName']).emit('game',{game: newGame, betTeam:0,betAmount:0});
+                io.to(streamer['channelName']).emit('game',{
+                  game: newGame,
+                  betTeam:0,
+                  betAmount:0,
+                  amount100:0,
+                  amount200:0
+                });
                 UpdateCurrentGameDebug("newGame well saved");
                 callback();
               });

@@ -11,8 +11,9 @@ ALLOWED_QUEUE_TYPE = [4,410];
 
   var createNewGame = function(err,currentGame,summonersName,streamer,spellList,listChampion,callback,io,smallLimitAPI,bigLimitAPI){
 
-    if (err != "Error:  Error getting current game: 404 Not Found" && err != null){
+    if (err != "Error: Error getting current game: 404 Not Found" && err != null){
       UpdateCurrentGameDebug("Error other than 404 game no found happened when requesting api for game for "+ streamer['name'] + " " + summonersName['name'] + err);
+
     }
     //We check that the user is in a game
     if(currentGame != undefined){

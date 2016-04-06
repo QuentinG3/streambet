@@ -3,8 +3,6 @@ var User = require('../models/User');
 var Game = require('../models/Game');
 var Bet = require('../models/Bet');
 
-var async = require("async");
-
 //debugs
 var debugRegisterBet = require('debug')('debugRegisterBet');
 
@@ -82,6 +80,7 @@ startSocketIO = function (io) {
       var amount = parseInt(msg.amount);
       var channelName = msg.streamer;
 
+
       User.findOne(userId,function(errUser,userDb){
         if (errUser) return io.to(channelName).emit('bet',{error:"Internal server error for user", amount200: -1, amount100: -1});
           else if (userDb == null){
@@ -108,7 +107,7 @@ startSocketIO = function (io) {
                      //CHECK timestamp
                      if(team == 100 || team == 200){
                        //TODO CHANGE TIMESTAMP
-                       if(timeSinceBeginning > MILLISTOBET){
+                       if(timeSinceBeginning < MILLISTOBET){
                          debugRegisterBet("Timestamp under 5 minuts");
                         //CHECK if user has enought money
                         if(userDb.elo >= amount){

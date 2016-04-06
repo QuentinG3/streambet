@@ -147,12 +147,9 @@ module.exports = {
                     async.each(allBets,function(singleBet,callbackBet){
                       gainAmount = 0;
                       amountBet = singleBet['amount'];
-                      processBetDebug("user = " + singleBet['user']);
-                      processBetDebug("amountBet = " + amountBet);
-                      processBetDebug("winnerTeamId == singleBet['teamIdWin'] " + (winnerTeamId == singleBet['teamIdWin']));
-                      processBetDebug("winnerTeamId = "+ winnerTeamId);
+                      processBetDebug("AmountBet = " + amountBet);
+                      processBetDebug("teamIdWin = " + singleBet['teamIdWin']);
                       if(winnerTeamId == singleBet['teamIdWin']){
-                        processBetDebug("winnerTeamId == 100 " + (winnerTeamId == "100"));
                         if(winnerTeamId == "100"){
                           gainAmount = Math.ceil((amountBet/totalAmount100)*totalAmount200);
                         }
@@ -165,8 +162,6 @@ module.exports = {
                       }
                       processBetDebug(gainAmount);
                       User.update({_id:singleBet['user']},{$inc:{elo:gainAmount}},function(errorUpdateEloUser){
-                        processBetDebug("Error when updateing user : "+err);
-                        processBetDebug("Done updating User");
                         callbackBet();
 
                       });
@@ -174,7 +169,6 @@ module.exports = {
                     },function(errAsyncBet){
                       //Remove bets
                       Bet.remove({game:game['_id']},function(errorBetsRemove){
-                        processBetDebug(errorBetsRemove);
                         processBetDebug("Bets removed");
 
                         Game.remove({_id:game['_id']},function(err,removed){

@@ -1,3 +1,4 @@
+/* jshint moz : true*/
 /*
 __      __        _       _     _
 \ \    / /       (_)     | |   | |
@@ -24,7 +25,7 @@ var RightSpell1 = document.getElementsByClassName("spell1-right");
 var RightSpell2 = document.getElementsByClassName("spell2-right");
 var RightName = document.getElementsByClassName("summonerName-right");
 var RightRank = document.getElementsByClassName("rank-right");
-var RightChampion = document.getElementsByClassName("champion-right")
+var RightChampion = document.getElementsByClassName("champion-right");
 
 var BlueBetAmount = document.getElementById("amount-blue");
 var BlueSelectedAmount = document.getElementById("select-blue");
@@ -53,7 +54,7 @@ var LeftSpell1 = document.getElementsByClassName("spell1-left");
 var LeftSpell2 = document.getElementsByClassName("spell2-left");
 var LeftName = document.getElementsByClassName("summonerName-left");
 var LeftRank = document.getElementsByClassName("rank-left");
-var LeftChampion = document.getElementsByClassName("champion-left")
+var LeftChampion = document.getElementsByClassName("champion-left");
 
 var RedBetAmount = document.getElementById("amount-red");
 var RedSelectedAmount = document.getElementById("select-red");
@@ -104,7 +105,7 @@ socket.on('game', function (data) {
   userBetTeam = data.betTeam;
   userBetAmount = data.betAmount;
 
-  if (userBetAmount == 0){
+  if (userBetAmount === 0){
     notAlreadyBetView();
   }
   else{
@@ -367,8 +368,8 @@ function updateBetAmount(amountBlue, amountRed){
   var redPercent = 50;
 
   if(amountBlue > 0 || amountRed > 0){
-    var bluePercent = (amountBlue/(amountBlue+amountRed))*100;
-    var redPercent = 100 - bluePercent;
+    bluePercent = (amountBlue/(amountBlue+amountRed))*100;
+    redPercent = 100 - bluePercent;
   }
 
   //Progress bar
@@ -376,7 +377,7 @@ function updateBetAmount(amountBlue, amountRed){
   LeftProgress.style.width = redPercent + "%";
 
   //Potential gain
-  if(userBetTeam != 0 && userBetAmount != 0){
+  if(userBetTeam !== 0 && userBetAmount !== 0){
     if(userBetTeam == TEAM_LEFT){
       if(amountBlue > 0){
         RightGain.innerHTML = -userBetAmount;
@@ -439,10 +440,10 @@ function blueRight(){
 
   //Champion
   for (var i = 0; i < RightChampion.length; i++) {
-    RightChampion[i].className = "champion champion-right champion-blue"
+    RightChampion[i].className = "champion champion-right champion-blue";
   }
-  for (var i = 0; i < LeftChampion.length; i++) {
-    LeftChampion[i].className = "champion champion-left champion-red"
+  for (i = 0; i < LeftChampion.length; i++) {
+    LeftChampion[i].className = "champion champion-left champion-red";
   }
 }
 
@@ -475,10 +476,10 @@ function blueLeft(){
 
   //Champion
   for (var i = 0; i < RightChampion.length; i++) {
-    RightChampion[i].className = "champion champion-right champion-red"
+    RightChampion[i].className = "champion champion-right champion-red";
   }
-  for (var i = 0; i < LeftChampion.length; i++) {
-    LeftChampion[i].className = "champion champion-left champion-blue"
+  for (i = 0; i < LeftChampion.length; i++) {
+    LeftChampion[i].className = "champion champion-left champion-blue";
   }
 }
 
@@ -524,7 +525,7 @@ function inGameView(){
 
 function updateGame(object){
   //Start chrono
-  updateTimeStamp(object.timestamp)
+  updateTimeStamp(object.timestamp);
 
   //Update current game
   var player = object.players;
@@ -557,7 +558,7 @@ function updateGame(object){
           LeftSpell1[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
           LeftSpell2[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
           //Set rank
-          LeftRank[r].src = "/img/rank/"+player[i].rank+".png"
+          LeftRank[r].src = "/img/rank/"+player[i].rank+".png";
           r++;
       }
 
@@ -580,7 +581,7 @@ function updateGame(object){
           RightSpell1[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
           RightSpell2[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
           //Set rank
-          RightRank[b].src = "/img/rank/"+player[i].rank+".png"
+          RightRank[b].src = "/img/rank/"+player[i].rank+".png";
           b++;
       }
   }

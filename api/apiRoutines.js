@@ -13,7 +13,7 @@ var riotAPILimitSmall = new RateLimiter(REQUEST_PER_SMALL, WAIT_SECONDS_SMALL*10
 var riotAPILimitBig = new RateLimiter(REQUEST_PER_BIG, WAIT_SECONDS_BIG*1000);
 
 
-INTERVAL_BETWEEN_UPDATE_SECONDS = 10;
+INTERVAL_BETWEEN_UPDATE_SECONDS = 5;
 //var io;
 var entierUpdateRoutine = function(io){
   async.series({
@@ -22,10 +22,10 @@ var entierUpdateRoutine = function(io){
     },
     two: function(callbackFinal){
       apiUpdate.updateCurrentGames(callbackFinal,riotAPILimitSmall,riotAPILimitBig,io);
-    },
+    }/*,
     three: function(callbackFinal){
       apiUpdate.processBet(callbackFinal,riotAPILimitSmall,riotAPILimitBig,io);
-    }
+    }*/
 },
 function(err, results) {
   if (err) console.error("Error in entier routine "+ err,err);

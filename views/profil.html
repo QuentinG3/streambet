@@ -2,6 +2,14 @@
 
 <!-- Title -->
 {% block title %}Profil{% endblock %}
+{% block ogtitle %}Profil{% endblock %}
+
+<!-- Description -->
+{% block description %}Check out and modify your personnal information!{% endblock %}
+{% block ogdescription %}Check out and modify your personnal information!{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}profil{% endblock %}
 
 <!-- Nav -->
 {% block profil %}class="active"{% endblock %}
@@ -14,7 +22,7 @@
   <!-- Content -->
   <div class="content-box">
 
-    <h2 class="text-center"><span class="gold bold">General</span> informations</h2>
+    <h1 class="text-center"><span class="gold bold">General</span> informations</h1>
     <hr>
 
     {% if error_list %}

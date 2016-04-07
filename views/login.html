@@ -2,6 +2,14 @@
 
 <!-- Title -->
 {% block title %}Login{% endblock %}
+{% block ogtitle %}Login{% endblock %}
+
+<!-- Description -->
+{% block description %}Login into StreamBet and bet on your favorite league of legends streamers!{% endblock %}
+{% block ogdescription %}Login into StreamBet and bet on your favorite league of legends streamers!{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}login{% endblock %}
 
 <!-- Content -->
 {% block content %}
@@ -9,7 +17,7 @@
 
   <div class="content-box center-box" id="contentbox">
 
-    <h2 class="text-center"><span class="gold bold">Log</span>in</h2>
+    <h1 class="text-center"><span class="gold bold">Log</span>in</h1>
     <hr>
 
     {% if error_list %}

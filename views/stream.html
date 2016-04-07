@@ -2,6 +2,10 @@
 
 <!-- Title -->
 {% block title %}{{streamer.channelName}}{% endblock %}
+{% block ogtitle %}{{streamer.channelName}}{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}stream/{{streamer.channelName}}{% endblock %}
 
 <!-- Content -->
 {% block content %}

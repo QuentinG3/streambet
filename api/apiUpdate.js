@@ -38,12 +38,14 @@ module.exports = {
       .then(function(channelNameList) {
 
         //Execute asyncEach to featch data on each channelName
-        var asyncEachPromise = Q.denodeify(async.each);
-        return asyncEachPromise(channelNameList, function(channelNameObj, callbackChannelName) {
+        var asyncEachNoCallback = Q.denodeify(async.each);
+        return asyncEachNoCallback(channelNameList, function(channelNameObj, callbackChannelName) {
 
           //Fetach data from twitch API from the channelName
           var channelName = channelNameObj.channelname;
           var twitchPromise = Q.denodeify(twitch);
+
+
           twitchPromise("streams/" + channelName)
             .then(function(streamData) {
               streamerUpdate.updateStreamer(streamData, channelName, callbackChannelName);
@@ -68,6 +70,37 @@ module.exports = {
   (Also used to update timestamp that wasn't set up the first time we check the api)
   */
   updateCurrentGames: function(callbackFinal, smallLimitAPI, bigLimitAPI, io) {
+    var summonersOfOnlineStreamersPromise = database.summoners.getSummonerOfOnlineStreamers();
+
+    var championListNoCallback = Q.denodeify(LolApi.Static.getChampionList);
+    var championListPromise = championListNoCallback({dataById: true});
+
+    var SpellListNoCallback = Q.denodeify(LolApi.Static.getSummonerSpellList);
+    var SpellListPromise = SpellListNoCallback({dataById: true});
+
+
+    summonersOfOnlineStreamersPromise.then(function(summonersOfOnlineStreamersList){
+      console.log(summonersOfOnlineStreamersList);
+      //Execute asyncEach loop throught the summoners of onlineStreamerList
+      var asyncEachPromise = Q.denodeify(async.each);
+      return asyncEachPromise(summonersOfOnlineStreamersList,updateCurrentGameForSummoners);
+    })
+    .then(function(){
+      UpdateCurrentGameDebug("Done with updateCurrentGame");
+      callbackFinal();
+    })
+    .catch(function(onlineStreamerError){
+      UpdateCurrentGameDebug(onlineStreamerError);
+      callbackFinal();
+    });
+
+    var updateCurrentGameForSummoners = function(summonerOfOnlineStreamer,callbackSummonerOfOnlineStreamer){
+      console.log(summonerOfOnlineStreamer);
+      callbackSummonerOfOnlineStreamer();
+    };
+
+
+    /*
     //Getting the list of all streamer to lookup there summmonersName
     Streamer.find({
       online: true
@@ -129,7 +162,7 @@ module.exports = {
           });
         });
       });
-    });
+    });*/
   },
   /*Function that check the game currently in the database to see if there are over.
   If there are done give the reward to those who bet on it and take the points from those that lose the bet

@@ -2,9 +2,29 @@ var User = require('../models/User');
 var Streamer = require('../models/Streamer');
 var passport = require('passport');
 var validator = require("email-validator");
+var https = require('https');
 
 var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var username_regex = /^[_A-z0-9]{3,}$/;
+
+const CAPTCHA_API_KEY = "6LdS0hwTAAAAAApkTHy8_QmUbcapYk6LwDJ2BExD";
+
+function verifyRecaptcha(key, callback) {
+        https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + CAPTCHA_API_KEY + "&response=" + key, function(res) {
+                var data = "";
+                res.on('data', function (chunk) {
+                        data += chunk.toString();
+                });
+                res.on('end', function() {
+                        try {
+                                var parsedData = JSON.parse(data);
+                                callback(parsedData.success);
+                        } catch (e) {
+                                callback(false);
+                        }
+                });
+        });
+}
 
 module.exports = {
 
@@ -75,6 +95,8 @@ module.exports = {
   registerAccount : function(req, res, next) {
     var error_list = [];
 
+
+
     //Data
     var email = req.body.email;
     var username = req.body.username;
@@ -138,54 +160,73 @@ module.exports = {
       }
     }
 
-    //Database Verification
-    //Email and username
-    User.findOne({email: email.toLowerCase()}, function(err,emailCheck){
-      if(err){
-        console.log(err);
-      }else{
-        User.findOne({username: username.toLowerCase()}, function(err,usernameCheck){
+    //Verify captcha
+    verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
+      if (success) {
+        //Database Verification
+        //Email and username
+        User.findOne({email: email.toLowerCase()}, function(err,emailCheck){
           if(err){
             console.log(err);
           }else{
-            if(emailCheck != null){
-              valid = false;
-              error_list.push("This email is already taken.");
-            }
-            if(usernameCheck != null){
-              valid = false;
-              error_list.push("This username is already taken.");
-            }
+            User.findOne({username: username.toLowerCase()}, function(err,usernameCheck){
+              if(err){
+                console.log(err);
+              }else{
+                if(emailCheck != null){
+                  valid = false;
+                  error_list.push("This email is already taken.");
+                }
+                if(usernameCheck != null){
+                  valid = false;
+                  error_list.push("This username is already taken.");
+                }
 
-            if(valid){
-              //Create user in db
-              var newUser = new User({name: username, username: username.toLowerCase(), password: password, email: email.toLowerCase(), birth_date: birthDate});
-              newUser.save(function(err){
-                if (err) return console.error("Error in user creation in database",err);
-                //connect user
-                passport.authenticate('local')(req, res, function () {
-                  res.redirect('/');
-                });
+                if(valid){
+                  //Create user in db
+                  var newUser = new User({name: username, username: username.toLowerCase(), password: password, email: email.toLowerCase(), birth_date: birthDate});
+                  newUser.save(function(err){
+                    if (err) return console.error("Error in user creation in database",err);
+                    //connect user
+                    passport.authenticate('local')(req, res, function () {
+                      res.redirect('/');
+                    });
 
-              });
+                  });
 
-            }else{
-              //Render signup page with errors and user inputs
-              res.render('signup', {
-                error_list: error_list,
-                email: email,
-                username: username,
-                password: password,
-                confirm: confirm,
-                day: day,
-                month: month,
-                year: year
-              });
-            }
+                }else{
+                  //Render signup page with errors and user inputs
+                  res.render('signup', {
+                    error_list: error_list,
+                    email: email,
+                    username: username,
+                    password: password,
+                    confirm: confirm,
+                    day: day,
+                    month: month,
+                    year: year
+                  });
+                }
+              }
+            });
           }
+        });
+      } else {
+        error_list.push("The captcha failed.");
+        res.render('signup', {
+          error_list: error_list,
+          email: email,
+          username: username,
+          password: password,
+          confirm: confirm,
+          day: day,
+          month: month,
+          year: year
         });
       }
     });
+
+
 
   },
 

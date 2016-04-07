@@ -369,6 +369,12 @@ ul.sortable-list {
   .champion-blue h4 {
     text-shadow: -1px 0 #000066, 0 1px #000066, 1px 0 #000066, 0 -1px #000066; }
 
+div.twitch-chat {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 0; }
+
 a.lolbet {
   color: #337AB7;
   font-weight: bold; }

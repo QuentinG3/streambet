@@ -16,7 +16,10 @@ var NON_STREAMER_TEAM = 0;
 var userBetAmount = 0;
 var userBetTeam = 0;
 
+var chat_open = false;
+
 //Right Team
+var RightBlock = document.getElementById("block-right");
 var RightTeam = document.getElementById("team-right");
 var RightTeamName = document.getElementById("team-name-right");
 var RightPicture = document.getElementsByClassName("picture-right");
@@ -27,14 +30,16 @@ var RightName = document.getElementsByClassName("summonerName-right");
 var RightRank = document.getElementsByClassName("rank-right");
 var RightChampion = document.getElementsByClassName("champion-right");
 
-var BlueBetAmount = document.getElementById("amount-blue");
-var BlueSelectedAmount = document.getElementById("select-blue");
-var BlueModal = document.getElementById("modal-blue");
 var RightBetButton = document.getElementById("button-right");
 var RightPotential = document.getElementById("potential-right");
 var RightTeamColor = document.getElementById("team-color-right");
 var RightGain = document.getElementById("gain-right");
 var RightProgress = document.getElementById("progress-right");
+
+//Blue Modal
+var BlueBetAmount = document.getElementById("amount-blue");
+var BlueSelectedAmount = document.getElementById("select-blue");
+var BlueModal = document.getElementById("modal-blue");
 
 var BlueConnection = document.getElementById("bet-connect-blue");
 var BlueBody = document.getElementById("bet-body-blue");
@@ -46,6 +51,7 @@ var BlueSuccess = document.getElementById("success-blue");
 
 
 //Left Team
+var LeftBlock = document.getElementById("block-left");
 var LeftTeam = document.getElementById("team-left");
 var LeftTeamName = document.getElementById("team-name-left");
 var LeftPicture = document.getElementsByClassName("picture-left");
@@ -56,14 +62,16 @@ var LeftName = document.getElementsByClassName("summonerName-left");
 var LeftRank = document.getElementsByClassName("rank-left");
 var LeftChampion = document.getElementsByClassName("champion-left");
 
-var RedBetAmount = document.getElementById("amount-red");
-var RedSelectedAmount = document.getElementById("select-red");
-var RedModal = document.getElementById("modal-red");
 var LeftBetButton = document.getElementById("button-left");
 var LeftPotential = document.getElementById("potential-left");
 var LeftTeamColor = document.getElementById("team-color-left");
 var LeftGain = document.getElementById("gain-left");
 var LeftProgress = document.getElementById("progress-left");
+
+//Red Modal
+var RedBetAmount = document.getElementById("amount-red");
+var RedSelectedAmount = document.getElementById("select-red");
+var RedModal = document.getElementById("modal-red");
 
 var RedConnection = document.getElementById("bet-connect-red");
 var RedBody = document.getElementById("bet-body-red");
@@ -208,6 +216,209 @@ socket.on('finishedGame', function(data){
 |____/ \___|\__|
 */
 
+function redModal(){
+  if(!isAuthenticated){
+    connectView();
+  }else{
+    bodyView();
+  }
+  $("#modal-red").modal({backdrop: "static"});
+}
+
+function blueModal(){
+  if(!isAuthenticated){
+    connectView();
+  }else{
+    bodyView();
+  }
+  $("#modal-blue").modal({backdrop: "static"});
+}
+
+function betRed(){
+  //Emit bet
+  var amount = parseInt(RedSelectedAmount.options[RedSelectedAmount.selectedIndex].value);
+  socket.emit('placeBet', {streamer : channel_name, team: NON_STREAMER_TEAM, amount: amount} );
+
+  //Put the view in already bet mode
+  userBetTeam = NON_STREAMER_TEAM;
+  userBetAmount = amount;
+  //alreadyBetView();
+
+  //Modal in loading State
+  loadingView();
+
+  //Follow socket.on("betResponse");
+}
+
+function betBlue(){
+  //Emit bet
+  var amount = parseInt(BlueSelectedAmount.options[BlueSelectedAmount.selectedIndex].value);
+  socket.emit('placeBet', {streamer : channel_name, team: STREAMER_TEAM, amount: amount} );
+
+  //Put the view in already bet mode
+  userBetTeam = STREAMER_TEAM;
+  userBetAmount = amount;
+  //alreadyBetView();
+
+  //Modal in loading State
+  loadingView();
+
+  //Follow socket.on("betResponse");
+}
+
+function updateBetAmount(amountBlue, amountRed){
+
+  //Total
+  BlueBetAmount.innerHTML = amountBlue;
+  RedBetAmount.innerHTML = amountRed;
+  var bluePercent = 50;
+  var redPercent = 50;
+
+  if(amountBlue > 0 || amountRed > 0){
+    bluePercent = (amountBlue/(amountBlue+amountRed))*100;
+    redPercent = 100 - bluePercent;
+  }
+
+  //Progress bar
+  RightProgress.style.width = bluePercent + "%";
+  LeftProgress.style.width = redPercent + "%";
+
+  //Potential gain
+  if(userBetTeam !== 0 && userBetAmount !== 0){
+    if(userBetTeam == TEAM_LEFT){
+      if(amountBlue > 0){
+        RightGain.innerHTML = -userBetAmount;
+      }else{
+        RightGain.innerHTML = 0;
+      }
+      LeftGain.innerHTML = Math.ceil((userBetAmount/amountRed)*amountBlue);
+    }else{
+      if(amountRed > 0){
+        LeftGain.innerHTML = -userBetAmount;
+      }else{
+        LeftGain.innerHTML = 0;
+      }
+      RightGain.innerHTML = Math.ceil((userBetAmount/amountBlue)*amountRed);
+    }
+
+  }
+
+}
+
+
+/*
+ _____                         _    _           _       _
+/ ____|                       | |  | |         | |     | |
+| |  __  __ _ _ __ ___   ___  | |  | |_ __   __| | __ _| |_ ___
+| | |_ |/ _` | '_ ` _ \ / _ \ | |  | | '_ \ / _` |/ _` | __/ _ \
+| |__| | (_| | | | | | |  __/ | |__| | |_) | (_| | (_| | ||  __/
+\_____|\__,_|_| |_| |_|\___|  \____/| .__/ \__,_|\__,_|\__\___|
+                                   | |
+                                   |_|
+*/
+function updateTimeStamp(data){
+  //Start chrono
+  if(data > 0){
+      chronoStart(data);
+  }else{
+      chronoReset();
+  }
+}
+
+function updateGame(object){
+  //Start chrono
+  updateTimeStamp(object.timestamp);
+
+  //Update current game
+  var player = object.players;
+  var bannedChamp = object.bannedChampions;
+
+  //Update streamer info
+  streamer_info.innerHTML = "- " + object.summonersName + " (" + object.region+")";
+
+  //Champion index
+  var r = 0;
+  var b = 0;
+
+  for (var i = 0; i < player.length; i++) {
+      //Red team
+      if(player[i].teamId == TEAM_LEFT){
+          //Set picture
+          LeftPicture[r].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
+          //Set name
+          LeftName[r].innerHTML = player[i].summonerName;
+          LeftName[r].title = player[i].summonerName;
+          //Set Summoner link
+          LeftName[r].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
+          //Set Mastery
+          if(player[i].finalMasteryId < 0){
+              LeftMastery[r].src = "/static/lolbet/img/no-mastery.png";
+          }else{
+              LeftMastery[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/"+player[i].finalMasteryId+".png";
+          }
+          //Set spell1 spell2
+          LeftSpell1[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
+          LeftSpell2[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
+          //Set rank
+          LeftRank[r].src = "/img/rank/"+player[i].rank+".png";
+          r++;
+      }
+
+      //Blue team
+      if(player[i].teamId == TEAM_RIGHT){
+          //Set picture
+          RightPicture[b].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
+          //Set name
+          RightName[b].innerHTML = player[i].summonerName;
+          RightName[b].title = player[i].summonerName;
+          //Set Summoner link
+          RightName[b].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
+          //Set Mastery
+          if(player[i].finalMasteryId < 0){
+              RightMaster[b].src = "/static/lolbet/img/no-mastery.png";
+          }else{
+              RightMaster[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/"+player[i].finalMasteryId+".png";
+          }
+          //Set spell1 spell2
+          RightSpell1[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
+          RightSpell2[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
+          //Set rank
+          RightRank[b].src = "/img/rank/"+player[i].rank+".png";
+          b++;
+      }
+  }
+
+  //Update Streamer team TODO
+  STREAMER_TEAM = 100;
+  NON_STREAMER_TEAM = 200;
+
+  //Update View
+  if (STREAMER_TEAM == TEAM_LEFT){
+    blueLeft();
+  }else{
+    blueRight();
+  }
+
+}
+
+
+/*
+__      ___
+\ \    / (_)
+ \ \  / / _  _____      __
+  \ \/ / | |/ _ \ \ /\ / /
+   \  /  | |  __/\ V  V /
+    \/   |_|\___| \_/\_/
+*/
+
+
+function twitchChat(url){
+  newwindow=window.open(url,'','height=600,width=400');
+	if (window.focus) {
+    newwindow.focus();
+  }
+}
+
 function alreadyBetView(){
   RightBetButton.style.display = 'none';
   LeftBetButton.style.display = 'none';
@@ -309,106 +520,36 @@ function connectView(){
   BlueMessage.style.display = "none";
 }
 
-function redModal(){
-  if(!isAuthenticated){
-    connectView();
-  }else{
-    bodyView();
-  }
-  $("#modal-red").modal({backdrop: "static"});
+function noGameView(){
+  //Team invisible
+  RightTeam.style.display = "none";
+  LeftTeam.style.display = "none";
+
+  //Looking visible
+  looking.style.display = "inherit";
+
+  //Bet-info invisible
+  bet_info.style.display = "none";
+
+  //Streamer-info invisible
+  streamer_info.style.display = "none";
 }
 
-function blueModal(){
-  if(!isAuthenticated){
-    connectView();
-  }else{
-    bodyView();
-  }
-  $("#modal-blue").modal({backdrop: "static"});
-}
+function inGameView(){
+  //Team visible
+  RightTeam.style.display = "inherit";
+  LeftTeam.style.display = "inherit";
 
-function betRed(){
-  //Emit bet
-  var amount = parseInt(RedSelectedAmount.options[RedSelectedAmount.selectedIndex].value);
-  socket.emit('placeBet', {streamer : channel_name, team: NON_STREAMER_TEAM, amount: amount} );
+  //Looking invisible
+  looking.style.display = "none";
 
-  //Put the view in already bet mode
-  userBetTeam = NON_STREAMER_TEAM;
-  userBetAmount = amount;
-  //alreadyBetView();
+  //Bet-info visible
+  bet_info.style.display = "inherit";
 
-  //Modal in loading State
-  loadingView();
-
-  //Follow socket.on("betResponse");
-}
-
-function betBlue(){
-  //Emit bet
-  var amount = parseInt(BlueSelectedAmount.options[BlueSelectedAmount.selectedIndex].value);
-  socket.emit('placeBet', {streamer : channel_name, team: STREAMER_TEAM, amount: amount} );
-
-  //Put the view in already bet mode
-  userBetTeam = STREAMER_TEAM;
-  userBetAmount = amount;
-  //alreadyBetView();
-
-  //Modal in loading State
-  loadingView();
-
-  //Follow socket.on("betResponse");
-}
-
-function updateBetAmount(amountBlue, amountRed){
-
-  //Total
-  BlueBetAmount.innerHTML = amountBlue;
-  RedBetAmount.innerHTML = amountRed;
-  var bluePercent = 50;
-  var redPercent = 50;
-
-  if(amountBlue > 0 || amountRed > 0){
-    bluePercent = (amountBlue/(amountBlue+amountRed))*100;
-    redPercent = 100 - bluePercent;
-  }
-
-  //Progress bar
-  RightProgress.style.width = bluePercent + "%";
-  LeftProgress.style.width = redPercent + "%";
-
-  //Potential gain
-  if(userBetTeam !== 0 && userBetAmount !== 0){
-    if(userBetTeam == TEAM_LEFT){
-      if(amountBlue > 0){
-        RightGain.innerHTML = -userBetAmount;
-      }else{
-        RightGain.innerHTML = 0;
-      }
-      LeftGain.innerHTML = Math.ceil((userBetAmount/amountRed)*amountBlue);
-    }else{
-      if(amountRed > 0){
-        LeftGain.innerHTML = -userBetAmount;
-      }else{
-        LeftGain.innerHTML = 0;
-      }
-      RightGain.innerHTML = Math.ceil((userBetAmount/amountBlue)*amountRed);
-    }
-
-  }
+  //Streamer-info visible
+  streamer_info.style.display = "inline-block";
 
 }
-
-
-/*
- _____                         _    _           _       _
-/ ____|                       | |  | |         | |     | |
-| |  __  __ _ _ __ ___   ___  | |  | |_ __   __| | __ _| |_ ___
-| | |_ |/ _` | '_ ` _ \ / _ \ | |  | | '_ \ / _` |/ _` | __/ _ \
-| |__| | (_| | | | | | |  __/ | |__| | |_) | (_| | (_| | ||  __/
-\_____|\__,_|_| |_| |_|\___|  \____/| .__/ \__,_|\__,_|\__\___|
-                                   | |
-                                   |_|
-*/
 
 function blueRight(){
   /* Bet button */
@@ -481,120 +622,4 @@ function blueLeft(){
   for (i = 0; i < LeftChampion.length; i++) {
     LeftChampion[i].className = "champion champion-left champion-blue";
   }
-}
-
-function updateTimeStamp(data){
-  //Start chrono
-  if(data > 0){
-      chronoStart(data);
-  }else{
-      chronoReset();
-  }
-}
-
-function noGameView(){
-  //Team invisible
-  RightTeam.style.display = "none";
-  LeftTeam.style.display = "none";
-
-  //Looking visible
-  looking.style.display = "inherit";
-
-  //Bet-info invisible
-  bet_info.style.display = "none";
-
-  //Streamer-info invisible
-  streamer_info.style.display = "none";
-}
-
-function inGameView(){
-  //Team visible
-  RightTeam.style.display = "inherit";
-  LeftTeam.style.display = "inherit";
-
-  //Looking invisible
-  looking.style.display = "none";
-
-  //Bet-info visible
-  bet_info.style.display = "inherit";
-
-  //Streamer-info visible
-  streamer_info.style.display = "inline-block";
-
-}
-
-function updateGame(object){
-  //Start chrono
-  updateTimeStamp(object.timestamp);
-
-  //Update current game
-  var player = object.players;
-  var bannedChamp = object.bannedChampions;
-
-  //Update streamer info
-  streamer_info.innerHTML = "- " + object.summonersName + " (" + object.region+")";
-
-  //Champion index
-  var r = 0;
-  var b = 0;
-
-  for (var i = 0; i < player.length; i++) {
-      //Red team
-      if(player[i].teamId == TEAM_LEFT){
-          //Set picture
-          LeftPicture[r].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
-          //Set name
-          LeftName[r].innerHTML = player[i].summonerName;
-          LeftName[r].title = player[i].summonerName;
-          //Set Summoner link
-          LeftName[r].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
-          //Set Mastery
-          if(player[i].finalMasteryId < 0){
-              LeftMastery[r].src = "/static/lolbet/img/no-mastery.png";
-          }else{
-              LeftMastery[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/"+player[i].finalMasteryId+".png";
-          }
-          //Set spell1 spell2
-          LeftSpell1[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
-          LeftSpell2[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
-          //Set rank
-          LeftRank[r].src = "/img/rank/"+player[i].rank+".png";
-          r++;
-      }
-
-      //Blue team
-      if(player[i].teamId == TEAM_RIGHT){
-          //Set picture
-          RightPicture[b].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+player[i].championName+"_0.jpg";
-          //Set name
-          RightName[b].innerHTML = player[i].summonerName;
-          RightName[b].title = player[i].summonerName;
-          //Set Summoner link
-          RightName[b].href = "http://www.lolking.net/summoner/"+object.region+"/"+player[i].summonerId;
-          //Set Mastery
-          if(player[i].finalMasteryId < 0){
-              RightMaster[b].src = "/static/lolbet/img/no-mastery.png";
-          }else{
-              RightMaster[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/"+player[i].finalMasteryId+".png";
-          }
-          //Set spell1 spell2
-          RightSpell1[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell1+".png";
-          RightSpell2[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/"+player[i].spell2+".png";
-          //Set rank
-          RightRank[b].src = "/img/rank/"+player[i].rank+".png";
-          b++;
-      }
-  }
-
-  //Update Streamer team TODO
-  STREAMER_TEAM = 100;
-  NON_STREAMER_TEAM = 200;
-
-  //Update View
-  if (STREAMER_TEAM == TEAM_LEFT){
-    blueLeft();
-  }else{
-    blueRight();
-  }
-
 }

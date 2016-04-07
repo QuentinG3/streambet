@@ -10,26 +10,21 @@
 <!-- Content -->
 {% block content %}
 <div class="container-fluid">
+
 	<!-- Stream and Bet -->
 	<div class="row">
 
 		<!-- Stream section -->
-		<div class=" col-lg-8 col-lg-push-2 col-md-8 col-md-push-2" id="stream">
+		<div class="col-lg-8 col-lg-push-2 col-md-8 col-md-push-2" id="stream">
 			<div class="panel">
-				<div class="panel-heading text-center"><i class="fa fa-bolt"></i> {{streamer.name}} <span id="streamer-info" style="display:none"></span> <i class="fa fa-bolt"></i></div>
+				<div class="panel-heading" style="position:relative;">
+					<i class="fa fa-video-camera"></i> {{streamer.name}} <span id="streamer-info" style="display:none"></span>
+					<button class="btn btn-lolbet" style="position:absolute;top:4px;right:4px;bottom:4px;"type="button" name="button" onclick="twitchChat('http://www.twitch.tv/{{streamer.channelName}}/chat?popout=')">Twitch Chat</button>
+				</div>
 				<div class="panel-body panel-body-empty">
 					<div class="aspect-ratio-16-9">
 						<iframe class="element-to-stretch" allowfullscreen webkitallowfullscreen mozallowfullscreen src="http://www.twitch.tv/{{streamer.channelName}}/embed" width="100%" height="100%" id="stream"></iframe>
 					</div>
-					<!--
-					<iframe frameborder="0"
-					        scrolling="no"
-					        id="chat_embed"
-					        src="http://www.twitch.tv/{{streamer.channelName}}/chat"
-					        height="500"
-					        width="700">
-					</iframe>
-				-->
 				</div>
 			</div>
 
@@ -57,8 +52,8 @@
 							{% endif %}
 						</p>
 						<div class="spinner">
-						  <div class="double-bounce1"></div>
-						  <div class="double-bounce2"></div>
+							<div class="double-bounce1"></div>
+							<div class="double-bounce2"></div>
 						</div>
 					</div>
 				</div>
@@ -117,7 +112,7 @@
 		</div><!-- Col -->
 
 		<!-- Red Team section -->
-		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left">
+		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left" id="block-left">
 			<div class="panel panel-red" id="team-left" style="display:none">
 
 				<div class="panel-heading" id="team-name-left">Red Team</div>
@@ -143,7 +138,7 @@
 		</div>
 
 		<!-- Blue Team section -->
-		<div class="col-lg-2 col-md-2 col-xs-6 col-right">
+		<div class="col-lg-2 col-md-2 col-xs-6 col-right" id="block-right">
 			<div class="panel panel-blue" id="team-right" style="display:none">
 
 				<div class="panel-heading" id="team-name-right">Blue Team</div>
@@ -168,6 +163,7 @@
 		</div>
 
 	</div><!-- Stream and bet -->
+
 
 <!--
  __  __           _       _

@@ -129,10 +129,12 @@ passport.deserializeUser(function(id, done) {
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  //TODO res.redirect('/404');
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  res.status(404);
+  res.render('404', {
+    user: req.user,
+    isAuthenticated: req.isAuthenticated(),
+    url: req.url
+  });
 });
 
 // error handlers

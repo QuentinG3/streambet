@@ -46,16 +46,13 @@ module.exports = {
           var twitchPromise = Q.denodeify(twitch);
           twitchPromise("streams/" + channelName)
             .then(function(streamData) {
-              streamerUpdate.updateStreamer(streamData,channelName,callbackChannelName);
+              streamerUpdate.updateStreamer(streamData, channelName, callbackChannelName);
             })
             .catch(function(errMessages) {
               UpdateStreamerDebug(errMessages);
               callbackChannelName();
             });
-
-
         });
-
       })
       .then(function() {
         UpdateStreamerDebug("Done updating streamers");
@@ -65,22 +62,6 @@ module.exports = {
         UpdateStreamerDebug(errorUpdateStream);
         callbackFinal();
       });
-
-
-
-    /*
-          //For each streamer we request the twitch API asyncroniously.
-          async.each(streamersList,function(streamer,callback){
-            //Calling the api
-            twitch("streams/"+streamer['channelName'],function(err,streamInfo){
-              streamerUpdate.updateStreamer(err,streamInfo,streamer,callback);
-              });
-            },function(err){
-              UpdateStreamerDebug("Done updating streamers");
-              callbackFinal(null, "one");
-            });
-        });
-    */
   },
   /*
   Function to update the create the new game in which the streamers(summonersName) are. Only one game at a time per streamer.

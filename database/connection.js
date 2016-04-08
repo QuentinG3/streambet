@@ -149,10 +149,14 @@ USERS
 */
 const USERS_TABLE_NAME = "users";
 const USERNAME_COL = "username";
+const EMAIL_COL = "email";
 
 var usersFunctions = {
+  getUserByEmail : function(email){
+    return db.oneOrNone("SELECT * FROM $1~ WHERE " + EMAIL_COL + "=$2", [USERS_TABLE_NAME, email]);
+  },
   getUserByUsername : function(username){
-    return db.query("SELET * FROM $1~ WHERE "+USERNAME_COL+"=$2",[USERS_TABLE_NAME,username]);
+    return db.oneOrNone("SELECT * FROM $1~ WHERE " + USERNAME_COL + "=$2", [USERS_TABLE_NAME, username]);
   }
 };
 module.exports = {

@@ -6,6 +6,8 @@ var passport = require('passport');
 var validator = require("email-validator");
 var https = require('https');
 
+var database = require('../database/connection');
+
 var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var username_regex = /^[_A-z0-9]{3,}$/;
 
@@ -65,6 +67,7 @@ module.exports = {
                 error_list: error_list
             });
         } else {
+
             //passport login user
             passport.authenticate('local', function(err, user, info) {
                 //Error
@@ -102,8 +105,6 @@ module.exports = {
     /* Register a new account  */
     registerAccount: function(req, res, next) {
         var error_list = [];
-
-
 
         //Data
         var email = req.body.email;
@@ -173,6 +174,23 @@ module.exports = {
             if (success) {
                 //Database Verification
                 //Email and username
+                /*
+                database.users.getUserByEmail(email.toLowerCase())
+                .then(function(emailCheck){
+                  database.users.getUserByUsername(username.toLowerCase())
+                  .then(function(usernameCheck){
+
+                  })
+                  .catch(function(error){
+
+                  });
+                })
+                .catch(function(error){
+
+                });*/
+
+
+
                 User.findOne({
                     email: email.toLowerCase()
                 }, function(err, emailCheck) {

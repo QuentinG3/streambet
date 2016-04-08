@@ -11,6 +11,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 var swig = require('swig');
 var session = require('express-session');
+var bcrypt = require("bcrypt-nodejs");
 
 var database = require('./database/connection');
 
@@ -94,49 +95,57 @@ var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var User = require('./models/User');
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    if (email_regex.test(username)){
-      //Get user with his username
-      /*
-      database.users.getUserByUsername("okok")
-      .then(function(user){
 
-      })
-      .catch(function(errorGettingUserByEmail){
-        userPassportDebug(errorGettingUserByEmail);
-      });*/
-      User.findOne({ email: username.toLowerCase() }, function (err, user) {
-        if (err) { return done(err); }
+    if (email_regex.test(username)){
+      //Get user with his email
+      database.users.getUserByEmail(username)
+      .then(function(user){
         if (!user) {
           return done(null, false, { message: 'Incorrect username.' });
         }
-        if (!user.verifyPasswordSync(password)) {
+        var hash = bcrypt.hashSync(password);
+        if(!bcrypt.compareSync(user.password, hash)){
           return done(null, false, { message: 'Incorrect password.' });
         }
         return done(null, user);
+      })
+      .catch(function(){
+        userPassportDebug(errorGettingUserByEmail);
+        return done(errorGettingUserByEmail);
       });
     }else{
       //Get user with his username
-      User.findOne({ username: username.toLowerCase() }, function (err, user) {
-        if (err) { return done(err); }
+
+      database.users.getUserByUsername(username)
+      .then(function(user){
         if (!user) {
           return done(null, false, { message: 'Incorrect username.' });
         }
-        if (!user.verifyPasswordSync(password)) {
+        var hash = bcrypt.hashSync(password);
+        if(!bcrypt.compareSync(user.password, hash)){
           return done(null, false, { message: 'Incorrect password.' });
         }
         return done(null, user);
+      })
+      .catch(function(errorGettingUserByUsername){
+        userPassportDebug(errorGettingUserByUsername);
+        return done(errorGettingUserByUsername);
       });
     }
   }
 ));
 
 passport.serializeUser(function(user, done) {
-  done(null, user._id);
+  done(null, user.username);
 });
 
-passport.deserializeUser(function(id, done) {
-  User.findOne({_id: id}, function(err, user) {
+passport.deserializeUser(function(username, done) {
+  database.users.getUserByUsername(username)
+  .then(function(user){
     done(err, user);
+  })
+  .catch(function(errorGettingUserByUsername){
+    userPassportDebug(errorGettingUserByUsername);
   });
 });
 

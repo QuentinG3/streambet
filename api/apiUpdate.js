@@ -74,7 +74,6 @@ module.exports = {
   (Also used to update timestamp that wasn't set up the first time we check the api)
   */
   updateCurrentGames: function(callbackFinal, smallLimitAPI, bigLimitAPI, io) {
-    var summonersOfOnlineStreamersPromise = database.summoners.getSummonerOfOnlineStreamers();
 
     var championListNoCallback = Q.denodeify(LolApi.Static.getChampionList);
     var championListPromise = championListNoCallback({
@@ -89,53 +88,111 @@ module.exports = {
     var GetGameApiNoCallBack = Q.denodeify(LolApi.getCurrentGame);
 
 
-    summonersOfOnlineStreamersPromise.then(function(summonersOfOnlineStreamersList) {
+    database.summoners.getSummonerOfOnlineStreamers().then(function(summonersOfOnlineStreamersList) {
         //Execute asyncEach loop throught the summoners of onlineStreamerList
         var asyncEachPromise = Q.denodeify(async.each);
-        return asyncEachPromise(summonersOfOnlineStreamersList, updateCurrentGameForSummoners);
+        asyncEachPromise(summonersOfOnlineStreamersList, updateCurrentGameForSummoners)
+          .then(function() {
+            UpdateCurrentGameDebug("Done with updateCurrentGame");
+            callbackFinal();
+          })
+          .catch(function(asyncEachError) {
+            UpdateCurrentGameDebug(asyncEachError);
+            callbackFinal();
+          });
       })
-      .then(function() {
-        UpdateCurrentGameDebug("Done with updateCurrentGame");
-        callbackFinal();
-      })
-      .catch(function(onlineStreamerError) {
-        UpdateCurrentGameDebug(onlineStreamerError);
+      .catch(function(summonersOFOnlineStreamersError) {
+        UpdateCurrentGameDebug(summonersOFOnlineStreamersError);
         callbackFinal();
       });
 
+
+    //This function is the callback of the asyncEach above
     var updateCurrentGameForSummoners = function(summonerOfOnlineStreamer, callbackSummonerOfOnlineStreamer) {
+
+      //First we look in the database if the user is in a game already
       database.games.getGameOfStreamer(summonerOfOnlineStreamer.channelname)
         .then(function(gameOfTheStreamer) {
+
+          //If the users isn't in a game we keep going to look if he's in a now game in the API
           if (!gameOfTheStreamer) {
+
             UpdateCurrentGameDebug("No game found in DB for " + summonerOfOnlineStreamer.summonersname);
-            smallLimitAPI.removeTokens(1, function(err, remainingRequestsSmall) {
-              bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
+
+            //We check the api call left with the limiters
+            smallLimitAPI.removeTokens(1, function(errSmallAPI, remainingRequestsSmall) {
+              bigLimitAPI.removeTokens(1, function(errBigAPI, remainingRequestsBig) {
+                if (errSmallAPI || errBigAPI) {
+                  UpdateCurrentGameDebug(errSmallAPI);
+                  UpdateCurrentGameDebug(errBigAPI);
+                  return callbackSummonerOfOnlineStreamer();
+                }
+
+                //We get the game from the API
                 GetGameApiNoCallBack(summonerOfOnlineStreamer.summonerid, summonerOfOnlineStreamer.region)
                   .then(function(gameFromApi) {
+
                     UpdateCurrentGameDebug("Game found in API for " + summonerOfOnlineStreamer.summonersname);
+
+                    //We create a new game with the informations gotten from the api
                     gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer);
                   })
                   .catch(function(errorGettingGameFromApi) {
+
                     if (errorGettingGameFromApi != "Error: Error getting current game: 404 Not Found") {
+
                       UpdateCurrentGameDebug("Error other than game not found : " + errorGettingGameFromApi);
+
                       callbackSummonerOfOnlineStreamer();
                     } else {
                       UpdateCurrentGameDebug(summonerOfOnlineStreamer.summonersname + " not in a game in API currently");
+
                       callbackSummonerOfOnlineStreamer();
                     }
                   });
               });
             });
+            //If the user is in the game but the timestamp isn't set yet we try to get in from the api
           } else if (gameOfTheStreamer.timestamp === 0) {
-            UpdateCurrentGameDebug("Updating timestamp for " + summonerOfOnlineStreamer.channelname);
-            callbackSummonerOfOnlineStreamer();
+
+            //We check the api call left with the limiters
+            smallLimitAPI.removeTokens(1, function(errSmallAPI, remainingRequestsSmall) {
+              bigLimitAPI.removeTokens(1, function(errBigAPI, remainingRequestsBig) {
+                if (errSmallAPI || errBigAPI) {
+                  UpdateCurrentGameDebug(errSmallAPI);
+                  UpdateCurrentGameDebug(errBigAPI);
+                  return callbackSummonerOfOnlineStreamer();
+                }
+
+                //We get the game from the api to get the timestamp
+                GetGameApiNoCallBack(summonerOfOnlineStreamer.summonerid, summonerOfOnlineStreamer.region)
+                  .then(function(gameFromApi) {
+
+                    //If the timestamp is set we update it
+                    if (gameFromApi.gameStartTime !== 0) {
+                      UpdateCurrentGameDebug("Updating timestamp for " + summonerOfOnlineStreamer.channelname);
+                      gameUpdate.updateTimeStamp(gameOfTheStreamer, gameFromApi.gameStartTime, callbackSummonerOfOnlineStreamer);
+                    }
+                    //If it isn't set yet we just go to the next summoners to update
+                    else {
+                      UpdateCurrentGameDebug("TimeStamp still not available in API for " + summonerOfOnlineStreamer.channelname);
+                      callbackSummonerOfOnlineStreamer();
+                    }
+                  })
+                  .catch(function(errorGettingGameFromApi) {
+                    UpdateCurrentGameDebug(errorGettingGameFromApi);
+                    callbackSummonerOfOnlineStreamer();
+                  });
+              });
+            });
           } else {
-            UpdateCurrentGameDebug(summonerOfOnlineStreamer.channelname + "already in a game in DB");
+            UpdateCurrentGameDebug(summonerOfOnlineStreamer.summonersname + " already in a game in DB");
             callbackSummonerOfOnlineStreamer();
           }
         })
         .catch(function(errorGettingGameOfStreamer) {
           UpdateCurrentGameDebug(errorGettingGameOfStreamer);
+          callbackSummonerOfOnlineStreamer();
         });
     };
   },
@@ -143,6 +200,84 @@ module.exports = {
   If there are done give the reward to those who bet on it and take the points from those that lose the bet
   */
   processBet: function(callbackFinal, smallLimitAPI, bigLimitAPI, io) {
+    //We get all the current games in the database
+    database.games.getAllGames()
+      .then(function(allCurrentGames) {
+        var asyncEachPromise = Q.denodeify(async.each);
+        asyncEachPromise(allCurrentGames, getResultsOfMatchs)
+        .then(function(){
+          processBetDebug("All bets processed");
+          callbackFinal();
+        }).
+        catch(function(asyncEachError){
+          processBetDebug(asyncEachError);
+          callbackFinal();
+        });
+
+      })
+      .catch(function(errorGettingCurrentGames) {
+        processBetDebug(errorGettingCurrentGames);
+        callbackFinal();
+      });
+
+      //Function of the asycn each call abvoe for each item
+      var getResultsOfMatchs = function(currentGame,callBackResultOfMatch){
+        //We check the api call left with the limiters
+        smallLimitAPI.removeTokens(1, function(errSmallAPI, remainingRequestsSmall) {
+          bigLimitAPI.removeTokens(1, function(errBigAPI, remainingRequestsBig) {
+            if (errSmallAPI || errBigAPI) {
+              processBetDebug(errSmallAPI);
+              processBetDebug(errBigAPI);
+              return callBackResultOfMatch();
+            }
+
+            //We try to get the result of the match
+            var getMatchResultNoCallback = Q.denodeify(LolApi.getMatch);
+            getMatchResultNoCallback(currentGame.gameid,false,currentGame.region)
+            .then(function(gameApi){
+
+              //Getting the id of the winning team
+              var winnerTeamId = -1;
+              for (var i = 0; i < gameApi.teams.length; i++) {
+                var team = gameApi.teams[i];
+                if (team.winner) {
+                  winnerTeamId = team.teamId;
+                }
+              }
+
+              //GET ALL THE BEST AND PROCESS BLABLA
+
+
+
+              database.transactions.deleteGameAndProcessBets(currentGame.gameid,currentGame.region)
+              .then(function(){
+                processBetDebug("Game fully deleted and bet process for game of " + currentGame.streamer);
+                callBackResultOfMatch();
+
+              })
+              .catch(function(errorTransctionDeleteGameAndProcessBets){
+                processBetDebug(errorTransctionDeleteGameAndProcessBets);
+                callBackResultOfMatch();
+              });
+
+
+
+            })
+            .catch(function(errorGettingResult){
+              if (errorGettingResult != "Error: Error getting match: 404 Not Found") {
+                processBetDebug("Error other than game not found : " + errorGettingResult);
+
+                callBackResultOfMatch();
+              } else {
+                processBetDebug(currentGame.streamer + " 's game is not finished yet'");
+
+                callBackResultOfMatch();
+              }
+            });
+
+          });//END BIG API
+        });//END SMALL API
+      };
     /*
         Game.find({}, function(err, gameList) {
           async.each(gameList, function(game, callbackGame) {

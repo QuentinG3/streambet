@@ -22,10 +22,10 @@ var entierUpdateRoutine = function(io){
     },
     two: function(callbackFinal){
       apiUpdate.updateCurrentGames(callbackFinal,riotAPILimitSmall,riotAPILimitBig,io);
-    }/*,
+    },
     three: function(callbackFinal){
       apiUpdate.processBet(callbackFinal,riotAPILimitSmall,riotAPILimitBig,io);
-    }*/
+    }
 },
 function(err, results) {
   if (err) console.error("Error in entier routine "+ err,err);

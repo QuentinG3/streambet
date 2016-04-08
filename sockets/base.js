@@ -74,7 +74,7 @@ startSocketIO = function (io) {
       //TODO check for undefined
 
       var team = msg.team;
-      var userId = socket.request.user['_id'];
+      var userId = socket.request.user.username;
       var amount = parseInt(msg.amount);
       var channelName = msg.streamer;
 
@@ -149,18 +149,17 @@ startSocketIO = function (io) {
                      debugRegisterBet("This team does not exist.");
                      socket.emit('betResponse',{success:false, error:"The id of the winning team does not exist"});
                    }
-                 /*}
-                 else{
-                   debugRegisterBet("User already bet")
-                   io.to(channelName).emit('bet',{error:"You have already bet", amount200: -1, amount100: -1});
-                 }*/
+                 //}
+                // else{
+                  // debugRegisterBet("User already bet")
+                  // io.to(channelName).emit('bet',{error:"You have already bet", amount200: -1, amount100: -1});
+                // }
                  }
                });
              }
-           });
-          }
+           }
+         );
 
-      });
       /*TODO :
       Check is user is a real user,
       Check if streamer has a game
@@ -176,7 +175,7 @@ startSocketIO = function (io) {
     });
   });
 
-}
+};
 
 /* Line to emit a message to a given room */
 //io.to('room name').emit('msg',{ object: 'msg' });

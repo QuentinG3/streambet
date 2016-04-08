@@ -1,7 +1,8 @@
 CREATE TABLE users(name TEXT NOT NULL,
                     username TEXT NOT NULL PRIMARY KEY,
+                    password TEXT NOT NULL,
                     email TEXT NOT NULL UNIQUE,
-                    money INT NOT NULL DEFAULT 500,
+                    money INT NOT NULL,
                     birthdate DATE DEFAULT CURRENT_DATE);
 
 CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,

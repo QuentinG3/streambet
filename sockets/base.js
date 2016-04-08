@@ -84,6 +84,7 @@ startSocketIO = function (io) {
       var amount = parseInt(msg.amount);
       var channelName = msg.streamer;
 
+
       database.users.getUserByUsername(username)
       .then(function(user){
         if(!user){
@@ -106,7 +107,7 @@ startSocketIO = function (io) {
                 else{
                   debugRegisterBet("Game exist");
                   registerBet.register(user,streamer,game,team,amount,socket,io);
-                  
+
                 }
               })
               .catch(function(errorGettingGame){
@@ -124,6 +125,7 @@ startSocketIO = function (io) {
         return socket.emit('betResponse',{success: false, error:"Internal server error for user"});
       });
       /*
+
       User.findOne({_id: userId},function(errUser,userDb){
         if (errUser) return socket.emit('betResponse',{success: false, error:"Internal server error for user"});
           else if (!userDb){

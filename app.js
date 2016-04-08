@@ -98,13 +98,12 @@ passport.use(new LocalStrategy(
 
     if (email_regex.test(username)){
       //Get user with his email
-      database.users.getUserByEmail(username)
+      database.users.getUserByEmail(username.toLowerCase())
       .then(function(user){
         if (!user) {
           return done(null, false, { message: 'Incorrect username.' });
         }
-        var hash = bcrypt.hashSync(password);
-        if(!bcrypt.compareSync(user.password, hash)){
+        if(!bcrypt.compareSync(password, user.password)){
           return done(null, false, { message: 'Incorrect password.' });
         }
         return done(null, user);
@@ -116,13 +115,12 @@ passport.use(new LocalStrategy(
     }else{
       //Get user with his username
 
-      database.users.getUserByUsername(username)
+      database.users.getUserByUsername(username.toLowerCase())
       .then(function(user){
         if (!user) {
           return done(null, false, { message: 'Incorrect username.' });
         }
-        var hash = bcrypt.hashSync(password);
-        if(!bcrypt.compareSync(user.password, hash)){
+        if(!bcrypt.compareSync(password, user.password)){
           return done(null, false, { message: 'Incorrect password.' });
         }
         return done(null, user);
@@ -142,9 +140,10 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(username, done) {
   database.users.getUserByUsername(username)
   .then(function(user){
-    done(err, user);
+    done(null, user);
   })
   .catch(function(errorGettingUserByUsername){
+    done(errorGettingUserByUsername, null);
     userPassportDebug(errorGettingUserByUsername);
   });
 });

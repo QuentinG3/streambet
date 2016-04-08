@@ -1,61 +1,56 @@
-﻿DELETE FROM summoners;
-DELETE FROM streamers;
-INSERT INTO streamers
-        VALUES('GoBGG','gobgg',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_gobgg-320x180.jpg'),
-              ('SirhcEz','SirhcEz',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_sirhcez-320x180.jpg'),
-              ('Night Blue','Nightblue3',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_nightblue3-320x180.jpg'),
-              ('Good Guy Garry','GoodGuyGarry',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_goodguygarry-320x180.jpg'),
-              ('Scarra','Scarra',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_scarra-320x180.jpg'),
-              ('Wings of Death','Wingsofdeath',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_wingsofdeath-320x180.jpg'),
-              ('Gosu','mushisgosu',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-320x180.jpg'),
-              ('Imaqtpie','imaqtpie',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg'),
-              ('Iwilldominate','iwilldominate',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_iwilldominate-320x180.jpg'),
-              ('Taour','taourrr1030',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_taourrr1030-320x180.jpg'),
-              ('Crvor','iamcrvor',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_iamcrvor-320x180.jpg'),
-              ('Sylrus','sylrus',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_sylrus-320x180.jpg'),
-              ('Sneaky','c9sneaky',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_c9sneaky-320x180.jpg');
+CREATE TABLE users(name TEXT NOT NULL,
+                    username TEXT NOT NULL PRIMARY KEY,
+                    email TEXT NOT NULL,
+                    money INT NOT NULL,
+                    birthdate DATE DEFAULT CURRENT_DATE);
 
+CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,
+                        Channelname TEXT NOT NULL PRIMARY KEY,
+                        online BOOL NOT NULL,
+                        viewers INT NOT NULL,
+                        preview TEXT NOT NULL,
+                        creationdate DATE DEFAULT CURRENT_DATE);
 
-                          --Summoners gobgg
-                          INSERT INTO summoners VALUES
-                          ('GoB GG','euw','18998522','gobgg');
-                          --Summoners SirhcEz
-                          INSERT INTO summoners VALUES
-                          ('Liquid SirhcEz','na','20526961','SirhcEz');
-                          --Summoners Nightblue3
-                          INSERT INTO summoners VALUES
-                          ('Nightblue3','na','25850956','Nightblue3'),
-                          ('EU Flamingo','euw','77348710','Nightblue3'),
-                          ('SKT T1 Nightblue','na','28753857','Nightblue3'),
-                          ('Nightbluex','na','67029611','Nightblue3');
-                          --Summoners GoodGuyGarry
-                          INSERT INTO summoners VALUES
-                          ('Bronze 5 Haircut','na','72720995','GoodGuyGarry');
-                          --Summoners Wingsofdeath
-                          INSERT INTO summoners VALUES
-                          ('Wingsofdeath','na','53742348','Wingsofdeath');
-                          --Summoners mushisgosu
-                          INSERT INTO summoners VALUES
-                          ('hi im gosu','na','23557909','mushisgosu'),
-                          ('45620','na','20967047','mushisgosu');
-                          --Summoners imaqtpie
-                          INSERT INTO summoners VALUES
-                          ('Imaqtpie','na','19887289','imaqtpie'),
-                          ('feed l0rd','na','35301382','imaqtpie');
+CREATE TABLE summoners(summonersname TEXT NOT NULL,
+                        region TEXT NOT NULL,
+                        summonerid TEXT NOT NULL,
+                        streamer TEXT NOT NULL REFERENCES streamers(channelname),
+                        PRIMARY KEY(region,summonerid));
 
-                          --Summoners iwilldominate
-                          INSERT INTO summoners VALUES
-                          ('IWDominate3','na','50529339','iwilldominate');
-                          --Summoners taourrr1030
-                          INSERT INTO summoners VALUES
-                          ('EagleStick','euw','27689318','taourrr1030');
-                          --Summoners iamcrvor
-                          INSERT INTO summoners VALUES
-                          ('crvor','euw','18977877','iamcrvor');
-                          --Summoners sylrus
-                          INSERT INTO summoners VALUES
-                          ('Pornstar Dovah','euw','59837265','sylrus'),
-                          ('Sylrus','euw','27979793','sylrus');
-                          --Summoners c9sneaky
-                          INSERT INTO summoners VALUES
-                          ('C9 StealthBomber','na','44989300','c9sneaky');
+CREATE TABLE games(gameid TEXT NOT NULL,
+                    region TEXT NOT NULL,
+                    streamer TEXT NOT NULL UNIQUE,
+                    summonerid TEXT NOT NULL,
+                    summonerteam TEXT NOT NULL,
+                    timestamp BIGINT NOT NULL,
+                    PRIMARY KEY(gameid,region),
+                    FOREIGN KEY(streamer) REFERENCES streamers(channelname),
+                    FOREIGN KEY(summonerid,region) REFERENCES summoners(summonerid,region));
+
+CREATE TABLE bannedchampions(gameid TEXT NOT NULL,
+                            region TEXT NOT NULL,
+                            name TEXT NOT NULL,
+                            teamid TEXT NOT NULL,
+                            PRIMARY KEY(gameid,region,name,teamid),
+                            FOREIGN KEY(gameid,region) REFERENCES games(gameid,region));
+
+CREATE TABLE players(gameid TEXT NOT NULL,
+                    region TEXT NOT NULL,
+                    summonername TEXT NOT NULL,
+                    championname TEXT NOT NULL,
+                    teamId TEXT NOT NULL,
+                    summonerid TEXT NOT NULL,
+                    spell1 TEXT NOT NULL,
+                    spell2 TEXT NOT NULL,
+                    rank TEXT NOT NULL,
+                    finalMasteryId TEXT NOT NULL,
+                    PRIMARY KEY(gameId,region,summonerid),
+                    FOREIGN KEY(gameId,region) REFERENCES games(gameid,region));
+
+CREATE TABLE bets(gameId TEXT NOT NULL,
+                    region TEXT NOT NULL,
+                    teamidwin TEXT NOT NULL,
+                    amount INT NOT NULL,
+                    users TEXT NOT NULL REFERENCES users(username),
+                    PRIMARY KEY(gameid,region,users),
+                    FOREIGN KEY(gameid,region) REFERENCES games(gameid,region));

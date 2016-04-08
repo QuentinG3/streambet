@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 <!-- Title -->
-{% block title %}{{streamer.channelName}}{% endblock %}
-{% block ogtitle %}{{streamer.channelName}}{% endblock %}
+{% block title %}{{streamer.channelname}}{% endblock %}
+{% block ogtitle %}{{streamer.channelname}}{% endblock %}
 
 <!-- URL -->
-{% block ogurl %}stream/{{streamer.channelName}}{% endblock %}
+{% block ogurl %}stream/{{streamer.channelname}}{% endblock %}
 
 <!-- Content -->
 {% block content %}
@@ -19,13 +19,13 @@
 			<div class="panel">
 				<div class="panel-heading" style="position:relative;">
 					<i class="fa fa-video-camera"></i> {{streamer.name}} <span id="streamer-info" style="display:none"></span>
-					<button class="btn btn-lolbet" style="padding:-top:0;padding-bottom:0;position:absolute;top:4px;right:4px;bottom:4px;" type="button" name="button" onclick="twitchChat('http://www.twitch.tv/{{streamer.channelName}}/chat?popout=')">
+					<button class="btn btn-lolbet" style="padding:-top:0;padding-bottom:0;position:absolute;top:4px;right:4px;bottom:4px;" type="button" name="button" onclick="twitchChat('http://www.twitch.tv/{{streamer.channelname}}/chat?popout=')">
 						<img src="https://static-cdn.jtvnw.net/emoticons/v1/62837/1.0" width="25" alt="Twitch" /> Chat
 					</button>
 				</div>
 				<div class="panel-body panel-body-empty">
 					<div class="aspect-ratio-16-9">
-						<iframe class="element-to-stretch" allowfullscreen webkitallowfullscreen mozallowfullscreen src="http://www.twitch.tv/{{streamer.channelName}}/embed" width="100%" height="100%" id="stream"></iframe>
+						<iframe class="element-to-stretch" allowfullscreen webkitallowfullscreen mozallowfullscreen src="http://www.twitch.tv/{{streamer.channelname}}/embed" width="100%" height="100%" id="stream"></iframe>
 					</div>
 				</div>
 			</div>
@@ -39,14 +39,14 @@
 					<div id="looking">
 						<p class="text-center">
 							<!-- If no summoner -->
-							{% if streamer.summoners.length == 0 %}
+							{% if summonersList.length == 0 %}
 							<span style="color:red;">( no summoners registered for "{{streamer.name}}" ) </span>
 							<!-- If only 1 summoner -->
-							{% elseif streamer.summoners.length == 1 %} {% for summoner in streamer.summoners %}
-							<span class="quote">{{summoner.name}} ({{summoner.region|upper}})</span> {% endfor %} {% else %}
+							{% elseif summonersList.length == 1 %} {% for summoner in summonersList %}
+							<span class="quote">{{summoner.summonersname}} ({{summoner.region|upper}})</span> {% endfor %} {% else %}
 							<!-- If more than 1 summoner -->
-							{% for summoner in streamer.summoners %}
-							<span class="quotes">{{summoner.name}} ({{summoner.region|upper}})</span> {% endfor %} {% endif %}
+							{% for summoner in summonersList %}
+							<span class="quotes">{{summoner.summonersname}} ({{summoner.region|upper}})</span> {% endfor %} {% endif %}
 						</p>
 						<div class="spinner">
 							<div class="double-bounce1"></div>
@@ -369,8 +369,8 @@
 
 <!-- Local Variable -->
 <script>
-	var channel_name = '{{streamer.channelName}}';
-	var userStreamCoin = parseInt('{{ user.elo }}');
+	var channel_name = '{{streamer.channelname}}';
+	var userStreamCoin = parseInt('{{ user.money }}');
 	var isAuthenticated = {{isAuthenticated}};
 </script>
 

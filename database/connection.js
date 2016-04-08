@@ -6,7 +6,7 @@ var cn = {
   host: 'localhost', // server name or IP address;
   port: 5432,
   database: 'streambet',
-  user: 'quentin',
+  user: 'sbrole',
   password: 'azerty'
 };
 
@@ -62,6 +62,10 @@ const STREAMER_COL_SUMMONERS = "streamer";
 var summonerFunctions = {
   getSummonerOfOnlineStreamers: function() {
     return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=true", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME]);
+  },
+
+  getSummonerOfStreamer: function(channelname) {
+    return db.any("SELECT * FROM $1~ WHERE "+STREAMER_COL_SUMMONERS+"=$2", [SUMMONERS_TABLE_NAME,channelname]);
   }
 };
 /*

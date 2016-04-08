@@ -163,4 +163,4 @@ var updateTimeStamp = function(err, currentGame, oneGame, callback, streamer, su
 module.exports = {
   createNewGame: createNewGame,
   updateTimeStamp: updateTimeStamp
-}
+};

@@ -1,23 +1,24 @@
 var Streamer = require('../models/Streamer');
 var base = require('./base');
+var database = require('../database/connection');
+
+var lolbetRoutesDebug = require('debug')('lolbetRoutes');
 
 module.exports = {
 
     /* Show the online lol streamer.  */
     streamers: function(req, res, next) {
-        Streamer.find({
-            online: true
-        }, "channelName viewers preview", {
-            sort: {
-                viewers: -1
-            }
-        }, function(err, streamerList) {
-            res.render('streamers', {
-                streamer_list: streamerList,
-                isAuthenticated: req.isAuthenticated(),
-                user: req.user
-            });
+      database.streamer.getOnlineStreamersSorted()
+      .then(function(streamerList){
+        res.render('streamers', {
+            streamer_list: streamerList,
+            isAuthenticated: req.isAuthenticated(),
+            user: req.user
         });
+      })
+      .catch(function(error){
+        lolbetRoutesDebug(error);
+      });
     },
 
     /* Show the stream, game info and bet system. */
@@ -40,7 +41,7 @@ module.exports = {
                 //TODO Bet range
                 res.render('stream', {
                     streamer: streamer,
-                    bet_range: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    bet_range: [5,10,15,20],
                     isAuthenticated: req.isAuthenticated(),
                     user: req.user
                 });

@@ -40,6 +40,9 @@ var streamerFunctions = {
   getOnlineStreamers: function() {
     return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2", [STREAMER_TABLE_NAME, true]);
   },
+  getOnlineStreamersSorted: function() {
+    return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2 ORDER BY "+VIEWERS_COL+" DESC", [STREAMER_TABLE_NAME, true]);
+  },
   getStreamerByChannelName: function(channelName){
     return db.one("SELECT * FROM $1~ WHERE "+CHANNELNAME_COL+"=$2",[STREAMER_TABLE_NAME,channelName]);
   }
@@ -184,6 +187,8 @@ _    _  _____ ______ _____   _____
 const USERS_TABLE_NAME = "users";
 const USERNAME_COL = "username";
 const EMAIL_COL = "email";
+const DATE_COL = "birthdate";
+const PASSWORD_COL = "password";
 
 var usersFunctions = {
   getUserByEmail : function(email){
@@ -193,7 +198,16 @@ var usersFunctions = {
     return db.oneOrNone("SELECT * FROM $1~ WHERE " + USERNAME_COL + "=$2", [USERS_TABLE_NAME, username]);
   },
   saveUser : function(name, username, hashPassword, email, birthdate){
-    return db.query("INSERT INTO $1~ VALUES($2, $3, $4, $5, $6, $7)", [USERS_TABLE_NAME, name, username, hashPassword, email, 500, birthdate]);
+    return db.query("INSERT INTO $1~ VALUES($2, $3, $4, $5, $6, make_date($7,$8,$9))", [USERS_TABLE_NAME, name, username, hashPassword, email, 500, birthdate.getFullYear(), birthdate.getMonth()+1, birthdate.getDate()]);
+  },
+  updateUserEmail : function(username, email){
+    return db.query("UPDATE $1~ SET " + EMAIL_COL + "=$2 WHERE username = $3",[USERS_TABLE_NAME, email, username]);
+  },
+  updateUserBirthdate : function(username, birthdate){
+    return db.query("UPDATE $1~ SET " + DATE_COL + "=make_date($2,$3,$4) WHERE username = $5",[USERS_TABLE_NAME, birthdate.getFullYear(), birthdate.getMonth()+1, birthdate.getDate(), username]);
+  },
+  updateUserPassword : function(username, hashPassword){
+    return db.query("UPDATE $1~ SET " + PASSWORD_COL + "=$2 WHERE username = $3",[USERS_TABLE_NAME, hashPassword, username]);
   }
 };
 

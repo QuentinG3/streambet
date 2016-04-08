@@ -17,13 +17,13 @@
     {% for streamer in streamer_list %}
     <div class="block-grid-item">
         <div class="imagehover img-hover">
-          <a href="/stream/{{ streamer.channelName }}">
+          <a href="/stream/{{ streamer.channelname }}">
           <img src="{{ streamer.preview }}" alt="Channel Preview">
           <div class="texthover">
             <p><i class="fa fa-play fa-lg"></i></p>
           </div>
           </a>
-          <p class="stream-info">{{ streamer.channelName }} <span class="pull-right"> {{ streamer.viewersComma() }} <i class="fa fa-user"></i></span></p>
+          <p class="stream-info">{{ streamer.channelname }} <span class="pull-right"> {{ streamer.viewers }} <i class="fa fa-user"></i></span></p>
         </div>
     </div>
     {% endfor %}
@@ -36,13 +36,13 @@
     {% for streamer in streamer_list %}
     <div class="center-block" style="padding:10px">
         <div class="imagehover img-hover">
-          <a href="/stream/{{ streamer.channel_name }}">
+          <a href="/stream/{{ streamer.channelname }}">
           <img src="{{ streamer.preview}}" alt="Channel Preview">
           <div class="texthover">
             <p><i class="fa fa-play fa-lg"></i></p>
           </div>
           </a>
-          <p class="stream-info">{{ streamer.channelName }} <span class="pull-right"> {{ streamer.viewersComma() }} <i class="fa fa-user"></i></span></p>
+          <p class="stream-info">{{ streamer.channelname }} <span class="pull-right"> {{ streamer.viewers }} <i class="fa fa-user"></i></span></p>
         </div>
     </div>
     {% endfor %}

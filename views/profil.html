@@ -83,7 +83,7 @@
                   <i class="fa fa-pencil-square-o fa-lg"></i>
                 </a>
               </label>
-              <p class="info">{{ user.bDay() }}</p>
+              <p class="info">{{ bDay }}</p>
             </div>
 
             <!-- Birth date EDIT -->
@@ -99,7 +99,7 @@
                   <!-- Day -->
                   <!-- TODO : only day -->
                   <div class="form-group col-xs-3" style="padding:0;margin:0;">
-                    <input type="number" name="day" data-error="Invalid day" min="1" max="31" class="form-control text-center" id="inputDay" placeholder="dd" style="padding:0" value="{{ user.day() }}" required>
+                    <input type="number" name="day" data-error="Invalid day" min="1" max="31" class="form-control text-center" id="inputDay" placeholder="dd" style="padding:0" value="{{ day }}" required>
                     <div class="help-block with-errors"></div>
                   </div>
 
@@ -108,7 +108,7 @@
                   <!-- Month -->
                   <!-- TODO : only month -->
                   <div class="form-group col-xs-3" style="padding:0;margin:0;">
-                    <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ user.month() }}" required>
+                    <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ month }}" required>
                     <div class="help-block with-errors"></div>
                   </div>
 
@@ -117,7 +117,7 @@
                   <!-- Year -->
                   <!-- TODO : only year -->
                   <div class="form-group col-xs-4" style="padding:0;margin:0;">
-                    <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ user.birth_date.getFullYear() }}" required>
+                    <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ user.birthdate.getFullYear() }}" required>
                     <div class="help-block with-errors"></div>
                   </div>
 

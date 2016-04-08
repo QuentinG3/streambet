@@ -21,12 +21,20 @@ span.twitch
   color: white
   border-color: lighten($twitch,15%)
 
+button.btn-twitch
+  background-color: transparent
+  color: white
+
+button.btn-twitch:hover, button.btn-twitch:focus
+  color: white
+  background-color: $twitch
+
 button.btn-lolbet
   +gradient-lolbet()
   color: white
 
 button.btn-lolbet:hover, button.btn-lolbet:focus
-  +gradient-lolbet2()
+  +gradient-lolbet()
   color: white
 
 //NAVIGATIONS
@@ -50,6 +58,26 @@ a.brand:hover
     font-weight: bold
 
 //Button
+button.btn-join
+  +gradient-lolbet()
+  width: 200px
+  height: 100px
+  color: white
+  font-size: 180%
+
+//Button
+button.btn-info:hover, button.btn-join:focus
+  +gradient-lolbet2()
+  color: white
+
+button.btn-info
+  +gradient-lolbet()
+  width: 100%
+  text-align: center
+
+button.btn-info:hover, button.btn-info:focus
+  +gradient-lolbet2()
+
 button.btn-login
   background-color: $login
   color: white
@@ -444,6 +472,7 @@ ul.nodeco
 
 .panel-clickable a
   +gradient-lolbet()
+  color: black
   display: block
   width: 100%
   height: 100%

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Bet on your favorite streamer!{% endblock %}
+{% block ogtitle %}Bet on your favorite streamer!{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}howitworks{% endblock %}
+
+<!-- Nav -->
+{% block nav-hiw %}class="active"{% endblock %}
+
+
+<!-- Content -->
+{% block content %}
+<div class="container">
+  <div class="content-box" >
+
+    <h1 class="text-center"><span class="gold bold">How</span> to play</h1>
+    <hr>
+
+    <div class="row">
+
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <h3 class="text-center"><span class="gold">1.</span> Pick a streamer</h3>
+        <img class="img-responsive" src="/img/streamwall.png" alt="Stream wall" />
+      </div>
+      <div class="col-md-4">
+        <h3 class="text-center"><span class="gold">2.</span> Bet on a team</h3>
+        <img class="img-responsive" src="/img/stream.png" alt="Stream wall" />
+      </div>
+      <div class="col-md-4">
+        <h3 class="text-center"><span class="gold">3.</span> Gain credit</h3>
+        <img class="img-responsive" src="/img/stream.png" alt="Stream bet" />
+      </div>
+    </div>
+
+    <button class="btn btn-join center-block" style="margin-top:20px;" onclick="location.href='/signup';" type="button" name="button">Play Now</button>
+
+  </div>
+
+
+
+</div>
+{% endblock %}

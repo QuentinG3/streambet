@@ -14,7 +14,7 @@ module.exports = {
   about : function(req, res, next) {
     res.render('about', {
       about: [
-        'Explaining what streambet is',
+        'Streambet is an esport betting website developped by two computer science students. As league of legends players and streaming enthusiast, they decided to develop this website to create a new kind of bet system. Every time a streamer enter in a ranked game on league of legends,users have 5 minutes to bet on one of the team involved. At the end of the game, this bet is processed and the total amount is shared among the winners. ',
         'Explaining what streambet could be',
         'Explain who we are and why we developped streambet'
       ],

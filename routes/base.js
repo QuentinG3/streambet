@@ -3,10 +3,10 @@ var nodemailer = require("nodemailer");
 
 module.exports = {
 
-  //TODO : Have a real home page
   /* Redirect to the stream wall page. */
+  //TODO home page
   home : function(req, res, next) {
-    res.redirect('/streamers');
+      res.redirect('/streamers');
   },
 
   //TODO : Get this text from the database ? from text file?
@@ -28,9 +28,12 @@ module.exports = {
   faq : function(req, res, next) {
     res.render('faq', {
       faq: [
-        {id:1, title: "What is streambet ?", text: "response 1"},
-        {id:2, title: "Will i be able to bet real money ?", text: "response 2"},
-        {id:3, title: "How does the bet works ?", text: "response 3"}
+        {id:1, title: "What is streambet?", text: "Streambet is about, streaming, league of legends and bets. With streambet, you can watch your favorite streamer play league of legends and bet on his games while he plays. When the game is over, the credit of those who bet wrong is shared among the winners."},
+        {id:2, title: "How does the bet works?", text: "You can only bet on ranked game. When a game is found the view will change and you'll be able to bet for one of the team. All bets are closed when the game reach 5 minutes in game. This way we can assure that the betting was fair. When the game is finished, we process the bet and the credit is shared among the winners depending of the amount they bid."},
+        {id:3, title: "The streamer is in game, but I can't bet", text: "We will only update the view with the bet window when the streamer is in ranked game. The game is either not ranked or we don't feature this particular summoners for the streamer yet. In the second case, please contact us so we can update his summoners list."},
+        {id:4, title: "Why is there a delay ?", text: "All streams have at least 10-15 seconds delay. Sometimes, streamers add delay to their stream to avoid getting stream sniped. Either way, the 'in game' time you see below the stream is without delay.	"},
+        {id:5, title: "Why streambet is only about league of legends?", text: "Riot games provides us all the informations we need to implements the game lookup of streamers in real time. As soon as other games provide us with the same kind of information, we will feature them too. Stay tuned!"},
+        {id:6, title: "How do you chose the streamers?", text: "The streamer list is the most watched streamers on twitch. If you think there is someone missing, please contact us !"}
       ],
       isAuthenticated: req.isAuthenticated(),
       user: req.user
@@ -49,7 +52,7 @@ module.exports = {
     if(req.body.company){
       valid = false;
       error_list.push("Spam bot detected");
-      res.render('contact',{isAuthenticated: req.isAuthenticated(),user: req.user,error_list: error_list})
+      res.render('contact',{isAuthenticated: req.isAuthenticated(),user: req.user,error_list: error_list});
       return;
     }
 
@@ -58,17 +61,17 @@ module.exports = {
     var message = req.body.message;
 
     if(!name || name.length < 3){
-      error_list.push("Enter a name with at least 3 characters.")
+      error_list.push("Enter a name with at least 3 characters.");
       valid = false;
     }
 
     if(!email || !validator.validate(email)){
-      error_list.push("Enter a valid email.")
+      error_list.push("Enter a valid email.");
       valid = false;
     }
 
     if(!message || message.length < 15){
-      error_list.push("Your message must contains at least 15 characters.")
+      error_list.push("Your message must contains at least 15 characters.");
       valid = false;
     }
 
@@ -123,10 +126,14 @@ module.exports = {
 
   },
 
+  howtoplay: function(req, res, next) {
+    res.render('howtoplay', {isAuthenticated: req.isAuthenticated(),user: req.user});
+  },
+
   /* 404 Page not found  */
   page404 : function(req, res, next) {
     //res.status(404);
     res.render('404', {isAuthenticated: req.isAuthenticated(),user: req.user});
   }
 
-}
+};

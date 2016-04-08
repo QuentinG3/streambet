@@ -143,11 +143,24 @@ var transactionFunctions = {
 
   }
 };
+
+/*
+USERS
+*/
+const USERS_TABLE_NAME = "users";
+const USERNAME_COL = "username";
+
+var usersFunctions = {
+  getUserByUsername : function(username){
+    return db.query("SELET * FROM $1~ WHERE "+USERNAME_COL+"=$2",[USERS_TABLE_NAME,username]);
+  }
+};
 module.exports = {
   streamer: streamerFunctions,
   summoners: summonerFunctions,
   games: gameFunctions,
   bannedChampions: bannedChampionFunctions,
   players: playerFunctions,
-  transactions: transactionFunctions
+  transactions: transactionFunctions,
+  users: usersFunctions
 };

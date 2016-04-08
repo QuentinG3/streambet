@@ -60,6 +60,6 @@ router.get('/ranking', lolbet.ranking);
 
 /* GET add_streamer page. */
 //TODO : Keep or remove? get the list of region
-//router.get('/new_streamer', lolbet.add_streamer);
+router.get('/add_streamer', lolbet.add_streamer);
 
 module.exports = router;

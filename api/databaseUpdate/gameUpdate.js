@@ -12,11 +12,13 @@ FINAL_MASTERIES_LIST = [6161, 6162, 6164, 6261, 6262, 6263, 6361, 6362, 6363];
 ALLOWED_QUEUE_TYPE = [4, 410];
 
 var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer) {
+
+  //We first check if the game is played in a ranked mode
   if (ALLOWED_QUEUE_TYPE.indexOf(gameFromApi.gameQueueConfigId) != -1) {
+
+    //We first get the static api's
     championListPromise.then(function(listChampion) {
         spellListPromise.then(function(listSpell) {
-
-
 
             //Getting the team of the summoner
             var summonerTeam = -1;
@@ -51,12 +53,14 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                 var rankingsNoCallback = Q.denodeify(LolApi.getLeagueEntryData);
                 rankingsNoCallback(sumIdsString, summonerOfOnlineStreamer.region)
                   .then(function(rankings) {
+
+                    //We get the final masteries of all the players of the game
                     for (var l = 0; l < gameFromApi.participants.length; l++) {
                       var participant = gameFromApi.participants[l];
 
                       var finalMastery = -1;
 
-                      //Getting the masteries of the player
+                      //Getting the masteries of one player
                       for (var m = 0; m < participant.masteries.length; m++) {
                         mastery = participant.masteries[m];
                         if (FINAL_MASTERIES_LIST.indexOf(mastery.masteryId) != -1) {
@@ -74,6 +78,7 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                         }
                       }
 
+                      //We create the player
                       playerList.push({
                         summonerName: participant.summonerName,
                         summonerId: participant.summonerId,
@@ -85,12 +90,11 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                         finalMasteryId: finalMastery,
                       });
 
-
-
                     }
                     //Starting the transaction to save the gaem
                     database.transactions.addEntierGameTransaction(gameFromApi.gameId, summonerOfOnlineStreamer, summonerTeam, gameFromApi.gameStartTime, playerList, bannedChampionList)
                       .then(function() {
+                        //Prepring the game to send to the socket
                         var gameToSend = {
                           players: playerList,
                           bannedChampions: bannedChampionList,
@@ -99,6 +103,8 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                           teamOfSummoner: summonerTeam,
                           timestamp: gameFromApi.gameStartTime
                         };
+
+                        //Sending the game to the socket
                         io.to(summonerOfOnlineStreamer.channelname).emit('game', {
                           game: gameToSend,
                           betTeam: 0,
@@ -106,7 +112,9 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                           amount100: 0,
                           amount200: 0
                         });
+
                         UpdateCurrentGameDebug("Game added to the database for summoner " + summonerOfOnlineStreamer.summonersname);
+                        callbackSummonerOfOnlineStreamer();
                       })
                       .catch(function(errorTransactionCreateGame) {
                         UpdateCurrentGameDebug(errorTransactionCreateGame);
@@ -127,8 +135,8 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
           });
 
       })
-      .catch(function(errorChampionAPI) {
-        UpdateCurrentGameDebug(errorChampionAPI);
+      .catch(function(errorChampionApi) {
+        UpdateCurrentGameDebug(errorChampionApi);
         callbackSummonerOfOnlineStreamer();
       });
   } else {
@@ -139,27 +147,19 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
 
 
 
-var updateTimeStamp = function(err, currentGame, oneGame, callback, streamer, summonersName, io) {
-  if (err) {
-    callback();
-    return console.error("Error when updating timestamp of a game (API request error?)", err);
-  }
-  Game.findByIdAndUpdate(oneGame['_id'], {
-    $set: {
-      timestamp: currentGame['gameStartTime']
-    }
-  }, function(err) {
-    if (err) {
-      callback();
-      return console.error("error when updateing the timestamp", error);
-    }
-    io.to(streamer['channelName']).emit('timeStamp', {
-      timeStamp: currentGame['gameStartTime']
+var updateTimeStamp = function(gameOfTheStreamer, timeStamp, callbackSummonerOfOnlineStreamer) {
+
+  //Update timestamp of the game gameOfTheStreamer with timestamp
+  database.games.updateTimeStamp(gameOfTheStreamer.gameid, gameOfTheStreamer.region, timeStamp)
+    .then(function() {
+      callbackSummonerOfOnlineStreamer();
+    })
+    .catch(function(errorUpdateTimestamp) {
+      UpdateCurrentGameDebug(errorUpdateTimestamp);
+      callbackSummonerOfOnlineStreamer();
     });
-    UpdateCurrentGameDebug("Updated timestamp for " + streamer['name'] + " " + summonersName['name'] + " (might still be 0)");
-    callback();
-  });
-}
+
+};
 
 module.exports = {
   createNewGame: createNewGame,

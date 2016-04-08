@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Reset password{% endblock %}
+{% block ogtitle %}Reset password{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}reset{% endblock %}
+
+
+<!-- Content -->
+{% block content %}
+<div class="container-fluid">
+
+  <div class="content-box center-box" id="contentbox">
+
+    <h1 class="text-center"><span class="gold bold">Reset</span> password</h1>
+    <hr>
+
+    {% if error_list %}
+    <div class="alert alert-danger" style="padding-left:0">
+      <ul>
+      {% for error in error_list %}
+        <li><strong>{{ error }}</strong></li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form data-toggle="validator" role="form" method="post" action="TODO">
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="inputPassword" class="control-label"><i class="fa fa-lock gold"></i> Password</label>
+        <input type="password" name="password" data-error="Minimum of 3 characters" data-minlength="3" class="form-control" id="inputPassword" placeholder="Password" value="{{ password }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="inputPassword2" class="control-label"><i class="fa fa-lock gold"></i> Confirm password</label>
+        <input type="password" name="confirm" data-error="Passwords doesn't match" data-match="#inputPassword" class="form-control" id="inputPassword2" placeholder="Confirm" value="{{ confirm }}" required>
+        <div class="help-block with-errors"></div>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-group">
+        <button type="submit" class="btn btn-login center-block" style="margin-top: 30px;"><i class="fa fa-refresh fa-lg"></i> Reset</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock %}

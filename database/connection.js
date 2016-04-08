@@ -39,6 +39,9 @@ var streamerFunctions = {
   },
   getOnlineStreamers: function() {
     return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2", [STREAMER_TABLE_NAME, true]);
+  },
+  getStreamerByChannelName: function(channelName){
+    return db.one("SELECT * FROM $1~ WHERE "+CHANNELNAME_COL+"=$2",[STREAMER_TABLE_NAME,channelName]);
   }
 };
 
@@ -171,7 +174,12 @@ var transactionFunctions = {
 };
 
 /*
-USERS
+_    _  _____ ______ _____   _____
+| |  | |/ ____|  ____|  __ \ / ____|
+| |  | | (___ | |__  | |__) | (___
+| |  | |\___ \|  __| |  _  / \___ \
+| |__| |____) | |____| | \ \ ____) |
+\____/|_____/|______|_|  \_\_____/
 */
 const USERS_TABLE_NAME = "users";
 const USERNAME_COL = "username";
@@ -185,6 +193,22 @@ var usersFunctions = {
     return db.oneOrNone("SELECT * FROM $1~ WHERE " + USERNAME_COL + "=$2", [USERS_TABLE_NAME, username]);
   }
 };
+
+/*
+____  ______ _______ _____
+|  _ \|  ____|__   __/ ____|
+| |_) | |__     | | | (___
+|  _ <|  __|    | |  \___ \
+| |_) | |____   | |  ____) |
+|____/|______|  |_| |_____/
+*/
+
+var betsFunctions = {
+  createBet : function(gameId,region,timeIdWin,amount){
+
+  }
+};
+
 module.exports = {
   streamer: streamerFunctions,
   summoners: summonerFunctions,
@@ -192,5 +216,7 @@ module.exports = {
   bannedChampions: bannedChampionFunctions,
   players: playerFunctions,
   transactions: transactionFunctions,
-  users: usersFunctions
+  users: usersFunctions,
+  bets: betsFunctions
+
 };

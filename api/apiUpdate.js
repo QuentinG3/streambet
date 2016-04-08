@@ -6,12 +6,6 @@ var async = require("async");
 var asyncq = require("async-q");
 var Q = require("q");
 
-//Models import
-var Streamer = require('../models/Streamer');
-var Game = require('../models/Game');
-var Bet = require('../models/Bet');
-var User = require('../models/User');
-
 var database = require('../database/connection');
 
 var streamerUpdate = require('./databaseUpdate/streamerUpdate');

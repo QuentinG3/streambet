@@ -1,7 +1,13 @@
+/* jshint moz:true */
+
 var Streamer = require('../models/Streamer');
 var User = require('../models/User');
 var Game = require('../models/Game');
 var Bet = require('../models/Bet');
+
+var database = require('../database/connection');
+
+var registerBet = require('./registerBet');
 
 //debugs
 var debugRegisterBet = require('debug')('debugRegisterBet');
@@ -67,19 +73,57 @@ startSocketIO = function (io) {
 
     });//End of room request listener
 
-
+    //TODO TRY TO REMOVE THE ELSE WHEN WORKING
     socket.on('placeBet', function(msg){
       //Data
 
       //TODO check for undefined
 
       var team = msg.team;
-      var userId = socket.request.user.username;
+      var username = socket.request.user.username;
       var amount = parseInt(msg.amount);
       var channelName = msg.streamer;
 
-
-
+      database.users.getUserByUsername(username)
+      .then(function(user){
+        if(!user){
+          return socket.emit('betResponse',{success:false,error:"Could not find the user"});
+        }
+        else{
+          debugRegisterBet("User exist");
+          database.streamers.getStreamerByChannelName(channelName)
+          .then(function(streamer){
+            if(!streamer){
+              return socket.emit('betResponse',{success:false,error:"Could not find the streamer"});
+            }
+            else{
+              debugRegisterBet("Streamer exist");
+              database.games.getGameOfStreamer(streamer.channelname)
+              .then(function(game){
+                if(!game){
+                  return socket.emit('betResponse',{success:false,error:"This streamer is not in a game"});
+                }
+                else{
+                  debugRegisterBet("Game exist");
+                  registerBet.register(user,streamer,game,team,amount,socket,io);
+                  
+                }
+              })
+              .catch(function(errorGettingGame){
+                return socket.emit('betResponse',{success:false,error:"Internal server error for game"});
+              });
+            }
+          })
+          .catch(function(errorGetingStreamer){
+            return socket.emit('betResponse',{success:false,error:"Internal server error for streamer"});
+          });
+        }
+      })
+      .catch(function(errorGettingUser){
+        debugRegisterBet(errorGettingUser);
+        return socket.emit('betResponse',{success: false, error:"Internal server error for user"});
+      });
+      /*
       User.findOne({_id: userId},function(errUser,userDb){
         if (errUser) return socket.emit('betResponse',{success: false, error:"Internal server error for user"});
           else if (!userDb){
@@ -158,7 +202,7 @@ startSocketIO = function (io) {
                });
              }
            }
-         );
+         );*/
 
       /*TODO :
       Check is user is a real user,

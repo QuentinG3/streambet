@@ -1,4 +1,3 @@
-var Game = require('../../models/Game');
 var LolApi = require('leagueapi');
 var Q = require("q");
 

@@ -1,4 +1,4 @@
-var express = require('express');
+  var express = require('express');
 var socket_io    = require( "socket.io" );
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -41,6 +41,7 @@ app.engine('html', swig.renderFile);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
+//database connection
 mongodb_connection_string = '127.0.0.1:27017/streambet';
 if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
   mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
@@ -52,22 +53,25 @@ if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
 mongoose.connect(mongodb_connection_string);
 
 var MongoStore = require('connect-mongo')(session);
-var mongoS = new MongoStore({ mongooseConnection: mongoose.connection })
+var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection });
 app.use(session({
     secret: process.env.SESSION_SECRET || 'keyboard monkey',
     resave: false,
-    saveUninitialized: false,
-    store: mongoS
+    store: mongoStore
 }));
+
+
+
 var passportSocketIo = require("passport.socketio");
 io.use(passportSocketIo.authorize({
   cookieParser: cookieParser,       // the same middleware you registrer in express
   key:          'connect.sid',       // the name of the cookie where express/connect stores its session_id
   secret:       'keyboard monkey',    // the session_secret to parse the cookie
-  store:        mongoS,     // we NEED to use a sessionstore. no memorystore please
+  store:        mongoStore,     // we NEED to use a sessionstore. no memorystore please
   //success:      onAuthorizeSuccess,  // *optional* callback on success - read more below
   fail:         onAuthorizeFail     // *optional* callback on fail/error - read more below
 }));
+
 
 // This function accepts every client unless there's an error
 function onAuthorizeFail(data, message, error, accept){
@@ -87,7 +91,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
 app.use('/', routes);
-//Database connection
 
 
 // passport config
@@ -103,10 +106,12 @@ passport.use(new LocalStrategy(
         if (!user) {
           return done(null, false, { message: 'Incorrect username.' });
         }
-        if(!bcrypt.compareSync(password, user.password)){
-          return done(null, false, { message: 'Incorrect password.' });
-        }
-        return done(null, user);
+        bcrypt.compare(password, user.password, function(err, res) {
+            if(!res){
+              return done(null, false, { message: 'Incorrect password.' });
+            }
+            return done(null, user);
+        });
       })
       .catch(function(){
         userPassportDebug(errorGettingUserByEmail);
@@ -114,15 +119,17 @@ passport.use(new LocalStrategy(
       });
     }else{
       //Get user with his username
-
       database.users.getUserByUsername(username.toLowerCase())
       .then(function(user){
         if (!user) {
           return done(null, false, { message: 'Incorrect username.' });
         }
-        if(!bcrypt.compareSync(password, user.password)){
-          return done(null, false, { message: 'Incorrect password.' });
-        }
+        bcrypt.compare(password, user.password, function(err, res) {
+            if(!res){
+              return done(null, false, { message: 'Incorrect password.' });
+            }
+
+        });
         return done(null, user);
       })
       .catch(function(errorGettingUserByUsername){

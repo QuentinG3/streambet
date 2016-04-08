@@ -20,7 +20,7 @@ startSocketIO = function (io) {
   io.on('connection', function(socket){
     /* Listen on room connection request. */
     socket.on('room connection', function(msg){
-
+      console.log("Coucou");
       //Verify the msg
       //TODO
 

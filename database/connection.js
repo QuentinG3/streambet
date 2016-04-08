@@ -34,7 +34,7 @@ var streamerFunctions = {
   setStreamerOffLine: function(channelName) {
     return db.query("UPDATE $1~ SET " + ONLINE_COL + "=$2, " + VIEWERS_COL + "=$3 WHERE " + CHANNELNAME_COL + "=$4", [STREAMER_TABLE_NAME, false, 0, channelName]);
   },
-  setStreamerOnLine: function(channelName, viewers) {;
+  setStreamerOnLine: function(channelName, viewers) {
     return db.query("UPDATE $1~ SET " + ONLINE_COL + "=$2, " + VIEWERS_COL + "=$3 WHERE " + CHANNELNAME_COL + "=$4", [STREAMER_TABLE_NAME, true, viewers, channelName]);
   },
   getOnlineStreamers: function() {
@@ -124,9 +124,9 @@ _______ _____            _   _  _____         _____ _______ _____ ____  _   _  _
 var transactionFunctions = {
   addEntierGameTransaction: function(gameId, summonerOfTheGame, teamOfSummoner, timestamp, playerList, bannedChampionList) {
     return db.tx(function(t) {
-      var requestList = []
+      var requestList = [];
       //Adding request to add the game
-      requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7)", [GAME_TABLE_NAME, gameId, summonerOfTheGame.region, summonerOfTheGame.channelname, summonerOfTheGame.summonerid, teamOfSummoner, timestamp]))
+      requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7)", [GAME_TABLE_NAME, gameId, summonerOfTheGame.region, summonerOfTheGame.channelname, summonerOfTheGame.summonerid, teamOfSummoner, timestamp]));
       //Adding request for the bannedChampion
       for (var i = 0; i < bannedChampionList.length; i++) {
         var bannedChampion = bannedChampionList[i];

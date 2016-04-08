@@ -19,7 +19,7 @@
 			<div class="panel">
 				<div class="panel-heading" style="position:relative;">
 					<i class="fa fa-video-camera"></i> {{streamer.name}} <span id="streamer-info" style="display:none"></span>
-					<button class="btn btn-lolbet" style="padding:-top:0;padding-bottom:0;position:absolute;top:4px;right:4px;bottom:4px;"type="button" name="button" onclick="twitchChat('http://www.twitch.tv/{{streamer.channelName}}/chat?popout=')">
+					<button class="btn btn-lolbet" style="padding:-top:0;padding-bottom:0;position:absolute;top:4px;right:4px;bottom:4px;" type="button" name="button" onclick="twitchChat('http://www.twitch.tv/{{streamer.channelName}}/chat?popout=')">
 						<img src="https://static-cdn.jtvnw.net/emoticons/v1/62837/1.0" width="25" alt="Twitch" /> Chat
 					</button>
 				</div>
@@ -30,7 +30,7 @@
 				</div>
 			</div>
 
-			<div class="panel" id="looking" >
+			<div class="panel" id="looking">
 				<div class="panel-heading">
 					<i class="fa fa-search"></i> Looking for a ranked solo queue
 				</div>
@@ -42,16 +42,11 @@
 							{% if streamer.summoners.length == 0 %}
 							<span style="color:red;">( no summoners registered for "{{streamer.name}}" ) </span>
 							<!-- If only 1 summoner -->
-							{% elseif streamer.summoners.length == 1 %}
-							{% for summoner in streamer.summoners %}
-							<span class="quote">{{summoner.name}} ({{summoner.region|upper}})</span>
-							{% endfor %}
-							{% else %}
+							{% elseif streamer.summoners.length == 1 %} {% for summoner in streamer.summoners %}
+							<span class="quote">{{summoner.name}} ({{summoner.region|upper}})</span> {% endfor %} {% else %}
 							<!-- If more than 1 summoner -->
 							{% for summoner in streamer.summoners %}
-							<span class="quotes">{{summoner.name}} ({{summoner.region|upper}})</span>
-							{% endfor %}
-							{% endif %}
+							<span class="quotes">{{summoner.name}} ({{summoner.region|upper}})</span> {% endfor %} {% endif %}
 						</p>
 						<div class="spinner">
 							<div class="double-bounce1"></div>
@@ -59,7 +54,8 @@
 						</div>
 					</div>
 				</div>
-			</div><!-- Looking -->
+			</div>
+			<!-- Looking -->
 
 			<div class="panel" id="bet-info" style="display:none;">
 				<div class="panel-heading">
@@ -96,7 +92,8 @@
 								<div id="progress-right" class="progress-bar progress-bar-blue" role="progressbar" style="width:50%">
 								</div>
 							</div>
-						</div><!-- col -->
+						</div>
+						<!-- col -->
 						<!-- Bet on blue -->
 						<div class="col-xs-3">
 							<button id="button-right" class="btn btn-bet btn-bet-blue center-block" onclick="blueModal()">Go Blue !</button>
@@ -109,9 +106,11 @@
 						</div>
 					</div>
 				</div>
-			</div> <!-- BET -->
+			</div>
+			<!-- BET -->
 
-		</div><!-- Col -->
+		</div>
+		<!-- Col -->
 
 		<!-- Red Team section -->
 		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left" id="block-left">
@@ -123,7 +122,7 @@
 					<ul id="red-list" class="sortable-list">
 						{% for e in "12345" %}
 						<li>
-							<div class="champion champion-left champion-red" >
+							<div class="champion champion-left champion-red">
 								<img class="img-background img-responsive center-block picture-left" src="" alt="">
 								<h4><a class="summonerName-left" title="" href="http://www.lolking.net/" target="_blank"></a></h4>
 								<img class="rank rank-left" src="" alt="">
@@ -164,10 +163,11 @@
 			</div>
 		</div>
 
-	</div><!-- Stream and bet -->
+	</div>
+	<!-- Stream and bet -->
 
 
-<!--
+	<!--
  __  __           _       _
 |  \/  |         | |     | |
 | \  / | ___   __| | __ _| |
@@ -176,178 +176,194 @@
 |_|  |_|\___/ \__,_|\__,_|_|
 -->
 
-		<!-- Win modal -->
-		<div id="WinModal" class="modal" data-easein="bounceIn" tabindex="-1" role="dialog" aria-labelledby="WinAnimation" aria-hidden="true">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-						<h3 class=" text-center modal-title"><span class="gold">Congrat</span>ulation !</h3>
-					</div>
-					<div class="modal-body">
-						<h4 class="text-center">You won <span class="gold" id="wonAmount"></span> <i class="fa fa-database gold"></i> !</h4>
-						<button class="center-block btn btn-lolbet" style="margin-top:15px;" data-dismiss="modal" aria-hidden="true">Ok !</button>
-					</div>
+	<!-- Win modal -->
+	<div id="WinModal" class="modal" data-easein="bounceIn" tabindex="-1" role="dialog" aria-labelledby="WinAnimation" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 class=" text-center modal-title"><span class="gold">Congrat</span>ulation !</h3>
+				</div>
+				<div class="modal-body">
+					<h4 class="text-center">You won <span class="gold" id="wonAmount"></span> <i class="fa fa-database gold"></i> !</h4>
+					<button class="center-block btn btn-lolbet" style="margin-top:15px;" data-dismiss="modal" aria-hidden="true">Ok !</button>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<!-- Lose modal -->
-		<div id="LoseModal" class="modal" data-easein="slideDownIn" tabindex="-1" role="dialog" aria-labelledby="LoseAnimation" aria-hidden="true">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-						<h3 class=" text-center modal-title"><span class="gold">Oh</span> no ...</h3>
-					</div>
-					<div class="modal-body">
-						<h4 class="text-center">You lost <span class="gold" id="lostAmount"></span> <i class="fa fa-database gold"></i></h4>
-						<button class="center-block btn btn-lolbet" style="margin-top:15px;" data-dismiss="modal" aria-hidden="true">Ok</button>
-					</div>
+	<!-- Lose modal -->
+	<div id="LoseModal" class="modal" data-easein="slideDownIn" tabindex="-1" role="dialog" aria-labelledby="LoseAnimation" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 class=" text-center modal-title"><span class="gold">Oh</span> no ...</h3>
+				</div>
+				<div class="modal-body">
+					<h4 class="text-center">You lost <span class="gold" id="lostAmount"></span> <i class="fa fa-database gold"></i></h4>
+					<button class="center-block btn btn-lolbet" style="margin-top:15px;" data-dismiss="modal" aria-hidden="true">Ok</button>
 				</div>
 			</div>
 		</div>
+	</div>
 
 
 	<!-- Red Modal -->
-		<div class="modal" id="modal-red" role="dialog">
-			<div class="modal-dialog modal-sm">
+	<div class="modal" id="modal-red" role="dialog">
+		<div class="modal-dialog modal-sm">
 
-	      <!-- Modal content-->
-	      <div class="modal-content modal-content-red">
-	        <div class="modal-header modal-header-red">
-	          <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
-	          <h4 class="modal-title">Bet on Red</h4>
-	        </div>
-	        <div class="modal-body">
-						<!-- Connection window -->
-						<div id="bet-connect-red" style="display:none;">
-							<p class="text-center" style="color:white;">
-								You need to be logged in to bet.
-							</p>
-							<ul class="list-inline text-center">
-								<li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
-				        <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
-						  </ul>
-							<button class="btn btn-lolbet center-block" data-dismiss="modal" id="dismiss-red-modal">Cancel</button>
+			<!-- Modal content-->
+			<div class="modal-content modal-content-red">
+				<div class="modal-header modal-header-red">
+					<!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+					<h4 class="modal-title">Bet on Red</h4>
+				</div>
+				<div class="modal-body">
+					<!-- Connection window -->
+					<div id="bet-connect-red" style="display:none;">
+						<p class="text-center" style="color:white;">
+							You need to be logged in to bet.
+						</p>
+						<ul class="list-inline text-center">
+							<li>
+								<button class="btn navbar-btn btn-signup" onclick="location.href='/signup';"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button>
+							</li>
+							<li>
+								<button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button>
+							</li>
+						</ul>
+						<button class="btn btn-lolbet center-block" data-dismiss="modal" id="dismiss-red-modal">Cancel</button>
 
-						</div>
-						<!-- Bet window -->
-						<div id="bet-body-red">
-							<div class="form-group center-block text-center" style="max-width:100px;">
-								<label for="amount-red">Amount:</label>
-								<select class="form-control" id="select-red">
-									{% for x in bet_range %}
-									<option value="{{x}}">{{x}}</option>
-									{% endfor %}
-								</select>
-							</div>
-
-						  <ul class="list-inline text-center">
-						  	<li><button class="btn btn-lolbet" onclick="betRed()">Confirm</button></li>
-						  	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-red-modal">Cancel</button></li>
-						  </ul>
+					</div>
+					<!-- Bet window -->
+					<div id="bet-body-red">
+						<div class="form-group center-block text-center" style="max-width:100px;">
+							<label for="amount-red">Amount:</label>
+							<select class="form-control" id="select-red">
+								{% for x in bet_range %}
+								<option value="{{x}}">{{x}}</option>
+								{% endfor %}
+							</select>
 						</div>
 
-						<!-- Loading window -->
-						<div id="bet-loading-red" style="display:none;">
-							<div class="spinner">
-							  <div class="double-bounce1"></div>
-							  <div class="double-bounce2"></div>
-							</div>
+						<ul class="list-inline text-center">
+							<li>
+								<button class="btn btn-lolbet" onclick="betRed()">Confirm</button>
+							</li>
+							<li>
+								<button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-red-modal">Cancel</button>
+							</li>
+						</ul>
+					</div>
+
+					<!-- Loading window -->
+					<div id="bet-loading-red" style="display:none;">
+						<div class="spinner">
+							<div class="double-bounce1"></div>
+							<div class="double-bounce2"></div>
+						</div>
+					</div>
+
+					<!-- Message window -->
+					<div id="bet-message-red" style="display:none;">
+						<div id="error-red" class="alert alert-danger" style="display:none;">
+							<strong><span id="error-msg-red"></span></strong>
+						</div>
+						<div class="text-center" id="success-red">
+							<i class="fa fa-check fa-4x gold"></i>
+						</div>
+						<button class="center-block btn btn-lolbet" data-dismiss="modal" style="margin-top:20px;" id="dismiss-red-modal">Confirm</button>
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+	<!-- Red Modal -->
+
+	<!-- Blue Modal -->
+	<div class="modal" id="modal-blue" role="dialog">
+		<div class="modal-dialog modal-sm">
+
+			<!-- Modal content-->
+			<div class="modal-content modal-content-blue">
+				<div class="modal-header modal-header-blue">
+					<!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+					<h4 class="modal-title">Bet on Blue</h4>
+				</div>
+				<div class="modal-body">
+					<!-- Connection window -->
+					<div id="bet-connect-blue" style="display:none;">
+						<p class="text-center" style="color:white;">
+							You need to be logged in to bet.
+						</p>
+						<ul class="list-inline text-center">
+							<li>
+								<button class="btn navbar-btn btn-signup" onclick="location.href='/signup';"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button>
+							</li>
+							<li>
+								<button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button>
+							</li>
+						</ul>
+						<button class="btn btn-lolbet center-block" data-dismiss="modal" id="dismiss-red-modal">Cancel</button>
+
+					</div>
+
+					<!-- Bet window -->
+					<div id="bet-body-blue">
+						<div class="form-group center-block text-center" style="max-width:100px;">
+							<label for="amount-blue">Amount:</label>
+							<select class="form-control" id="select-blue">
+								{% for x in bet_range %}
+								<option value="{{x}}">{{x}}</option>
+								{% endfor %}
+							</select>
 						</div>
 
-						<!-- Message window -->
-						<div id="bet-message-red" style="display:none;">
-							<div id="error-red" class="alert alert-danger" style="display:none;">
-							  <strong><span id="error-msg-red"></span></strong>
-							</div>
-							<div class="text-center" id="success-red">
-								<i class="fa fa-check fa-4x gold"></i>
-							</div>
-							<button class="center-block btn btn-lolbet" data-dismiss="modal" style="margin-top:20px;" id="dismiss-red-modal">Confirm</button>
+						<ul class="list-inline text-center">
+							<li>
+								<button class="btn btn-lolbet" onclick="betBlue()">Confirm</button>
+							</li>
+							<li>
+								<button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-blue-modal">Cancel</button>
+							</li>
+						</ul>
+					</div>
+
+					<!-- Loading window -->
+					<div id="bet-loading-blue" style="display:none;">
+						<div class="spinner">
+							<div class="double-bounce1"></div>
+							<div class="double-bounce2"></div>
 						</div>
-	        </div>
-	      </div>
+					</div>
 
-
-
-	    </div>
-	  </div> <!-- Red Modal -->
-
-	  <!-- Blue Modal -->
-	  <div class="modal" id="modal-blue" role="dialog">
-	    <div class="modal-dialog modal-sm" >
-
-	      <!-- Modal content-->
-	      <div class="modal-content modal-content-blue">
-	        <div class="modal-header modal-header-blue">
-	          <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
-	          <h4 class="modal-title">Bet on Blue</h4>
-	        </div>
-	        <div class="modal-body">
-						<!-- Connection window -->
-						<div id="bet-connect-blue" style="display:none;">
-							<p class="text-center" style="color:white;">
-								You need to be logged in to bet.
-							</p>
-							<ul class="list-inline text-center">
-								<li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
-				        <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
-						  </ul>
-							<button class="btn btn-lolbet center-block" data-dismiss="modal" id="dismiss-red-modal">Cancel</button>
-
+					<!-- Message window -->
+					<div id="bet-message-blue" style="display:none;">
+						<div id="error-blue" class="alert alert-danger" style="display:none;">
+							<strong><span id="error-msg-blue"></span></strong>
 						</div>
-
-						<!-- Bet window -->
-	        	<div id="bet-body-blue">
-	        		<div class="form-group center-block text-center" style="max-width:100px;">
-								<label for="amount-blue">Amount:</label>
-								<select class="form-control" id="select-blue">
-									{% for x in bet_range %}
-									<option value="{{x}}">{{x}}</option>
-									{% endfor %}
-								</select>
-							</div>
-
-		          <ul class="list-inline text-center">
-				      	<li><button class="btn btn-lolbet" onclick="betBlue()">Confirm</button></li>
-				      	<li><button class="btn btn-lolbet" data-dismiss="modal" id="dismiss-blue-modal">Cancel</button></li>
-				      </ul>
-	        	</div>
-
-						<!-- Loading window -->
-						<div id="bet-loading-blue" style="display:none;">
-							<div class="spinner">
-							  <div class="double-bounce1"></div>
-							  <div class="double-bounce2"></div>
-							</div>
+						<div class="text-center" id="success-blue">
+							<i class="fa fa-check fa-4x gold"></i>
 						</div>
-
-						<!-- Message window -->
-						<div id="bet-message-blue" style="display:none;">
-							<div id="error-blue" class="alert alert-danger" style="display:none;">
-							  <strong><span id="error-msg-blue"></span></strong>
-							</div>
-							<div class="text-center" id="success-blue">
-								<i class="fa fa-check fa-4x gold"></i>
-							</div>
-							<button class="center-block btn btn-lolbet" data-dismiss="modal" style="margin-top:20px;" id="dismiss-blue-modal">Confirm</button>
-						</div>
-	        </div>
-	      </div>
+						<button class="center-block btn btn-lolbet" data-dismiss="modal" style="margin-top:20px;" id="dismiss-blue-modal">Confirm</button>
+					</div>
+				</div>
+			</div>
 
 
 
-	    </div>
-	  </div> <!-- Blue Modal -->
+		</div>
+	</div>
+	<!-- Blue Modal -->
 
 
-</div><!-- Container -->
-{% endblock %}
-
-
-{% block JS %}
+</div>
+<!-- Container -->
+{% endblock %} {% block JS %}
 <!-- Socket IO -->
 <script src="/socket.io/socket.io.js"></script>
 
@@ -355,10 +371,18 @@
 <script>
 	var channel_name = '{{streamer.channelName}}';
 	var userStreamCoin = parseInt('{{ user.elo }}');
-	var isAuthenticated = {{ isAuthenticated }};
+	var isAuthenticated = {
+		{
+			isAuthenticated
+		}
+	};
 </script>
 
 <!-- Realtime behavior -->
+<script src="/js/stream_variables.js"></script>
+<script src="/js/stream_views.js"></script>
+<script src="/js/stream_game.js"></script>
+<script src="/js/stream_bet.js"></script>
 <script src="/js/stream_socket.js"></script>
 
 <!-- Chrono -->

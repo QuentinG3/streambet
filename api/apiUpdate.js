@@ -23,7 +23,7 @@ var UpdateCurrentGameDebug = require('debug')('updateCurrentGame');
 var doubleLoopDebug = require('debug')('doubleLoop');
 var processBetDebug = require('debug')('processBet');
 
-LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
+LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
 
 
 
@@ -73,30 +73,67 @@ module.exports = {
     var summonersOfOnlineStreamersPromise = database.summoners.getSummonerOfOnlineStreamers();
 
     var championListNoCallback = Q.denodeify(LolApi.Static.getChampionList);
-    var championListPromise = championListNoCallback({dataById: true});
-
-    var SpellListNoCallback = Q.denodeify(LolApi.Static.getSummonerSpellList);
-    var SpellListPromise = SpellListNoCallback({dataById: true});
-
-
-    summonersOfOnlineStreamersPromise.then(function(summonersOfOnlineStreamersList){
-      console.log(summonersOfOnlineStreamersList);
-      //Execute asyncEach loop throught the summoners of onlineStreamerList
-      var asyncEachPromise = Q.denodeify(async.each);
-      return asyncEachPromise(summonersOfOnlineStreamersList,updateCurrentGameForSummoners);
-    })
-    .then(function(){
-      UpdateCurrentGameDebug("Done with updateCurrentGame");
-      callbackFinal();
-    })
-    .catch(function(onlineStreamerError){
-      UpdateCurrentGameDebug(onlineStreamerError);
-      callbackFinal();
+    var championListPromise = championListNoCallback({
+      dataById: true
     });
 
-    var updateCurrentGameForSummoners = function(summonerOfOnlineStreamer,callbackSummonerOfOnlineStreamer){
+    var spellListNoCallback = Q.denodeify(LolApi.Static.getSummonerSpellList);
+    var spellListPromise = spellListNoCallback({
+      dataById: true
+    });
+
+    var GetGameApiNoCallBack = Q.denodeify(LolApi.getCurrentGame);
+
+
+    summonersOfOnlineStreamersPromise.then(function(summonersOfOnlineStreamersList) {
+        console.log(summonersOfOnlineStreamersList);
+        //Execute asyncEach loop throught the summoners of onlineStreamerList
+        var asyncEachPromise = Q.denodeify(async.each);
+        return asyncEachPromise(summonersOfOnlineStreamersList, updateCurrentGameForSummoners);
+      })
+      .then(function() {
+        UpdateCurrentGameDebug("Done with updateCurrentGame");
+        callbackFinal();
+      })
+      .catch(function(onlineStreamerError) {
+        UpdateCurrentGameDebug(onlineStreamerError);
+        callbackFinal();
+      });
+
+    var updateCurrentGameForSummoners = function(summonerOfOnlineStreamer, callbackSummonerOfOnlineStreamer) {
       console.log(summonerOfOnlineStreamer);
-      callbackSummonerOfOnlineStreamer();
+      database.games.getGameOfStreamer(summonerOfOnlineStreamer.channelname)
+        .then(function(gameOfTheStreamer) {
+          if (!gameOfTheStreamer) {
+            console.log(summonerOfOnlineStreamer);
+            UpdateCurrentGameDebug("No game found in DB for " + summonerOfOnlineStreamer.summonersname);
+            smallLimitAPI.removeTokens(1, function(err, remainingRequestsSmall) {
+              bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
+                GetGameApiNoCallBack(summonerOfOnlineStreamer.summonerid, summonerOfOnlineStreamer.region)
+                  .then(function(gameFromApi) {
+                    UpdateCurrentGameDebug("Game found in API for " + summonerOfOnlineStreamer.summonersname);
+                    gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer);
+                  })
+                  .catch(function(errorGettingGameFromApi) {
+                    if (errorGettingGameFromApi != "Error: Error getting current game: 404 Not Found") {
+                      UpdateCurrentGameDebug("Error other than game not found : " + errorGettingGameFromApi);
+                    } else {
+                      UpdateCurrentGameDebug(summonerOfOnlineStreamer.summonersname + " not in a game in API currently");
+                    }
+                  });
+              });
+            });
+          } else if (gameOfTheStreamer.timestamp === 0) {
+            UpdateCurrentGameDebug("Updating timestamp for " + summonerOfOnlineStreamer.channelname);
+            callbackSummonerOfOnlineStreamer();
+          } else {
+            UpdateCurrentGameDebug(summonerOfOnlineStreamer.channelname + "already in a game in DB");
+            callbackSummonerOfOnlineStreamer();
+          }
+        })
+        .catch(function(errorGettingGameOfStreamer) {
+          UpdateCurrentGameDebug(errorGettingGameOfStreamer);
+        });
     };
 
 

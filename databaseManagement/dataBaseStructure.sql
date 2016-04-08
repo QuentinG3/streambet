@@ -11,18 +11,21 @@ CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,
                         preview TEXT NOT NULL,
                         creationdate DATE DEFAULT CURRENT_DATE);
 
-CREATE TABLE summoners(name TEXT NOT NULL,
+CREATE TABLE summoners(summonersname TEXT NOT NULL,
                         region TEXT NOT NULL,
-                        summonerId TEXT NOT NULL,
+                        summonerid TEXT NOT NULL,
                         streamer TEXT NOT NULL REFERENCES streamers(channelname),
                         PRIMARY KEY(region,summonerid));
 
-CREATE TABLE games(gameId TEXT NOT NULL,
+CREATE TABLE games(gameid TEXT NOT NULL,
                     region TEXT NOT NULL,
                     streamer TEXT NOT NULL UNIQUE,
-                    timestamp INT NOT NULL,
-                    PRIMARY KEY(gameId,region),
-                    FOREIGN KEY(streamer) REFERENCES streamers(channelname));
+                    summonerid TEXT NOT NULL,
+                    summonerteam TEXT NOT NULL,
+                    timestamp BIGINT NOT NULL,
+                    PRIMARY KEY(gameid,region),
+                    FOREIGN KEY(streamer) REFERENCES streamers(channelname),
+                    FOREIGN KEY(summonerid,region) REFERENCES summoners(summonerid,region));
 
 CREATE TABLE bannedchampions(gameid TEXT NOT NULL,
                             region TEXT NOT NULL,

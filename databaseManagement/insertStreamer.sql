@@ -26,7 +26,8 @@ INSERT INTO streamers
                           INSERT INTO summoners VALUES
                           ('Nightblue3','na','25850956','Nightblue3'),
                           ('EU Flamingo','euw','77348710','Nightblue3'),
-                          ('SKT T1 Nightblue','na','28753857','Nightblue3');
+                          ('SKT T1 Nightblue','na','28753857','Nightblue3'),
+                          ('Nightbluex','na','67029611','Nightblue3');
                           --Summoners GoodGuyGarry
                           INSERT INTO summoners VALUES
                           ('Bronze 5 Haircut','na','72720995','GoodGuyGarry');
@@ -39,7 +40,9 @@ INSERT INTO streamers
                           ('45620','na','20967047','mushisgosu');
                           --Summoners imaqtpie
                           INSERT INTO summoners VALUES
-                          ('Imaqtpie','na','19887289','imaqtpie');
+                          ('Imaqtpie','na','19887289','imaqtpie'),
+                          ('feed l0rd','na','35301382','3530imaqtpie1382');
+
                           --Summoners iwilldominate
                           INSERT INTO summoners VALUES
                           ('IWDominate3','na','50529339','iwilldominate');

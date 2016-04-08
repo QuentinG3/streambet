@@ -2,6 +2,14 @@
 
 <!-- Title -->
 {% block title %}Sign up{% endblock %}
+{% block ogtitle %}Sign up{% endblock %}
+
+<!-- Description -->
+{% block description %}Create an account and bet on your favorite league of legends streamers!{% endblock %}
+{% block ogdescription %}Create an account and bet on your favorite league of legends streamers!{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}signup{% endblock %}
 
 <!-- Content -->
 {% block content %}
@@ -9,7 +17,7 @@
 
   <div class="content-box center-box">
 
-    <h2 class="text-center"><span class="gold">Sign</span> Up</h2>
+    <h1 class="text-center"><span class="gold">Sign</span> Up</h1>
     <hr>
 
     {% if error_list %}
@@ -87,6 +95,8 @@
         </div><!-- Row -->
       </div><!-- Form Group -->
 
+      <div class="g-recaptcha" data-theme="dark" data-size:"compact" data-sitekey="6LdS0hwTAAAAAJNsrV0mzKokIDb-KbwsT0Czqkta"></div>
+
 
       <!-- Submit -->
       <div class="form-group">
@@ -100,4 +110,8 @@
   </div>
 
 </div>
+{% endblock %}
+
+{% block JS %}
+<script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
 {% endblock %}

@@ -2,6 +2,15 @@
 
 <!-- Title -->
 {% block title %}Contact Us{% endblock %}
+{% block ogtitle %}Contact us{% endblock %}
+
+<!-- Description -->
+
+{% block description %}Do you have feedbacks, question or want to report an issue? Feel free to contact us!{% endblock %}
+{% block ogdescription %}Do you have feedbacks, question or want to report an issue? Feel free to contact us!{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}contact{% endblock %}
 
 <!-- Nav -->
 {% block nav-contact %}class="active"{% endblock %}
@@ -11,7 +20,7 @@
 <div class="container-fluid">
   <div class="content-box center-box">
 
-    <h2 class="text-center"><span class="gold bold">Contact</span> us</h2>
+    <h1 class="text-center"><span class="gold bold">Contact</span> us</h1>
     <hr>
 
     {% if error_list %}

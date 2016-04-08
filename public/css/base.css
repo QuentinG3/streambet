@@ -24,6 +24,14 @@ span.twitch {
   color: white;
   border-color: #8c6dc5; }
 
+button.btn-twitch {
+  background-color: transparent;
+  color: white; }
+
+button.btn-twitch:hover, button.btn-twitch:focus {
+  color: white;
+  background-color: #6441A5; }
+
 button.btn-lolbet {
   background: #D39C2C;
   background: -webkit-linear-gradient(#d38b39, #D39C2C);
@@ -33,11 +41,11 @@ button.btn-lolbet {
   color: white; }
 
 button.btn-lolbet:hover, button.btn-lolbet:focus {
-  background: #d38b39;
-  background: -webkit-linear-gradient(#D39C2C, #d38b39);
-  background: -o-linear-gradient(#D39C2C, #d38b39);
-  background: -moz-linear-gradient(#D39C2C, #d38b39);
-  background: linear-gradient(#D39C2C, #d38b39);
+  background: #D39C2C;
+  background: -webkit-linear-gradient(#d38b39, #D39C2C);
+  background: -o-linear-gradient(#d38b39, #D39C2C);
+  background: -moz-linear-gradient(#d38b39, #D39C2C);
+  background: linear-gradient(#d38b39, #D39C2C);
   color: white; }
 
 .navbar {
@@ -55,6 +63,41 @@ a.brand:hover {
 
 .navbar-nav li a {
   font-weight: bold; }
+
+button.btn-join {
+  background: #D39C2C;
+  background: -webkit-linear-gradient(#d38b39, #D39C2C);
+  background: -o-linear-gradient(#d38b39, #D39C2C);
+  background: -moz-linear-gradient(#d38b39, #D39C2C);
+  background: linear-gradient(#d38b39, #D39C2C);
+  width: 200px;
+  height: 100px;
+  color: white;
+  font-size: 180%; }
+
+button.btn-info:hover, button.btn-join:focus {
+  background: #946d1f;
+  background: -webkit-linear-gradient(#9d6423, #946d1f);
+  background: -o-linear-gradient(#9d6423, #946d1f);
+  background: -moz-linear-gradient(#9d6423, #946d1f);
+  background: linear-gradient(#9d6423, #946d1f);
+  color: white; }
+
+button.btn-info {
+  background: #D39C2C;
+  background: -webkit-linear-gradient(#d38b39, #D39C2C);
+  background: -o-linear-gradient(#d38b39, #D39C2C);
+  background: -moz-linear-gradient(#d38b39, #D39C2C);
+  background: linear-gradient(#d38b39, #D39C2C);
+  width: 100%;
+  text-align: center; }
+
+button.btn-info:hover, button.btn-info:focus {
+  background: #946d1f;
+  background: -webkit-linear-gradient(#9d6423, #946d1f);
+  background: -o-linear-gradient(#9d6423, #946d1f);
+  background: -moz-linear-gradient(#9d6423, #946d1f);
+  background: linear-gradient(#9d6423, #946d1f); }
 
 button.btn-login {
   background-color: #D39C2C;
@@ -326,44 +369,54 @@ ul.sortable-list {
       color: #337AB7;
       text-decoration: none; }
 
-.champion-left {
-  border-bottom: solid 1px #660000; }
-  .champion-left img.img-background {
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: "FlipH"; }
-  .champion-left img.mastery {
-    left: 3%; }
-  .champion-left img.summoner1 {
-    right: 3%; }
-  .champion-left img.summoner2 {
-    right: 22%; }
-  .champion-left img.rank {
-    left: 3%; }
-  .champion-left h4 {
-    left: 5px;
-    text-align: left;
-    text-shadow: -1px 0 #660000, 0 1px #660000, 1px 0 #660000, 0 -1px #660000;
-    width: 100%; }
+.champion-left img.img-background {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH"; }
+.champion-left img.mastery {
+  left: 3%; }
+.champion-left img.summoner1 {
+  right: 3%; }
+.champion-left img.summoner2 {
+  right: 22%; }
+.champion-left img.rank {
+  left: 3%; }
+.champion-left h4 {
+  left: 5px;
+  text-align: left;
+  width: 100%; }
 
-.champion-right {
+.champion-right img.mastery {
+  right: 3%; }
+.champion-right img.summoner1 {
+  left: 3%; }
+.champion-right img.summoner2 {
+  left: 22%; }
+.champion-right img.rank {
+  right: 3%; }
+.champion-right h4 {
+  right: 5px;
+  text-align: right;
+  width: 100%; }
+
+.champion-red {
+  border-bottom: solid 1px #660000; }
+  .champion-red h4 {
+    text-shadow: -1px 0 #660000, 0 1px #660000, 1px 0 #660000, 0 -1px #660000; }
+
+.champion-blue {
   border-bottom: solid 1px #000066; }
-  .champion-right img.mastery {
-    right: 3%; }
-  .champion-right img.summoner1 {
-    left: 3%; }
-  .champion-right img.summoner2 {
-    left: 22%; }
-  .champion-right img.rank {
-    right: 3%; }
-  .champion-right h4 {
-    right: 5px;
-    text-align: right;
-    text-shadow: -1px 0 #000066, 0 1px #000066, 1px 0 #000066, 0 -1px #000066;
-    width: 100%; }
+  .champion-blue h4 {
+    text-shadow: -1px 0 #000066, 0 1px #000066, 1px 0 #000066, 0 -1px #000066; }
+
+div.twitch-chat {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 0; }
 
 a.lolbet {
   color: #337AB7;
@@ -439,6 +492,7 @@ ul.nodeco {
   background: -o-linear-gradient(#d38b39, #D39C2C);
   background: -moz-linear-gradient(#d38b39, #D39C2C);
   background: linear-gradient(#d38b39, #D39C2C);
+  color: black;
   display: block;
   width: 100%;
   height: 100%;

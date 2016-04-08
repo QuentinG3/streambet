@@ -2,12 +2,30 @@
 <html lang="en">
 <head>
 
-  <title>Stream Bet - {% block title %}{% endblock %}</title>
+  <title>{% block title %}{% endblock %} &ndash; StreamBet</title>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Description -->
+  <meta name="description" content="{% block description %}Bet on games of your favorite league of legends streamer while he plays !{% endblock %}">
+  <meta name="keywords" content="league of legends, lol, streams, streamer, game, bet, gamble, streambet, game, play, win, live games, ranked, twitch">
+
+  <!-- Social network -->
+  <meta property="og:url" content="http://streambet.tv/{% block ogurl %}{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% block ogtitle %}{% endblock %} &ndash; StreamBet">
+  <meta property="og:locale" content="en_US">
+  <!-- TODO image -->
+  <meta property="og:image" content="http://streambet.tv/img/favicon.ico">
+  <meta property="og:description" content="{% block ogdescription %}{% endblock %}">
+  <meta property="og:site_name" content="StreamBet">
+
+  <!-- Image -->
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/img/favicon.ico">
+  <link rel="image_src" href="/img/favicon.ico">
 
   <!-- Bootstrap css -->
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -23,6 +41,17 @@
   <link rel="stylesheet" href="/css/hover.css">
   <!-- Base -->
   <link rel="stylesheet" href="/css/base.css">
+
+  <!-- Google analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-76104344-1', 'auto');
+  ga('send', 'pageview');
+</script>
 
   <!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -57,17 +86,17 @@
           <span class="icon-bar"></span>
         </button>
         <!-- Brand -->
-        <a class="navbar-brand brand" href="/" title="Bet on famous streamers"><span class="gold">STREAM</span>BET</a>
+        <a class="navbar-brand brand" href="/" title="Bet on your favorite streamer"><span class="gold">STREAM</span>BET</a>
       </div><!-- nav header -->
 
       <!-- LINKS -->
       <div class="collapse navbar-collapse " id="navbar">
         <!-- links -->
         <ul class="nav navbar-nav">
-          <li {% block streamers %}{% endblock %} ><a href="/streamers">
-            <i class="hidden-xs fa fa-video-camera fa-lg"></i><i class="pull-right visible-xs fa fa-video-camera fa-lg" style="padding-top:4px"></i> Streamers
+          <li {% block nav-hiw %}{% endblock %} ><a href="/how-to-play">
+            <i class="hidden-xs fa fa-cog fa-lg"></i><i class="pull-right visible-xs fa fa-cog fa-lg" style="padding-top:4px"></i> How to play
           </a></li>
-          <li {% block ranking %}{% endblock %} ><a href="/ranking">
+          <li {% block nav-ranking %}{% endblock %} ><a href="/ranking">
             <i class="hidden-xs fa fa-trophy fa-lg"></i><i class="pull-right visible-xs fa fa-trophy fa-lg" style="padding-top:4px"></i> Ranking
           </a></li>
           <li {% block nav-contact %}{% endblock %} ><a href="/contact">
@@ -75,7 +104,6 @@
           </a></li>
         </ul>
       <!-- USER -->
-      <!-- TODO Add when user is connected -->
       <hr class="visible-xs" style="margin:5px">
       {% if not isAuthenticated %}
       <!-- Login and signup on normal screen -->
@@ -96,7 +124,7 @@
             <div class="user-overflow">
                {{ user.name }}
               <br>
-              <span class="gold" style="font-size:80%;">{{ user.elo }} <i class="fa gold fa-database"></i></span>
+              <span class="gold" style="font-size:80%;"><span id="streamcoin">{{ user.elo }}</span> <i class="fa gold fa-database"></i></span>
             </div>
             <i class="pull-right fa fa-lg fa-angle-down user-caret"></i>
           </a>
@@ -117,7 +145,7 @@
         <span>
            {{ user.name }}
           <br>
-          <span class="gold" style="font-size:80%;">{{ user.elo }} <i class="fa gold fa-database"></i></span>
+          <span class="gold" style="font-size:80%;"><span id="streamcoin-m">{{ user.elo }}</span> <i class="fa gold fa-database"></i></span>
         </span>
       </p>
       <hr class="visible-xs" style="margin:5px">

@@ -2,6 +2,14 @@
 
 <!-- Title -->
 {% block title %}About us{% endblock %}
+{% block ogtitle %}About us{% endblock %}
+
+<!-- Description -->
+{% block description %}Read about StreamBet. The website, the idea and the conception of the first league of legends live stream betting site.{% endblock %}
+{% block ogdescription %}Read about StreamBet. The website, the idea and the conception of the first league of legends live stream betting site.{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}about{% endblock %}
 
 <!-- Content -->
 {% block content %}
@@ -9,7 +17,7 @@
 
   <div class="content-box">
 
-    <h2 class="text-center"><span class="gold bold">About</span> us</h2>
+    <h1 class="text-center"><span class="gold bold">About</span> us</h1>
     <hr>
     {% for para in about %}
     <p>

@@ -32,14 +32,14 @@ function(err, results) {
     console.log("Done with whole api update routines");
     setTimeout(function(){entierUpdateRoutine(io);},INTERVAL_BETWEEN_UPDATE_SECONDS*1000);
 });
-}
+};
 
 startApiRoutineLoop = function(io){
   //io = ioIn;
   setTimeout(function(){entierUpdateRoutine(io);},INTERVAL_BETWEEN_UPDATE_SECONDS*1000);
-}
+};
 
 
 module.exports = {
   startApiRoutineLoop : startApiRoutineLoop
-}
+};

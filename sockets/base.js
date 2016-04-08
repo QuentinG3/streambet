@@ -6,10 +6,7 @@ var Bet = require('../models/Bet');
 //debugs
 var debugRegisterBet = require('debug')('debugRegisterBet');
 
-var tot100 = 0;
-var tot200 = 0;
-
-MILLISTOBET = 300000;
+const MILLISTOBET = 300000;
 
 startSocketIO = function (io) {
 
@@ -17,11 +14,13 @@ startSocketIO = function (io) {
   io.on('connection', function(socket){
     /* Listen on room connection request. */
     socket.on('room connection', function(msg){
+
       //Verify the msg
       //TODO
 
       //Connect the socket to the room asked
       socket.join(msg);
+
       var userId = socket.request.user['_id'];
 
       /* Lookup if there is a game for the channel. */
@@ -35,7 +34,7 @@ startSocketIO = function (io) {
             if(err){
               console.log(err);
             }else if(currentGame){
-              //TODO also send if user already bet or not
+
               //Emit the current game
               Bet.find({game:currentGame._id,teamIdWin:100},function(errFindBet100,bet100){
                 Bet.find({game:currentGame._id,teamIdWin:200},function(errFindBet200,bet200){
@@ -51,7 +50,6 @@ startSocketIO = function (io) {
                     }
 
                     for(var i=0;i<bet100.length;i++){
-
                       amount100 += bet100[i]['amount']
                     }
                     for(var i=0;i<bet200.length;i++){
@@ -108,7 +106,7 @@ startSocketIO = function (io) {
                      //CHECK timestamp
                      if(team == 100 || team == 200){
                        //TODO CHANGE TIMESTAMP
-                       if(timeSinceBeginning < MILLISTOBET){
+                       if(timeSinceBeginning < MILLISTOBET || gameDb.timestamp == 0){
                          debugRegisterBet("Timestamp under 5 minuts");
                         //CHECK if user has enought money
                         if(userDb.elo >= amount){
@@ -144,7 +142,7 @@ startSocketIO = function (io) {
                       }
                       else{
                         debugRegisterBet("Can't bet after the 5 minuts mark.");
-                        socket.emit('betResponse',{success:false, error:"You can't bet after the 5 minuts mark"});
+                        socket.emit('betResponse',{success:false, error:"You can't bet after the 5 minute mark"});
                       }
                    }
                    else{

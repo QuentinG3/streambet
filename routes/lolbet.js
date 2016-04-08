@@ -18,18 +18,22 @@ module.exports = {
     //Database lookup
     Streamer.findOne({channelName: name}, "channelName name summoners", function(err,streamer){
       if(err) {
-        //TODO res.redirect('/404');
-        var err = new Error('Not Found');
-        err.status = 404;
-        next(err);
+        res.status(404);
+        res.render('404', {
+          user: req.user,
+          isAuthenticated: req.isAuthenticated(),
+          url: req.url
+        });
       }else if(streamer){
         //TODO Bet range
         res.render('stream', {streamer: streamer, bet_range: [1,2,3,4,5,6,7,8,9,10], isAuthenticated: req.isAuthenticated(), user: req.user});
       }else{
-        //TODO res.redirect('/404');
-        var err = new Error('Not Found');
-        err.status = 404;
-        next(err);
+        res.status(404);
+        res.render('404', {
+          user: req.user,
+          isAuthenticated: req.isAuthenticated(),
+          url: req.url
+        });
       }
     });
   },
@@ -45,4 +49,4 @@ module.exports = {
     res.render('add_streamer', {isAuthenticated: req.isAuthenticated(), user: req.user});
   }
 
-}
+};

@@ -2,6 +2,15 @@
 
 <!-- Title -->
 {% block title %}Recover account{% endblock %}
+{% block ogtitle %}Recover account{% endblock %}
+
+<!-- Description -->
+{% block description %}Lost your password? Enter your mail and reset your password{% endblock %}
+{% block ogdescription %}Lost your password? Enter your mail and reset your password{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}recover{% endblock %}
+
 
 <!-- Content -->
 {% block content %}
@@ -9,7 +18,7 @@
 
   <div class="content-box center-box" id="contentbox">
 
-    <h2 class="text-center"><span class="gold bold">Recover</span> account</h2>
+    <h1 class="text-center"><span class="gold bold">Recover</span> account</h1>
     <hr>
 
     {% if error_list %}

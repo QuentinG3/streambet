@@ -58,10 +58,15 @@ io.use(passportSocketIo.authorize({
   cookieParser: cookieParser,       // the same middleware you registrer in express
   key:          'connect.sid',       // the name of the cookie where express/connect stores its session_id
   secret:       'keyboard monkey',    // the session_secret to parse the cookie
-  store:        mongoS     // we NEED to use a sessionstore. no memorystore please
+  store:        mongoS,     // we NEED to use a sessionstore. no memorystore please
   //success:      onAuthorizeSuccess,  // *optional* callback on success - read more below
-  //fail:         onAuthorizeFail,     // *optional* callback on fail/error - read more below
+  fail:         onAuthorizeFail     // *optional* callback on fail/error - read more below
 }));
+
+// This function accepts every client unless there's an error
+function onAuthorizeFail(data, message, error, accept){
+  accept(null, !error);
+}
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -124,10 +129,12 @@ passport.deserializeUser(function(id, done) {
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  //TODO res.redirect('/404');
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  res.status(404);
+  res.render('404', {
+    user: req.user,
+    isAuthenticated: req.isAuthenticated(),
+    url: req.url
+  });
 });
 
 // error handlers

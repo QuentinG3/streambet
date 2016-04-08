@@ -2,20 +2,30 @@
 
 <!-- Title -->
 {% block title %}{{streamer.channelName}}{% endblock %}
+{% block ogtitle %}{{streamer.channelName}}{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}stream/{{streamer.channelName}}{% endblock %}
 
 <!-- Content -->
 {% block content %}
 <div class="container-fluid">
+
 	<!-- Stream and Bet -->
 	<div class="row">
 
 		<!-- Stream section -->
-		<div class=" col-lg-8 col-lg-push-2 col-md-8 col-md-push-2" id="stream">
+		<div class="col-lg-8 col-lg-push-2 col-md-8 col-md-push-2" id="stream">
 			<div class="panel">
-				<div class="panel-heading text-center"><i class="fa fa-bolt"></i> {{streamer.name}} <span id="streamer-info" style="display:none"></span> <i class="fa fa-bolt"></i></div>
+				<div class="panel-heading" style="position:relative;">
+					<i class="fa fa-video-camera"></i> {{streamer.name}} <span id="streamer-info" style="display:none"></span>
+					<button class="btn btn-lolbet" style="padding:-top:0;padding-bottom:0;position:absolute;top:4px;right:4px;bottom:4px;"type="button" name="button" onclick="twitchChat('http://www.twitch.tv/{{streamer.channelName}}/chat?popout=')">
+						<img src="https://static-cdn.jtvnw.net/emoticons/v1/62837/1.0" width="25" alt="Twitch" /> Chat
+					</button>
+				</div>
 				<div class="panel-body panel-body-empty">
 					<div class="aspect-ratio-16-9">
-						<iframe class="element-to-stretch" src="http://www.twitch.tv/{{streamer.channelName}}/embed" width="100%" height="100%" id="stream"></iframe>
+						<iframe class="element-to-stretch" allowfullscreen webkitallowfullscreen mozallowfullscreen src="http://www.twitch.tv/{{streamer.channelName}}/embed" width="100%" height="100%" id="stream"></iframe>
 					</div>
 				</div>
 			</div>
@@ -44,8 +54,8 @@
 							{% endif %}
 						</p>
 						<div class="spinner">
-						  <div class="double-bounce1"></div>
-						  <div class="double-bounce2"></div>
+							<div class="double-bounce1"></div>
+							<div class="double-bounce2"></div>
 						</div>
 					</div>
 				</div>
@@ -60,11 +70,11 @@
 					<div class="row">
 						<!-- Bet on red -->
 						<div class="col-xs-3">
-							<button id="button-red" class="btn btn-bet btn-bet-red center-block" onclick="redModal()">Go Red !</button>
-							<div id="potential-red" class="text-center" style="display:none">
-								<h4>Red <span class="gold">Wins</span></h4>
+							<button id="button-left" class="btn btn-bet btn-bet-red center-block" onclick="redModal()">Go Red !</button>
+							<div id="potential-left" class="text-center" style="display:none">
+								<h4><span id="team-color-left">Red</span> <span class="gold">Wins</span></h4>
 								<p>
-									<span id="gain-red"></span> <i class="fa gold fa-database"></i>
+									<span id="gain-left"></span> <i class="fa gold fa-database"></i>
 								</p>
 							</div>
 						</div>
@@ -81,19 +91,19 @@
 							</div>
 							<!-- Progress bar -->
 							<div class="progress" style="margin-bottom: 0;">
-								<div id="progress-red" class="progress-bar progress-bar-red" role="progressbar" style="width:50%">
+								<div id="progress-left" class="progress-bar progress-bar-red" role="progressbar" style="width:50%">
 								</div>
-								<div id="progress-blue" class="progress-bar progress-bar-blue" role="progressbar" style="width:50%">
+								<div id="progress-right" class="progress-bar progress-bar-blue" role="progressbar" style="width:50%">
 								</div>
 							</div>
 						</div><!-- col -->
 						<!-- Bet on blue -->
 						<div class="col-xs-3">
-							<button id="button-blue" class="btn btn-bet btn-bet-blue center-block" onclick="blueModal()">Go Blue !</button>
-							<div id="potential-blue" class="text-center" style="display:none">
-								<h4>Blue <span class="gold">Wins</span></h4>
+							<button id="button-right" class="btn btn-bet btn-bet-blue center-block" onclick="blueModal()">Go Blue !</button>
+							<div id="potential-right" class="text-center" style="display:none">
+								<h4><span id="team-color-right">Blue</span> <span class="gold">Wins</span></h4>
 								<p>
-									<span id="gain-blue"></span> <i class="fa gold fa-database"></i>
+									<span id="gain-right"></span> <i class="fa gold fa-database"></i>
 								</p>
 							</div>
 						</div>
@@ -104,22 +114,22 @@
 		</div><!-- Col -->
 
 		<!-- Red Team section -->
-		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left">
-			<div class="panel panel-red" id="team-red" style="display:none">
+		<div class="col-lg-2 col-lg-pull-8 col-md-2 col-xs-6 col-md-pull-8 col-left" id="block-left">
+			<div class="panel panel-red" id="team-left" style="display:none">
 
-				<div class="panel-heading">Red Team</div>
+				<div class="panel-heading" id="team-name-left">Red Team</div>
 				<div class="panel-body panel-body-empty">
 
 					<ul id="red-list" class="sortable-list">
 						{% for e in "12345" %}
 						<li>
-							<div class="champion champion-left" >
-								<img class="img-background img-responsive center-block picture-red" src="" alt="">
-								<h4><a class="summonerName-red" title="" href="http://www.lolking.net/" target="_blank"></a></h4>
-								<img class="rank rank-red" src="" alt="">
-								<img class="mastery img-rounded mastery-red" src="" alt="">
-								<img class="summoner1 img-rounded spell1-red" src="" alt="">
-								<img class="summoner2 img-rounded spell2-red" src="" alt="">
+							<div class="champion champion-left champion-red" >
+								<img class="img-background img-responsive center-block picture-left" src="" alt="">
+								<h4><a class="summonerName-left" title="" href="http://www.lolking.net/" target="_blank"></a></h4>
+								<img class="rank rank-left" src="" alt="">
+								<img class="mastery img-rounded mastery-left" src="" alt="">
+								<img class="summoner1 img-rounded spell1-left" src="" alt="">
+								<img class="summoner2 img-rounded spell2-left" src="" alt="">
 							</div>
 						</li>
 						{% endfor %}
@@ -130,22 +140,22 @@
 		</div>
 
 		<!-- Blue Team section -->
-		<div class="col-lg-2 col-md-2 col-xs-6 col-right">
-			<div class="panel panel-blue" id="team-blue" style="display:none">
+		<div class="col-lg-2 col-md-2 col-xs-6 col-right" id="block-right">
+			<div class="panel panel-blue" id="team-right" style="display:none">
 
-				<div class="panel-heading">Blue Team</div>
+				<div class="panel-heading" id="team-name-right">Blue Team</div>
 				<div class="panel-body panel-body-empty">
 
 					<ul id="blue-list" class="sortable-list">
 						{% for e in "12345" %}
 						<li>
-							<div class="champion champion-right">
-								<img class="img-background img-responsive center-block picture-blue" src="" alt="">
-								<h4><a class="summonerName-blue" title="" href="http://www.lolking.net/" target="_blank"></a></h4>
-								<img class="rank rank-blue" src="" alt="">
-								<img class="mastery img-rounded mastery-blue" src="" alt="">
-								<img class="summoner1 img-rounded spell1-blue" src="" alt="">
-								<img class="summoner2 img-rounded spell2-blue" src="" alt="">
+							<div class="champion champion-right champion-blue">
+								<img class="img-background img-responsive center-block picture-right" src="" alt="">
+								<h4><a class="summonerName-right" title="" href="http://www.lolking.net/" target="_blank"></a></h4>
+								<img class="rank rank-right" src="" alt="">
+								<img class="mastery img-rounded mastery-right" src="" alt="">
+								<img class="summoner1 img-rounded spell1-right" src="" alt="">
+								<img class="summoner2 img-rounded spell2-right" src="" alt="">
 							</div>
 						</li>
 						{% endfor %}
@@ -155,6 +165,7 @@
 		</div>
 
 	</div><!-- Stream and bet -->
+
 
 <!--
  __  __           _       _
@@ -209,6 +220,18 @@
 	          <h4 class="modal-title">Bet on Red</h4>
 	        </div>
 	        <div class="modal-body">
+						<!-- Connection window -->
+						<div id="bet-connect-red" style="display:none;">
+							<p class="text-center" style="color:white;">
+								You need to be logged in to bet.
+							</p>
+							<ul class="list-inline text-center">
+								<li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
+				        <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
+						  </ul>
+							<button class="btn btn-lolbet center-block" data-dismiss="modal" id="dismiss-red-modal">Cancel</button>
+
+						</div>
 						<!-- Bet window -->
 						<div id="bet-body-red">
 							<div class="form-group center-block text-center" style="max-width:100px;">
@@ -237,7 +260,7 @@
 						<!-- Message window -->
 						<div id="bet-message-red" style="display:none;">
 							<div id="error-red" class="alert alert-danger" style="display:none;">
-							  <strong>Error!</strong> <span id="error-msg-red"></span>
+							  <strong><span id="error-msg-red"></span></strong>
 							</div>
 							<div class="text-center" id="success-red">
 								<i class="fa fa-check fa-4x gold"></i>
@@ -263,6 +286,19 @@
 	          <h4 class="modal-title">Bet on Blue</h4>
 	        </div>
 	        <div class="modal-body">
+						<!-- Connection window -->
+						<div id="bet-connect-blue" style="display:none;">
+							<p class="text-center" style="color:white;">
+								You need to be logged in to bet.
+							</p>
+							<ul class="list-inline text-center">
+								<li><button class="btn navbar-btn btn-signup" onclick="location.href='/signup';"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button></li>
+				        <li><button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button></li>
+						  </ul>
+							<button class="btn btn-lolbet center-block" data-dismiss="modal" id="dismiss-red-modal">Cancel</button>
+
+						</div>
+
 						<!-- Bet window -->
 	        	<div id="bet-body-blue">
 	        		<div class="form-group center-block text-center" style="max-width:100px;">
@@ -291,7 +327,7 @@
 						<!-- Message window -->
 						<div id="bet-message-blue" style="display:none;">
 							<div id="error-blue" class="alert alert-danger" style="display:none;">
-							  <strong>Error!</strong> <span id="error-msg-blue"></span>
+							  <strong><span id="error-msg-blue"></span></strong>
 							</div>
 							<div class="text-center" id="success-blue">
 								<i class="fa fa-check fa-4x gold"></i>
@@ -318,6 +354,8 @@
 <!-- Local Variable -->
 <script>
 	var channel_name = '{{streamer.channelName}}';
+	var userStreamCoin = parseInt('{{ user.elo }}');
+	var isAuthenticated = {{ isAuthenticated }};
 </script>
 
 <!-- Realtime behavior -->

@@ -97,14 +97,18 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                           gameId: gameFromApi.gameId,
                           region: summonerOfOnlineStreamer.region,
                           channelName: summonerOfOnlineStreamer.channelname,
-                          summonerName:summonerOfOnlineStreamer.summonersname,
-                          teamOfSummoner:summonerTeam
+                          summonerName: summonerOfOnlineStreamer.summonersname,
+                          teamOfSummoner: summonerTeam
                         };
-                        io.to(summonerOfOnlineStreamer.channelname).emit('game',{game: gameToSend, betTeam:0,betAmount:0});
+                        io.to(summonerOfOnlineStreamer.channelname).emit('game', {
+                          game: gameToSend,
+                          betTeam: 0,
+                          betAmount: 0
+                        });
                         UpdateCurrentGameDebug("Game added to the database for summoner " + summonerOfOnlineStreamer.summonersname);
                       })
                       .catch(function(errorTransactionCreateGame) {
-                        console.log(errorTransactionCreateGame);
+                        UpdateCurrentGameDebug(errorTransactionCreateGame);
                         callbackSummonerOfOnlineStreamer();
                       });
                   })
@@ -128,6 +132,7 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
       });
   } else {
     UpdateCurrentGameDebug(summonerOfOnlineStreamer.summonersname + " not in a mode other than ranked queue");
+    callbackSummonerOfOnlineStreamer();
   }
 };
 

@@ -8,7 +8,7 @@ function addSummoner() {
     //Change template label
     document.getElementById("summonerNumber").innerHTML = summoner_length.toString();
     //Change template input ID
-    var summoner_input = document.getElementById("inputSummonerName")
+    var summoner_input = document.getElementById("inputSummonerName");
     summoner_input.id += summoner_length.toString();
 
 	//Clone element
@@ -20,7 +20,7 @@ function addSummoner() {
     //Change template ID
     cln.id = summoner_length;
 
-    //Display 
+    //Display
     cln.style.display = "inherit";
     //Add element to the list
     summoner_list.appendChild(cln);

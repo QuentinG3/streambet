@@ -1,10 +1,32 @@
+/* jshint esversion : 6*/
+
 var User = require('../models/User');
 var Streamer = require('../models/Streamer');
 var passport = require('passport');
 var validator = require("email-validator");
+var https = require('https');
 
 var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var username_regex = /^[_A-z0-9]{3,}$/;
+
+const CAPTCHA_API_KEY = "6LdS0hwTAAAAAApkTHy8_QmUbcapYk6LwDJ2BExD";
+
+function verifyRecaptcha(key, callback) {
+        https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + CAPTCHA_API_KEY + "&response=" + key, function(res) {
+                var data = "";
+                res.on('data', function (chunk) {
+                        data += chunk.toString();
+                });
+                res.on('end', function() {
+                        try {
+                                var parsedData = JSON.parse(data);
+                                callback(parsedData.success);
+                        } catch (e) {
+                                callback(false);
+                        }
+                });
+        });
+}
 
 module.exports = {
 
@@ -27,12 +49,12 @@ module.exports = {
     //Verficiation
     var valid = true;
     //username
-    if (!username || username == ""){
+    if (!username || username === ""){
       valid = false;
       error_list.push("Enter a username.");
     }
     //password
-    if (!password || password == ""){
+    if (!password || password === ""){
       valid = false;
       error_list.push("Enter a password.");
     }
@@ -75,6 +97,8 @@ module.exports = {
   registerAccount : function(req, res, next) {
     var error_list = [];
 
+
+
     //Data
     var email = req.body.email;
     var username = req.body.username;
@@ -88,17 +112,17 @@ module.exports = {
     //Verification
     var valid = true;
     //Email
-    if(!email || email == "" || !validator.validate(email)){
+    if(!email || email === "" || !validator.validate(email)){
       valid = false;
       error_list.push("Enter a valid email.");
     }
     //Username
-    if(!username || username == "" || !username_regex.test(username)){
+    if(!username || username === "" || !username_regex.test(username)){
       valid = false;
       error_list.push("Enter a valid username.");
     }
     //Password
-    if(!password || password == ""){
+    if(!password || password === ""){
       valid = false;
       error_list.push("Enter a password.");
     }else if (password.length < 3){
@@ -106,7 +130,7 @@ module.exports = {
       error_list.push("Your password must contain at least 3 characters.");
     }
     //Confirm
-    if(!confirm || confirm == ""){
+    if(!confirm || confirm === ""){
       valid = false;
       error_list.push("Enter your password confirmation.");
     }else if(password != confirm){
@@ -114,7 +138,7 @@ module.exports = {
       error_list.push("Passwords doesn't match.");
     }
     //Birthdate
-    if(!day || !month || !year || day == "" || month == "" || year == ""){
+    if(!day || !month || !year || day === "" || month === "" || year === ""){
       valid = false;
       error_list.push("Verify your age.");
     }else{
@@ -138,54 +162,73 @@ module.exports = {
       }
     }
 
-    //Database Verification
-    //Email and username
-    User.findOne({email: email.toLowerCase()}, function(err,emailCheck){
-      if(err){
-        console.log(err);
-      }else{
-        User.findOne({username: username.toLowerCase()}, function(err,usernameCheck){
+    //Verify captcha
+    verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
+      if (success) {
+        //Database Verification
+        //Email and username
+        User.findOne({email: email.toLowerCase()}, function(err,emailCheck){
           if(err){
             console.log(err);
           }else{
-            if(emailCheck != null){
-              valid = false;
-              error_list.push("This email is already taken.");
-            }
-            if(usernameCheck != null){
-              valid = false;
-              error_list.push("This username is already taken.");
-            }
+            User.findOne({username: username.toLowerCase()}, function(err,usernameCheck){
+              if(err){
+                console.log(err);
+              }else{
+                if(emailCheck !== null){
+                  valid = false;
+                  error_list.push("This email is already taken.");
+                }
+                if(usernameCheck !== null){
+                  valid = false;
+                  error_list.push("This username is already taken.");
+                }
 
-            if(valid){
-              //Create user in db
-              var newUser = new User({name: username, username: username.toLowerCase(), password: password, email: email.toLowerCase(), birth_date: birthDate});
-              newUser.save(function(err){
-                if (err) return console.error("Error in user creation in database",err);
-                //connect user
-                passport.authenticate('local')(req, res, function () {
-                  res.redirect('/');
-                });
+                if(valid){
+                  //Create user in db
+                  var newUser = new User({name: username, username: username.toLowerCase(), password: password, email: email.toLowerCase(), birth_date: birthDate});
+                  newUser.save(function(err){
+                    if (err) return console.error("Error in user creation in database",err);
+                    //connect user
+                    passport.authenticate('local')(req, res, function () {
+                      res.redirect('/');
+                    });
 
-              });
+                  });
 
-            }else{
-              //Render signup page with errors and user inputs
-              res.render('signup', {
-                error_list: error_list,
-                email: email,
-                username: username,
-                password: password,
-                confirm: confirm,
-                day: day,
-                month: month,
-                year: year
-              });
-            }
+                }else{
+                  //Render signup page with errors and user inputs
+                  res.render('signup', {
+                    error_list: error_list,
+                    email: email,
+                    username: username,
+                    password: password,
+                    confirm: confirm,
+                    day: day,
+                    month: month,
+                    year: year
+                  });
+                }
+              }
+            });
           }
+        });
+      } else {
+        error_list.push("The captcha failed.");
+        res.render('signup', {
+          error_list: error_list,
+          email: email,
+          username: username,
+          password: password,
+          confirm: confirm,
+          day: day,
+          month: month,
+          year: year
         });
       }
     });
+
+
 
   },
 
@@ -197,7 +240,7 @@ module.exports = {
       Streamer.find({}, "channelName name",{ sort:{name : 1}},function(err,streamer_list){
         if(err) return console.log(err);
           res.render('profil', {streamer_list: streamer_list, isAuthenticated: req.isAuthenticated(), user: req.user});
-      })
+      });
     }
   },
 
@@ -206,12 +249,12 @@ module.exports = {
     var valid = true;
 
     /* Edit email */
-    if (req.body.email_edit != undefined){
+    if (req.body.email_edit !== undefined){
       //Data
       var email = req.body.email;
 
       //Verification
-      if(!email || email == "" || !validator.validate(email)){
+      if(!email || email === "" || !validator.validate(email)){
         valid = false;
         error_list.push("Enter a valid email.");
       }
@@ -220,14 +263,14 @@ module.exports = {
         User.findOne({email: email.toLowerCase()}, function(err,emailCheck){
           if(err) console.log(err);
           else{
-            if(emailCheck != null && emailCheck.username != req.user.username){
+            if(emailCheck !== null && emailCheck.username !== req.user.username){
               valid = false;
               error_list.push("This email is already taken.");
               res.render('profil', {error_list: error_list, isAuthenticated: req.isAuthenticated, user: req.user});
             }else{
               //Update user
               User.update(req.user, {email: email}, function(err, doc){
-                if(err) console.log(err)
+                if(err) console.log(err);
                 else{
                   res.redirect('/profil');
                 }
@@ -238,14 +281,14 @@ module.exports = {
 
       }
     /* Edit  birthday */
-    }else if(req.body.birthdate_edit != undefined){
+  }else if(req.body.birthdate_edit !== undefined){
       var day = req.body.day;
       var month = req.body.month;
       var year = req.body.year;
       var birthDate = null;
 
       //Birthdate
-      if(!day || !month || !year || day == "" || month == "" || year == ""){
+      if(!day || !month || !year || day === "" || month === "" || year === ""){
         valid = false;
         error_list.push("Verify your age.");
       }else{
@@ -272,7 +315,7 @@ module.exports = {
       if(valid){
         //update user
         User.update(req.user, {birth_date: birthDate}, function(err, doc){
-          if(err) console.log(err)
+          if(err) console.log(err);
           else{
             res.redirect('/profil');
           }
@@ -280,12 +323,12 @@ module.exports = {
       }
 
     /* Edit password */
-    }else if(req.body.password_edit != undefined){
+  }else if(req.body.password_edit !== undefined){
       var password = req.body.password;
       var confirm = req.body.confirm;
 
       //Password
-      if(!password || password == ""){
+      if(!password || password === ""){
         valid = false;
         error_list.push("Enter a password.");
       }else if (password.length < 3){
@@ -293,7 +336,7 @@ module.exports = {
         error_list.push("Your password must contain at least 3 characters.");
       }
       //Confirm
-      if(!confirm || confirm == ""){
+      if(!confirm || confirm === ""){
         valid = false;
         error_list.push("Enter your password confirmation.");
       }else if(password != confirm){
@@ -307,7 +350,7 @@ module.exports = {
         	if (!err) {
             //Update user
             User.update(req.user, {password: encryptedValue}, function(err, doc){
-              if(err) console.log(err)
+              if(err) console.log(err);
               else{
                 res.redirect('/profil');
               }
@@ -338,4 +381,4 @@ module.exports = {
     res.redirect('/');
   }
 
-}
+};

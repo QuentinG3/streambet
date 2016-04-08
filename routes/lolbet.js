@@ -49,4 +49,4 @@ module.exports = {
     res.render('add_streamer', {isAuthenticated: req.isAuthenticated(), user: req.user});
   }
 
-}
+};

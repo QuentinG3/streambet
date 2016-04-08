@@ -8,7 +8,7 @@ var lolbet = require('./lolbet');
 
 
 /* GET Home page. */
-router.get('/', base.home);
+router.get('/', lolbet.streamers);
 
 /* GET 404 page. */
 router.get('/404', base.page404);
@@ -24,6 +24,9 @@ router.get('/contact', base.contact);
 
 /* POST Contact page. */
 router.post('/contact', base.sendContactMail);
+
+/* GET How it works page. */
+router.get('/how-to-play', base.howtoplay);
 
 /* GET Login page. */
 router.get('/login', account.login);
@@ -48,9 +51,6 @@ router.get('/logoff', account.logoff);
 
 /* GET Recover account page. */
 router.get('/recover', account.recover);
-
-/* GET streamers page. */
-router.get('/streamers', lolbet.streamers);
 
 /* GET stream page. */
 router.get('/stream/:name', lolbet.stream);

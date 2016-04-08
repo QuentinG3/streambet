@@ -1,7 +1,7 @@
 /* jshint esversion : 6*/
 
-var User = require('../models/User');
-var Streamer = require('../models/Streamer');
+//var User = require('../models/User');
+//var Streamer = require('../models/Streamer');
 var passport = require('passport');
 var validator = require("email-validator");
 var https = require('https');
@@ -16,6 +16,36 @@ var username_regex = /^[_A-z0-9]{3,}$/;
 var userAccountDebug = require('debug')('userAccount');
 
 const CAPTCHA_API_KEY = "6LdS0hwTAAAAAApkTHy8_QmUbcapYk6LwDJ2BExD";
+
+function getBDay(birthdate){
+  var day = birthdate.getDate();
+  if (day < 10){
+    day = "0" + day.toString();
+  }
+  var month = birthdate.getMonth() + 1;
+  if (month < 10){
+    month = "0" + month.toString();
+  }
+  var year = birthdate.getFullYear();
+
+  return day + " / " + month + " / " + year;
+}
+
+function getDay(birthdate){
+  var day = birthdate.getDate();
+  if (day < 10){
+    day = "0" + day.toString();
+  }
+  return day;
+}
+
+function getMonth(birthdate){
+  var month = birthdate.getMonth() + 1;
+  if (month < 10){
+    month = "0" + month.toString();
+  }
+  return month;
+}
 
 function verifyRecaptcha(key, callback) {
     https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + CAPTCHA_API_KEY + "&response=" + key, function(res) {
@@ -255,18 +285,13 @@ module.exports = {
         if (!req.isAuthenticated()) {
             res.redirect('/');
         } else {
-            Streamer.find({}, "channelName name", {
-                sort: {
-                    name: 1
-                }
-            }, function(err, streamer_list) {
-                if (err) return console.log(err);
-                res.render('profil', {
-                    streamer_list: streamer_list,
-                    isAuthenticated: req.isAuthenticated(),
-                    user: req.user
-                });
-            });
+          res.render('profil', {
+              isAuthenticated: req.isAuthenticated(),
+              user: req.user,
+              bDay: getBDay(req.user.birthdate),
+              day: getDay(req.user.birthdate),
+              month: getMonth(req.user.birthdate)
+          });
         }
     },
 
@@ -286,33 +311,36 @@ module.exports = {
             }
 
             if (valid) {
-                User.findOne({
-                    email: email.toLowerCase()
-                }, function(err, emailCheck) {
-                    if (err) console.log(err);
-                    else {
-                        if (emailCheck !== null && emailCheck.username !== req.user.username) {
-                            valid = false;
-                            error_list.push("This email is already taken.");
-                            res.render('profil', {
-                                error_list: error_list,
-                                isAuthenticated: req.isAuthenticated,
-                                user: req.user
-                            });
-                        } else {
-                            //Update user
-                            User.update(req.user, {
-                                email: email
-                            }, function(err, doc) {
-                                if (err) console.log(err);
-                                else {
-                                    res.redirect('/profil');
-                                }
-                            });
-                        }
-                    }
-                });
+              database.users.getUserByEmail(email.toLowerCase())
+              .then(function(emailCheck){
 
+                if (emailCheck !== null && emailCheck.username !== req.user.username) {
+                    valid = false;
+                    error_list.push("This email is already taken.");
+                    res.render('profil', {
+                        error_list: error_list,
+                        isAuthenticated: req.isAuthenticated,
+                        user: req.user,
+                        bDay: getBDay(req.user.birthdate),
+                        day: getDay(req.user.birthdate),
+                        month: getMonth(req.user.birthdate)
+                    });
+                } else {
+                    //Update user
+                    database.users.updateUserEmail(req.user.username, email)
+                    .then(function(){
+                      console.log(email);
+                      res.redirect('/profil');
+                    })
+                    .catch(function(error){
+                      userAccountDebug(error);
+                    });
+                }
+
+              })
+              .catch(function(error){
+                userAccountDebug(error);
+              });
             }
             /* Edit  birthday */
         } else if (req.body.birthdate_edit !== undefined) {
@@ -348,13 +376,12 @@ module.exports = {
 
             if (valid) {
                 //update user
-                User.update(req.user, {
-                    birth_date: birthDate
-                }, function(err, doc) {
-                    if (err) console.log(err);
-                    else {
-                        res.redirect('/profil');
-                    }
+                database.users.updateUserBirthdate(req.user.username, birthDate)
+                .then(function(){
+                  res.redirect('/profil');
+                })
+                .catch(function(error){
+                  userAccountDebug(error);
                 });
             }
 
@@ -381,21 +408,21 @@ module.exports = {
             }
 
             if (valid) {
-                //Encrypt password
-                User.encryptPassword(password, function(err, encryptedValue) {
-                    if (!err) {
-                        //Update user
-                        User.update(req.user, {
-                            password: encryptedValue
-                        }, function(err, doc) {
-                            if (err) console.log(err);
-                            else {
-                                res.redirect('/profil');
-                            }
-                        });
-                    }
+              //Hash password
+              var hashNoCallBack = Q.denodeify(bcrypt.hash);
+              hashNoCallBack(password, null, null)
+              .then(function(hashPassword){
+                database.users.updateUserPassword(req.user.username, hashPassword)
+                .then(function(){
+                  res.redirect('/profil');
+                })
+                .catch(function(error){
+                  userAccountDebug(error);
                 });
-
+              })
+              .catch(function(error){
+                userAccountDebug(error);
+              });
             }
         }
 
@@ -403,7 +430,10 @@ module.exports = {
             res.render('profil', {
                 error_list: error_list,
                 isAuthenticated: req.isAuthenticated,
-                user: req.user
+                user: req.user,
+                bDay: getBDay(req.user.birthdate),
+                day: getDay(req.user.birthdate),
+                month: getMonth(req.user.birthdate)
             });
         }
     },

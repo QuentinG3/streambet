@@ -6,7 +6,7 @@ CREATE TABLE users(name TEXT NOT NULL,
                     birthdate DATE DEFAULT CURRENT_DATE);
 
 CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,
-                        Channelname TEXT NOT NULL PRIMARY KEY,
+                        channelname TEXT NOT NULL PRIMARY KEY,
                         online BOOL NOT NULL,
                         viewers INT NOT NULL,
                         preview TEXT NOT NULL,

@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var swig = require('swig');
 
 var base = require('./base');
 var account = require('./account');

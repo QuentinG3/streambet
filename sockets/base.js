@@ -79,7 +79,7 @@ startSocketIO = function (io) {
       var channelName = msg.streamer;
 
 
-
+/*
       User.findOne({_id: userId},function(errUser,userDb){
         if (errUser) return socket.emit('betResponse',{success: false, error:"Internal server error for user"});
           else if (!userDb){
@@ -158,7 +158,7 @@ startSocketIO = function (io) {
                });
              }
            }
-         );
+         );*/
 
       /*TODO :
       Check is user is a real user,

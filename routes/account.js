@@ -5,11 +5,15 @@ var Streamer = require('../models/Streamer');
 var passport = require('passport');
 var validator = require("email-validator");
 var https = require('https');
+var bcrypt = require("bcrypt-nodejs");
+var Q = require("q");
 
 var database = require('../database/connection');
 
 var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 var username_regex = /^[_A-z0-9]{3,}$/;
+
+var userAccountDebug = require('debug')('userAccount');
 
 const CAPTCHA_API_KEY = "6LdS0hwTAAAAAApkTHy8_QmUbcapYk6LwDJ2BExD";
 
@@ -174,78 +178,61 @@ module.exports = {
             if (success) {
                 //Database Verification
                 //Email and username
-                /*
+
                 database.users.getUserByEmail(email.toLowerCase())
                 .then(function(emailCheck){
                   database.users.getUserByUsername(username.toLowerCase())
                   .then(function(usernameCheck){
+                    if (emailCheck !== null) {
+                        valid = false;
+                        error_list.push("This email is already taken.");
+                    }
+                    if (usernameCheck !== null) {
+                        valid = false;
+                        error_list.push("This username is already taken.");
+                    }
 
+                    if (valid) {
+
+                      //Hash password
+                      var hashNoCallBack = Q.denodeify(bcrypt.hash);
+                      hashNoCallBack(password, null, null)
+                      .then(function(hashPassword){
+                        database.users.saveUser(username, username.toLowerCase(), hashPassword, email, birthDate)
+                        .then(function(){
+                          //connect user
+                          passport.authenticate('local')(req, res, function() {
+                              res.redirect('/');
+                          });
+                        })
+                        .catch(function(error){
+                          userAccountDebug(error);
+                        });
+                      })
+                      .catch(function(error){
+                        userAccountDebug(error);
+                      });
+
+                    } else {
+                        //Render signup page with errors and user inputs
+                        res.render('signup', {
+                            error_list: error_list,
+                            email: email,
+                            username: username,
+                            password: password,
+                            confirm: confirm,
+                            day: day,
+                            month: month,
+                            year: year
+                        });
+                    }
                   })
                   .catch(function(error){
-
+                    userAccountDebug(error);
                   });
                 })
                 .catch(function(error){
-
-                });*/
-
-
-
-                User.findOne({
-                    email: email.toLowerCase()
-                }, function(err, emailCheck) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        User.findOne({
-                            username: username.toLowerCase()
-                        }, function(err, usernameCheck) {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                if (emailCheck !== null) {
-                                    valid = false;
-                                    error_list.push("This email is already taken.");
-                                }
-                                if (usernameCheck !== null) {
-                                    valid = false;
-                                    error_list.push("This username is already taken.");
-                                }
-
-                                if (valid) {
-                                    //Create user in db
-                                    var newUser = new User({
-                                        name: username,
-                                        username: username.toLowerCase(),
-                                        password: password,
-                                        email: email.toLowerCase(),
-                                        birth_date: birthDate
-                                    });
-                                    newUser.save(function(err) {
-                                        if (err) return console.error("Error in user creation in database", err);
-                                        //connect user
-                                        passport.authenticate('local')(req, res, function() {
-                                            res.redirect('/');
-                                        });
-
-                                    });
-
-                                } else {
-                                    //Render signup page with errors and user inputs
-                                    res.render('signup', {
-                                        error_list: error_list,
-                                        email: email,
-                                        username: username,
-                                        password: password,
-                                        confirm: confirm,
-                                        day: day,
-                                        month: month,
-                                        year: year
-                                    });
-                                }
-                            }
-                        });
-                    }
+                  userAccountDebug(error);
                 });
             } else {
                 error_list.push("The captcha failed.");
@@ -261,9 +248,6 @@ module.exports = {
                 });
             }
         });
-
-
-
     },
 
     /* Show profil section.  */

@@ -6,7 +6,7 @@ var cn = {
   host: 'localhost', // server name or IP address;
   port: 5432,
   database: 'streambet',
-  user: 'quentin',
+  user: 'sbrole',
   password: 'azerty'
 };
 
@@ -183,6 +183,9 @@ var usersFunctions = {
   },
   getUserByUsername : function(username){
     return db.oneOrNone("SELECT * FROM $1~ WHERE " + USERNAME_COL + "=$2", [USERS_TABLE_NAME, username]);
+  },
+  saveUser : function(name, username, hashPassword, email, birthdate){
+    return db.query("INSERT INTO $1~ VALUES($2, $3, $4, $5, $6, $7)", [USERS_TABLE_NAME, name, username, hashPassword, email, 500, birthdate]);
   }
 };
 module.exports = {

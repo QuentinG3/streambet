@@ -1,4 +1,4 @@
-var Game = require('../../models/Game')
+var Game = require('../../models/Game');
 var LolApi = require('leagueapi');
 var Q = require("q");
 
@@ -75,10 +75,10 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                       }
 
                       playerList.push({
-                        summonername: participant.summonerName,
-                        summonerid: participant.summonerId,
-                        teamid: participant.teamId,
-                        championname: listChampion.data[participant.championId].key,
+                        summonerName: participant.summonerName,
+                        summonerId: participant.summonerId,
+                        teamId: participant.teamId,
+                        championName: listChampion.data[participant.championId].key,
                         spell1: listSpell.data[participant.spell1Id].key,
                         spell2: listSpell.data[participant.spell2Id].key,
                         rank: playerRank,
@@ -92,18 +92,19 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                     database.transactions.addEntierGameTransaction(gameFromApi.gameId, summonerOfOnlineStreamer, summonerTeam, gameFromApi.gameStartTime, playerList, bannedChampionList)
                       .then(function() {
                         var gameToSend = {
-                          player: playerList,
-                          bannedChampion: bannedChampionList,
-                          gameId: gameFromApi.gameId,
+                          players: playerList,
+                          bannedChampions: bannedChampionList,
                           region: summonerOfOnlineStreamer.region,
-                          channelName: summonerOfOnlineStreamer.channelname,
                           summonerName: summonerOfOnlineStreamer.summonersname,
-                          teamOfSummoner: summonerTeam
+                          teamOfSummoner: summonerTeam,
+                          timestamp: gameFromApi.gameStartTime
                         };
                         io.to(summonerOfOnlineStreamer.channelname).emit('game', {
                           game: gameToSend,
                           betTeam: 0,
-                          betAmount: 0
+                          betAmount: 0,
+                          amount100: 0,
+                          amount200: 0
                         });
                         UpdateCurrentGameDebug("Game added to the database for summoner " + summonerOfOnlineStreamer.summonersname);
                       })

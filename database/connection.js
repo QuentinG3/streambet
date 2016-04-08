@@ -6,7 +6,7 @@ var cn = {
   host: 'localhost', // server name or IP address;
   port: 5432,
   database: 'streambet',
-  user: 'quentin',
+  user: 'sbrole',
   password: 'azerty'
 };
 

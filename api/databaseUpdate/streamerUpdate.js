@@ -1,6 +1,6 @@
 var Q = require("q");
 
-var database = require('../../database/connection')
+var database = require('../../database/connection');
 
 //debugs
 var UpdateStreamerDebug = require('debug')('updateStreamer');

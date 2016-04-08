@@ -1,6 +1,6 @@
 CREATE TABLE users(name TEXT NOT NULL,
                     username TEXT NOT NULL PRIMARY KEY,
-                    email TEXT NOT NULL,
+                    email TEXT NOT NULL UNIQUE,
                     money INT NOT NULL,
                     birthdate DATE DEFAULT CURRENT_DATE);
 

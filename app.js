@@ -12,10 +12,15 @@ var flash = require('connect-flash');
 var swig = require('swig');
 var session = require('express-session');
 
+var database = require('./database/connection');
+
 var routes = require('./routes/index');
 
 var apiRoutines = require('./api/apiRoutines');
 var socketIOManagement = require('./sockets/base');
+
+//debugs
+var userPassportDebug = require('debug')('userPassport');
 
 
 var app = express();
@@ -91,6 +96,14 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     if (email_regex.test(username)){
       //Get user with his username
+      /*
+      database.users.getUserByUsername("okok")
+      .then(function(user){
+
+      })
+      .catch(function(errorGettingUserByEmail){
+        userPassportDebug(errorGettingUserByEmail);
+      });*/
       User.findOne({ email: username.toLowerCase() }, function (err, user) {
         if (err) { return done(err); }
         if (!user) {

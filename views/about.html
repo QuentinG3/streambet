@@ -11,6 +11,9 @@
 <!-- URL -->
 {% block ogurl %}about{% endblock %}
 
+<!-- Nav -->
+{% block nav-about %}class="active"{% endblock %}
+
 <!-- Content -->
 {% block content %}
 <div class="container">
@@ -19,11 +22,20 @@
 
     <h1 class="text-center"><span class="gold bold">About</span> us</h1>
     <hr>
+    <br>
     {% for para in about %}
+    <h2>{{ para.title }}</h2>
     <p>
-      {{ para }}
+      {{ para.text }}
     </p>
+    <br>
     {% endfor %}
+
+    <br>
+
+    <p>
+      Got a question? Please check the <a class="lolbet" href="/faq">FAQ</a>.
+    </p>
   </div>
 
 </div>

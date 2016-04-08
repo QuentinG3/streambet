@@ -193,6 +193,7 @@ const USERNAME_COL = "username";
 const EMAIL_COL = "email";
 const DATE_COL = "birthdate";
 const PASSWORD_COL = "password";
+const MONEY_COL = "money";
 
 var usersFunctions = {
   getUserByEmail : function(email){
@@ -212,6 +213,9 @@ var usersFunctions = {
   },
   updateUserPassword : function(username, hashPassword){
     return db.query("UPDATE $1~ SET " + PASSWORD_COL + "=$2 WHERE username = $3",[USERS_TABLE_NAME, hashPassword, username]);
+  },
+  getBestUser : function(){
+    return db.query("SELECT * FROM $1~ ORDER BY "+MONEY_COL+" DESC LIMIT 20", [USERS_TABLE_NAME]);
   }
 };
 

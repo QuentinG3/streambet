@@ -72,10 +72,21 @@ module.exports = {
     //TODO : Get the best ranked account
     /* Show the ranking of the best player of the website. */
     ranking: function(req, res, next) {
-        res.render('ranking', {
-            isAuthenticated: req.isAuthenticated(),
-            user: req.user
-        });
+        database.users.getBestUser()
+        .then(function(list){
+          res.render('ranking', {
+              player_list: list,
+              isAuthenticated: req.isAuthenticated(),
+              user: req.user
+          });
+        })
+        .catch(function(error){
+          res.render('ranking', {
+              isAuthenticated: req.isAuthenticated(),
+              user: req.user
+          });
+          lolbetRoutesDebug(error);
+        })
     },
 
     /* Allow the user to request a streamer. */

@@ -75,8 +75,13 @@ startSocketIO = function(io) {
                                     timestamp: parseInt(game.timestamp)
                                   };
 
-                                  socket.emit('game', {game: gameToSend, betTeam: betTeam, betAmount: betAmount,amount100:amount100,amount200:amount200});
-
+                                  socket.emit('game', {
+                                    game: gameToSend,
+                                    betTeam: betTeam,
+                                    betAmount: betAmount,
+                                    amount100: amount100,
+                                    amount200: amount200
+                                  });
 
                                 })
                                 .catch(function(errorGettingBets) {

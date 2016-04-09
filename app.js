@@ -32,7 +32,7 @@ app.io = io;
 //Start socket io
 socketIOManagement.startSocketIO(io);
 //Starting api update routines
-//apiRoutines.startApiRoutineLoop(io);
+apiRoutines.startApiRoutineLoop(io);
 
 //Make the app use Swig to render file
 app.engine('html', swig.renderFile);
@@ -110,13 +110,14 @@ passport.use(new LocalStrategy(
         bcrypt.compare(password, user.password, function(err, res) {
             if(!res){
               return done(null, false, { message: 'Incorrect password.' });
+            }else{
+              return done(null, user);
             }
-            return done(null, user);
         });
       })
       .catch(function(){
         userPassportDebug(errorGettingUserByEmail);
-        return done(errorGettingUserByEmail);
+        return done(errorGettingUserByEmail, null);
       });
     }else{
       //Get user with his username
@@ -128,14 +129,15 @@ passport.use(new LocalStrategy(
         bcrypt.compare(password, user.password, function(err, res) {
             if(!res){
               return done(null, false, { message: 'Incorrect password.' });
+            }else{
+              return done(null, user);
             }
 
         });
-        return done(null, user);
       })
       .catch(function(errorGettingUserByUsername){
         userPassportDebug(errorGettingUserByUsername);
-        return done(errorGettingUserByUsername);
+        return done(errorGettingUserByUsername, null);
       });
     }
   }

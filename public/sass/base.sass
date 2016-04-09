@@ -18,18 +18,21 @@ p
 .underline
   text-decoration: underline
 
+span.twitch-text
+  color: $twitch
+
 span.twitch
   background-color: $twitch
   color: white
   border-color: lighten($twitch,15%)
 
 button.btn-twitch
-  background-color: transparent
+  background-color: $twitch
   color: white
 
 button.btn-twitch:hover, button.btn-twitch:focus
   color: white
-  background-color: $twitch
+  background-color: darken($twitch, 10%)
 
 button.btn-lolbet
   +gradient-lolbet()
@@ -66,6 +69,14 @@ button.btn-join
   height: 100px
   color: white
   font-size: 180%
+
+button.btn-request
+  background-color: transparent
+  border: solid 1px $navcolor
+  border-radius: 5px
+
+button.btn-request:hover, button.btn-request:focus
+  color: white
 
 //Button
 button.btn-info:hover, button.btn-join:focus
@@ -247,6 +258,51 @@ p.info
   padding-left: 0
   padding-right: 0
   text-align: center
+
+//Streamer list
+ul.streamer-list
+  list-style-type: none
+
+  margin: 0
+  padding: 0
+
+  li
+    padding: 5px 10px
+
+
+  li:nth-child(even)
+    background-color: $navbg
+
+  li:nth-child(odd)
+    background-color: lighten($navbg, 5%)
+
+//Summoner list
+ul.summoner-list
+  list-style-type: none
+  border-top: solid 1px $navcolor
+  border-left: solid 1px $navcolor
+  border-right: solid 1px $navcolor
+  margin: 0
+  padding: 0
+
+  li
+    padding: 5px 10px
+    border-bottom: solid 1px $navcolor
+
+  li:nth-child(odd)
+    background-color: $navbg
+
+  li:nth-child(even)
+    background-color: lighten($navbg, 5%)
+
+div.increment
+  cursor: pointer
+
+div.increment.up:hover
+  color: green
+
+div.increment.down:hover
+  color: red
 
 //Text Area
 textarea

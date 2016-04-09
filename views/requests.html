@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Requested Streamers{% endblock %}
+{% block ogtitle %}Requested Streamers{% endblock %}
+
+<!-- Description -->
+{% block description %}Your favorite streamer isn't part of the website yet? Request it !{% endblock %}
+{% block ogdescription %}Your favorite streamer isn't part of the website yet? Request it !{% endblock %}
+
+<!-- URL -->
+{% block ogurl %}requests{% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="container">
+
+  <div class="content-box">
+    <h1 class="text-center"><span class="gold">Req</span>uests</h1>
+    <hr>
+
+    <!-- Streamer list -->
+    <ul class="streamer-list">
+      {% for e in "12345" %}
+      <li>
+        <div class="row">
+          <div class="col-sm-1 col-xs-2" style="padding:0;">
+            <span class="vote">
+              <div class="text-center increment up" onclick=""><i class="fa fa-2x fa-caret-up"></i></div>
+              <div class="text-center count">3556</div>
+              <div class="text-center increment down" onclick=""><i class="fa fa-2x fa-caret-down"></i></div>
+            </span>
+          </div>
+          <div class="col-sm-11 col-xs-10" style="">
+            channeName
+            <br>
+            <span class="twitch-text">https://www.twitch.tv/</span>channelName
+            <br>
+            <button class="btn btn-request" data-toggle="collapse" data-target="#c{{e}}"><i class="fa fa-angle-down"></i> Summoners</button>
+            <div id="c{{e}}" class="collapse">
+              <ul class="summoner-list">
+                {% for i in "123" %}
+                <li>
+                  <div class="row">
+                    <div class="col-sm-1 col-xs-2" style="padding: 0;">
+                      <span class="vote">
+                        <div class="text-center increment up" onclick=""><i class="fa fa fa-caret-up"></i></div>
+                        <div class="text-center count">252</div>
+                        <div class="text-center increment down" onclick=""><i class="fa fa fa-caret-down"></i></div>
+                      </span>
+                    </div>
+                    <div class="col-sm-11 col-xs-10" style="padding-top:19.5px;">
+                      Summoner name (serveur)
+                    </div>
+                  </div>
+                </li>
+                {% endfor %}
+                <li>
+                  <div class="row">
+                    <div class="col-sm-1 col-xs-2">
+                      <button class="btn btn-lolbet center-block" style="margin-top:9px" type="button" name="button"><i class="fa fa-plus"></i></button>
+                    </div>
+                    <div class="col-sm-11 col-xs-10" style="max-width:600px;">
+                      <div class="form-group" style="margin-bottom:0;margin-top:9px;">
+                        <div class="row" >
+                          <!-- Summoner Name -->
+                          <div class="form-group col-sm-6" style="margin-bottom:0">
+                            <input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
+                            <div class="help-block with-errors"></div>
+                          </div>
+                          <!-- Region Name -->
+                          <div class="form-group col-sm-6" style="margin-bottom:0">
+                            <select class="form-control">
+                              {% for region in region_list %}
+                              <option>{{ region.name }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block JS %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}

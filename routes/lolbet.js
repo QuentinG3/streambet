@@ -69,7 +69,6 @@ module.exports = {
         });
     },
 
-    //TODO : Get the best ranked account
     /* Show the ranking of the best player of the website. */
     ranking: function(req, res, next) {
         database.users.getBestUser()
@@ -86,15 +85,31 @@ module.exports = {
               user: req.user
           });
           lolbetRoutesDebug(error);
-        })
+        });
     },
 
     /* Allow the user to request a streamer. */
     add_streamer: function(req, res, next) {
+      if(req.isAuthenticated()){
         res.render('add_streamer', {
             isAuthenticated: req.isAuthenticated(),
             user: req.user
         });
+      }else{
+        res.redirect('/login');
+      }
+    },
+
+    requests: function(req, res, next) {
+      if(req.isAuthenticated()){
+        res.render('requests', {
+            isAuthenticated: req.isAuthenticated(),
+            user: req.user
+        });
+      }else{
+        res.redirect('/login');
+      }
+
     }
 
 };

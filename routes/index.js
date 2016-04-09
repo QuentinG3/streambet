@@ -51,6 +51,9 @@ router.get('/logoff', account.logoff);
 /* GET Recover account page. */
 router.get('/recover', account.recover);
 
+/* GET Request streamer page */
+router.get('/requests', lolbet.requests);
+
 /* GET stream page. */
 router.get('/stream/:name', lolbet.stream);
 

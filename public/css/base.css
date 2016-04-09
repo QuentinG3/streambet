@@ -22,18 +22,21 @@ p {
 .underline {
   text-decoration: underline; }
 
+span.twitch-text {
+  color: #6441A5; }
+
 span.twitch {
   background-color: #6441A5;
   color: white;
   border-color: #8c6dc5; }
 
 button.btn-twitch {
-  background-color: transparent;
+  background-color: #6441A5;
   color: white; }
 
 button.btn-twitch:hover, button.btn-twitch:focus {
   color: white;
-  background-color: #6441A5; }
+  background-color: #4e3380; }
 
 button.btn-lolbet {
   background: #D39C2C;
@@ -77,6 +80,14 @@ button.btn-join {
   height: 100px;
   color: white;
   font-size: 180%; }
+
+button.btn-request {
+  background-color: transparent;
+  border: solid 1px #9D9D9D;
+  border-radius: 5px; }
+
+button.btn-request:hover, button.btn-request:focus {
+  color: white; }
 
 button.btn-info:hover, button.btn-join:focus {
   background: #946d1f;
@@ -282,6 +293,41 @@ p.info {
   padding-left: 0;
   padding-right: 0;
   text-align: center; }
+
+ul.streamer-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+  ul.streamer-list li {
+    padding: 5px 10px; }
+  ul.streamer-list li:nth-child(even) {
+    background-color: #222222; }
+  ul.streamer-list li:nth-child(odd) {
+    background-color: #2f2f2f; }
+
+ul.summoner-list {
+  list-style-type: none;
+  border-top: solid 1px #9D9D9D;
+  border-left: solid 1px #9D9D9D;
+  border-right: solid 1px #9D9D9D;
+  margin: 0;
+  padding: 0; }
+  ul.summoner-list li {
+    padding: 5px 10px;
+    border-bottom: solid 1px #9D9D9D; }
+  ul.summoner-list li:nth-child(odd) {
+    background-color: #222222; }
+  ul.summoner-list li:nth-child(even) {
+    background-color: #2f2f2f; }
+
+div.increment {
+  cursor: pointer; }
+
+div.increment.up:hover {
+  color: green; }
+
+div.increment.down:hover {
+  color: red; }
 
 textarea {
   resize: vertical; }

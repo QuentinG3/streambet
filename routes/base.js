@@ -15,13 +15,13 @@ module.exports = {
         res.render('about', {
             about: [{
                 title: "What is streambet",
-                text: "Streambet is an esport betting website based on league of legends streaming. Every time a streamer enter in a ranked game on league of legends, StreamBet users have 5 minutes to bet on one of the team involved. At the end of the game, this bet is processed and the total amount is shared among the winners. We feature the most watched streamers on twitch.tv and we try to maintain their summoners list up-to-date. ",
+                text: "Streambet is an esport betting website based on league of legends streaming. Every time a streamer enter in a ranked game on league of legends, StreamBet users have 5 minutes to bet on one of the team involved. At the end of the game, this bet is processed and the total amount is shared among the winners. We feature the most watched streamers on twitch.tv and we try to maintain their summoners list up-to-date. If you think we missed someone, please log in and add a new streamer in the home page.",
             }, {
                 title: "Who we are",
-                text: "We are two belgian computer science students. We study in the Catholic University of Louvain in Belgium. As league of legends players and streaming enthusiast, we decided to develop this website to create a new kind of bet system.",
+                text: "We are two belgian computer science students. We study in the Catholic University of Louvain in Belgium. As league of legends players and streaming enthusiast, we decided to develop this website to create a new kind of bet system. We hope you'll enjoy this project and don't hesitate to give us your feedback !",
             }, {
                 title: "Future of StreamBet",
-                text: "There are a lots of things that we can add to streambet. We will try to add a recommandation system that allow user to add new streamers and summoners. We will also try to add new game to the system like Counter Strike, Hearthstone, ... Feel free ton contact us with any request you have.",
+                text: "There are a lots of things that we can add to streambet. At the moment you can only bet on which team is going to win. Soon you'll be able to bet on more specifics things. Like who will draw the first blood for example. We will also try to add new game to the system like Counter Strike, Hearthstone, ... Feel free ton contact us with any request you have.",
             }],
             isAuthenticated: req.isAuthenticated(),
             user: req.user

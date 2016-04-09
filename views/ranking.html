@@ -27,11 +27,13 @@
     <ol>
       {% for player in player_list %}
       <li style="height:30px;line-height:30px;">
-        {{ player.profil.name }}
+        <p>  
+        {{ player.name }}
         <span class="pull-right" style="height:30px;">
-          {{ player.profil.elo }}
-          <img src="lolbet/img/rank/{{player.profil.division}}.png" width="30" alt="rank">
+          {{ player.money }}
+          <i class="fa fa-database gold"></i>
         </span>
+        </p>
       </li>
       {% endfor %}
     </ol>

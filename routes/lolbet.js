@@ -27,42 +27,66 @@ module.exports = {
         var name = req.params.name;
 
         //Database lookup
-        Streamer.findOne({
-            channelName: name
-        }, "channelName name summoners", function(err, streamer) {
-            if (err) {
-                res.status(404);
-                res.render('404', {
-                    user: req.user,
-                    isAuthenticated: req.isAuthenticated(),
-                    url: req.url
-                });
-            } else if (streamer) {
-                //TODO Bet range
-                res.render('stream', {
-                    streamer: streamer,
-                    bet_range: [5,10,15,20],
-                    isAuthenticated: req.isAuthenticated(),
-                    user: req.user
-                });
-            } else {
-                res.status(404);
-                res.render('404', {
-                    user: req.user,
-                    isAuthenticated: req.isAuthenticated(),
-                    url: req.url
-                });
-            }
+        database.streamer.getStreamerByChannelName(name)
+        .then(function(streamer){
+          if (streamer) {
+            database.summoners.getSummonerOfStreamer(name)
+            .then(function(summonersList){
+              res.render('stream', {
+                  streamer: streamer,
+                  summonersList: summonersList,
+                  bet_range: [5,10,15,20],
+                  isAuthenticated: req.isAuthenticated(),
+                  user: req.user
+              });
+            })
+            .catch(function(error){
+              res.status(404);
+              res.render('404', {
+                  user: req.user,
+                  isAuthenticated: req.isAuthenticated(),
+                  url: req.url
+              });
+              lolbetRoutesDebug(error);
+            });
+          } else {
+              res.status(404);
+              res.render('404', {
+                  user: req.user,
+                  isAuthenticated: req.isAuthenticated(),
+                  url: req.url
+              });
+          }
+        })
+        .catch(function(error){
+          res.status(404);
+          res.render('404', {
+              user: req.user,
+              isAuthenticated: req.isAuthenticated(),
+              url: req.url
+          });
+          lolbetRoutesDebug(error);
         });
     },
 
     //TODO : Get the best ranked account
     /* Show the ranking of the best player of the website. */
     ranking: function(req, res, next) {
-        res.render('ranking', {
-            isAuthenticated: req.isAuthenticated(),
-            user: req.user
-        });
+        database.users.getBestUser()
+        .then(function(list){
+          res.render('ranking', {
+              player_list: list,
+              isAuthenticated: req.isAuthenticated(),
+              user: req.user
+          });
+        })
+        .catch(function(error){
+          res.render('ranking', {
+              isAuthenticated: req.isAuthenticated(),
+              user: req.user
+          });
+          lolbetRoutesDebug(error);
+        })
     },
 
     /* Allow the user to request a streamer. */

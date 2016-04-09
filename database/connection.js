@@ -6,7 +6,7 @@ var cn = {
   host: 'localhost', // server name or IP address;
   port: 5432,
   database: 'streambet',
-  user: 'quentin',
+  user: 'sbrole',
   password: 'azerty'
 };
 
@@ -63,6 +63,10 @@ const SUMMONERID_COL_SUMMONERS = "summonerid";
 var summonerFunctions = {
   getSummonerOfOnlineStreamers: function() {
     return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=true", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME]);
+  },
+
+  getSummonerOfStreamer: function(channelname) {
+    return db.any("SELECT * FROM $1~ WHERE "+STREAMER_COL_SUMMONERS+"=$2", [SUMMONERS_TABLE_NAME,channelname]);
   }
 };
 /*
@@ -204,6 +208,7 @@ const USERNAME_COL = "username";
 const EMAIL_COL = "email";
 const DATE_COL = "birthdate";
 const PASSWORD_COL = "password";
+const MONEY_COL = "money";
 
 var usersFunctions = {
   getUserByEmail : function(email){
@@ -223,6 +228,9 @@ var usersFunctions = {
   },
   updateUserPassword : function(username, hashPassword){
     return db.query("UPDATE $1~ SET " + PASSWORD_COL + "=$2 WHERE username = $3",[USERS_TABLE_NAME, hashPassword, username]);
+  },
+  getBestUser : function(){
+    return db.query("SELECT * FROM $1~ ORDER BY "+MONEY_COL+" DESC LIMIT 20", [USERS_TABLE_NAME]);
   }
 };
 

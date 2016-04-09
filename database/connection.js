@@ -44,7 +44,7 @@ var streamerFunctions = {
     return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2 ORDER BY "+VIEWERS_COL+" DESC", [STREAMER_TABLE_NAME, true]);
   },
   getStreamerByChannelName: function(channelName){
-    return db.one("SELECT * FROM $1~ WHERE "+CHANNELNAME_COL+"=$2",[STREAMER_TABLE_NAME,channelName]);
+    return db.oneOrNone("SELECT * FROM $1~ WHERE "+CHANNELNAME_COL+"=$2",[STREAMER_TABLE_NAME,channelName]);
   }
 };
 
@@ -58,6 +58,7 @@ ____) | |__| | |  | | |  | | |__| | |\  | |____| | \ \ ____) |
 */
 const SUMMONERS_TABLE_NAME = "summoners";
 const STREAMER_COL_SUMMONERS = "streamer";
+const SUMMONERID_COL_SUMMONERS = "summonerid";
 
 var summonerFunctions = {
   getSummonerOfOnlineStreamers: function() {
@@ -76,8 +77,9 @@ _____          __  __ ______
 const GAME_TABLE_NAME = "games";
 const STREAMER_COL_GAME = "streamer";
 const TIMESTAMP_COL = "timestamp";
-const GAMEID_COL = "gameid";
+const GAMEID_COL_GAME = "gameid";
 const REGION_COL = "region";
+const SUMMONERID_COL_GAME = "summonerid";
 
 var gameFunctions = {
   getGameOfStreamer: function(channelName) {
@@ -87,13 +89,16 @@ var gameFunctions = {
     return db.query("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7)", [GAME_TABLE_NAME, gameId, region, streamer, summonerId, summonerTeam, timestamp]);
   },
   updateTimeStamp: function(gameId,region,timestamp){
-    return db.query("UPDATE $1~ SET " + TIMESTAMP_COL + "=$2 WHERE " + GAMEID_COL + "=$3 AND "+REGION_COL+"=$4", [GAME_TABLE_NAME, timestamp, gameId, region]);
+    return db.query("UPDATE $1~ SET " + TIMESTAMP_COL + "=$2 WHERE " + GAMEID_COL_GAME + "=$3 AND "+REGION_COL+"=$4", [GAME_TABLE_NAME, timestamp, gameId, region]);
   },
   getAllGames : function(){
-    return db.query("SELECT * FROM $1~", [GAME_TABLE_NAME]);
+    return db.any("SELECT * FROM $1~", [GAME_TABLE_NAME]);
   },
   deleteGame : function(gameId,region){
-    return db.query("DELETE FROM $1~ WHERE "+GAMEID_COL+"=$2 AND "+REGION_COL+"=$3", [GAME_TABLE_NAME,gameId,region]);
+    return db.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [GAME_TABLE_NAME,gameId,region]);
+  },
+  getGameOfStreamerWithSummonerName : function(channelName){
+    return db.oneOrNone("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_GAME + "=$3 AND $1~.$4~=$2~.$5~", [GAME_TABLE_NAME,SUMMONERS_TABLE_NAME,channelName,SUMMONERID_COL_GAME,SUMMONERID_COL_SUMMONERS]);
   }
 };
 
@@ -109,10 +114,15 @@ ____          _   _ _   _ ______ _____     _____ _    _          __  __ _____ __
 
 */
 const BANNEDCHAMPION_TABLE_NAME = "bannedchampions";
+const GAMEID_COL_BANNEDCHAMPIONS = "gameid";
+const REGION_COL_BANNEDCHAMPIONS = "region";
 
 var bannedChampionFunctions = {
   addBannedChampion: function(gameId, region, name, teamId) {
     return db.query("INSERT INTO $1~ VALUES($2,$3,$4,$5)", [BANNEDCHAMPION_TABLE_NAME, gameId, region, name, teamId]);
+  },
+  getBannedChampionForGame : function(gameId,region){
+    return db.any("SELECT*FROM $1~ WHERE "+GAMEID_COL_BANNEDCHAMPIONS+"=$2 AND "+REGION_COL_BANNEDCHAMPIONS+"=$3", [BANNEDCHAMPION_TABLE_NAME, gameId, region]);
   }
 };
 
@@ -125,10 +135,15 @@ _____  _           __     ________ _____   _____
 |_|    |______/_/    \_\_|  |______|_|  \_\_____/
 */
 const PLAYER_TABLE_NAME = "players";
+const GAMEID_COL_PLAYER = "gameid";
+const REGION_COL_PLAYER = "region";
 
 var playerFunctions = {
   addPlayer: function(gameId, region, summonerName, championName, teamId, summonerId, spell1, spell2, rank, finalmasteryId) {
     return db.query("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7,$8,$9,$10,$11)", [PLAYER_TABLE_NAME, gameId, region, summonerName, championName, teamId, summonerId, spell1, spell2, rank, finalmasteryId]);
+  },
+  getPlayersForGame : function(gameId,region){
+    return db.any("SELECT * FROM $1~ WHERE "+GAMEID_COL_PLAYER+"=$2 AND "+REGION_COL_PLAYER+"=$3", [PLAYER_TABLE_NAME,gameId,region]);
   }
 };
 /*
@@ -149,12 +164,12 @@ var transactionFunctions = {
       //Adding request for the bannedChampion
       for (var i = 0; i < bannedChampionList.length; i++) {
         var bannedChampion = bannedChampionList[i];
-        requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5)", [BANNEDCHAMPION_TABLE_NAME, gameId, summonerOfTheGame.region, bannedChampion.name, bannedChampion.teamId]));
+        requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5)", [BANNEDCHAMPION_TABLE_NAME, gameId, summonerOfTheGame.region, bannedChampion.name, bannedChampion.teamid]));
       }
       //Adding request for the players of the game
       for (var p = 0; p < playerList.length; p++) {
         var player = playerList[p];
-        requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7,$8,$9,$10,$11)", [PLAYER_TABLE_NAME, gameId, summonerOfTheGame.region, player.summonerName, player.championName, player.teamId, player.summonerId, player.spell1, player.spell2, player.rank, player.finalMasteryId]));
+        requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7,$8,$9,$10,$11)", [PLAYER_TABLE_NAME, gameId, summonerOfTheGame.region, player.summonername, player.championname, player.teamid, player.summonerid, player.spell1, player.spell2, player.rank, player.finalmasteryid]));
       }
 
       return t.batch(requestList);
@@ -165,11 +180,11 @@ var transactionFunctions = {
       var requestList = [];
 
       //Deleting players
-      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL+"=$2 AND "+REGION_COL+"=$3", [PLAYER_TABLE_NAME,gameId,region]);
+      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [PLAYER_TABLE_NAME,gameId,region]);
       //Deleting bannedchampions
-      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL+"=$2 AND "+REGION_COL+"=$3", [BANNEDCHAMPION_TABLE_NAME,gameId,region]);
+      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [BANNEDCHAMPION_TABLE_NAME,gameId,region]);
       //Deleting game
-      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL+"=$2 AND "+REGION_COL+"=$3", [GAME_TABLE_NAME,gameId,region]);
+      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [GAME_TABLE_NAME,gameId,region]);
 
       return t.batch(requestList);
     });
@@ -219,10 +234,18 @@ ____  ______ _______ _____
 | |_) | |____   | |  ____) |
 |____/|______|  |_| |_____/
 */
+const BETS_TABLE_NAME = "bets";
+const GAMEID_COL_BETS = "gameid";
+const REGION_COL_BETS = "region";
+const USERS_COL_BETS = "users";
 
 var betsFunctions = {
-  createBet : function(gameId,region,timeIdWin,amount){
-
+  insertBetIfNotAlreadyBet : function(gameId,region,timeIdWin,amount,username){
+    return db.query("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6)",
+    [BETS_TABLE_NAME,gameId,region,timeIdWin,amount,username]);
+  },
+  findBetsForGame : function(gameId,region){
+    return db.any("SELECT*FROM $1~ WHERE "+GAMEID_COL_BETS+"=$2 AND "+REGION_COL_BETS+"=$3",[BETS_TABLE_NAME, gameId, region]);
   }
 };
 

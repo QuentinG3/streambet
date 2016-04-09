@@ -34,7 +34,7 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
               var bannedChampion = gameFromApi.bannedChampions[j];
               bannedChampionList.push({
                 name: listChampion.data[bannedChampion.championId].key,
-                teamId: bannedChampion.teamId
+                teamid: bannedChampion.teamId
               });
             }
 
@@ -79,14 +79,14 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
 
                       //We create the player
                       playerList.push({
-                        summonerName: participant.summonerName,
-                        summonerId: participant.summonerId,
-                        teamId: participant.teamId,
-                        championName: listChampion.data[participant.championId].key,
+                        summonername: participant.summonerName,
+                        summonerid: participant.summonerId,
+                        teamid: participant.teamId,
+                        championname: listChampion.data[participant.championId].key,
                         spell1: listSpell.data[participant.spell1Id].key,
                         spell2: listSpell.data[participant.spell2Id].key,
                         rank: playerRank,
-                        finalMasteryId: finalMastery,
+                        finalmasteryid: finalMastery,
                       });
 
                     }
@@ -146,11 +146,14 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
 
 
 
-var updateTimeStamp = function(gameOfTheStreamer, timeStamp, callbackSummonerOfOnlineStreamer) {
+var updateTimeStamp = function(gameOfTheStreamer, timeStamp, channelname, io, callbackSummonerOfOnlineStreamer) {
 
   //Update timestamp of the game gameOfTheStreamer with timestamp
   database.games.updateTimeStamp(gameOfTheStreamer.gameid, gameOfTheStreamer.region, timeStamp)
     .then(function() {
+      io.to(channelname).emit('timeStamp', {
+        timeStamp: timeStamp
+      });
       callbackSummonerOfOnlineStreamer();
     })
     .catch(function(errorUpdateTimestamp) {

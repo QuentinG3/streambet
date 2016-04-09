@@ -147,8 +147,7 @@ module.exports = {
               });
             });
             //If the user is in the game but the timestamp isn't set yet we try to get in from the api
-          } else if (gameOfTheStreamer.timestamp === 0) {
-
+          } else if (gameOfTheStreamer.timestamp === "0") {
             //We check the api call left with the limiters
             smallLimitAPI.removeTokens(1, function(errSmallAPI, remainingRequestsSmall) {
               bigLimitAPI.removeTokens(1, function(errBigAPI, remainingRequestsBig) {
@@ -165,7 +164,7 @@ module.exports = {
                     //If the timestamp is set we update it
                     if (gameFromApi.gameStartTime !== 0) {
                       UpdateCurrentGameDebug("Updating timestamp for " + summonerOfOnlineStreamer.channelname);
-                      gameUpdate.updateTimeStamp(gameOfTheStreamer, gameFromApi.gameStartTime, callbackSummonerOfOnlineStreamer);
+                      gameUpdate.updateTimeStamp(gameOfTheStreamer, gameFromApi.gameStartTime,summonerOfOnlineStreamer.channelname,io, callbackSummonerOfOnlineStreamer);
                     }
                     //If it isn't set yet we just go to the next summoners to update
                     else {

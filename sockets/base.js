@@ -11,70 +11,102 @@ var registerBet = require('./registerBet');
 
 //debugs
 var debugRegisterBet = require('debug')('debugRegisterBet');
-
+var debugRoomConnection = require('debug')('debugRoomConnection');
 const MILLISTOBET = 300000;
 
-startSocketIO = function (io) {
+startSocketIO = function(io) {
 
   /* Listen on user connection */
-  io.on('connection', function(socket){
+  io.on('connection', function(socket) {
     /* Listen on room connection request. */
-    socket.on('room connection', function(msg){
-      console.log("Coucou");
+    socket.on('room connection', function(channelName) {
+
       //Verify the msg
       //TODO
 
       //Connect the socket to the room asked
-      socket.join(msg);
+      socket.join(channelName);
 
-      var userId = socket.request.user['_id'];
+      var username = socket.request.user.username;
 
-      /* Lookup if there is a game for the channel. */
-      //Get the streamer
-      Streamer.findOne({channelName: msg}, "_id", function(err,currentStreamer){
-        if(err){
-          console.log(err);
-        }else if(currentStreamer){
-          //Get the game
-          Game.findOne({streamer: currentStreamer._id}, function(err,currentGame){
-            if(err){
-              console.log(err);
-            }else if(currentGame){
+      database.streamer.getStreamerByChannelName(channelName)
+        .then(function(streamer) {
+          if (!streamer) {
+            return debugRoomConnection("Streamer not found");
+          } else {
+            database.games.getGameOfStreamerWithSummonerName(streamer.channelname)
+              .then(function(game) {
+                if (!game) {
+                  return debugRoomConnection("Game not found");
+                } else {
+                  database.bannedChampions.getBannedChampionForGame(game.gameid, game.region)
+                    .then(function(bannedChampionList) {
+                        database.players.getPlayersForGame(game.gameid, game.region)
+                          .then(function(playerList) {
+                              database.bets.findBetsForGame(game.gameid, game.region)
+                                .then(function(betList) {
 
-              //Emit the current game
-              Bet.find({game:currentGame._id,teamIdWin:100},function(errFindBet100,bet100){
-                Bet.find({game:currentGame._id,teamIdWin:200},function(errFindBet200,bet200){
-                  Bet.findOne({game:currentGame._id,user:userId},function(errFindMyBet,myBet){
-                      amount100 = 0;
-                      amount200 = 0;
-                      betTeam = 0
-                      betAmount = 0
-                    if (myBet != null){
-                      betTeam = myBet['teamIdWin'];
-                      betAmount = myBet['amount'];
+                                  amount100 = 0;
+                                  amount200 = 0;
+                                  betTeam = 0;
+                                  betAmount = 0;
 
-                    }
+                                  for(var i =0;i<betList.length;i++){
+                                    var oneBet = betList[i];
+                                    if(oneBet.teamidwin == "100"){
+                                      amount100 += oneBet.amount;
+                                    }
+                                    if(oneBet.teamidwin == "200"){
+                                      amount200 += oneBet.amount;
+                                    }
+                                    if(oneBet.users == username){
+                                      betTeam = oneBet.teamidwin;
+                                      betAmount = oneBet.betAmount;
+                                    }
+                                  }
+                                  console.log(amount100);
+                                  console.log(amount200);
+                                  var gameToSend = {
+                                    players: playerList,
+                                    bannedChampions: bannedChampionList,
+                                    region: game.region,
+                                    summonerName: game.summonersname,
+                                    teamOfSummoner: game.summonerteam,
+                                    timestamp: parseInt(game.timestamp)
+                                  };
 
-                    for(var i=0;i<bet100.length;i++){
-                      amount100 += bet100[i]['amount']
-                    }
-                    for(var i=0;i<bet200.length;i++){
-                      amount200 += bet200[i]['amount']
-                    }
-                    socket.emit('game', {game: currentGame, betTeam: betTeam, betAmount: betAmount,amount100:amount100,amount200:amount200});
-                  });
-                });
+                                  socket.emit('game', {game: gameToSend, betTeam: betTeam, betAmount: betAmount,amount100:amount100,amount200:amount200});
+
+
+                                })
+                                .catch(function(errorGettingBets) {
+                                  debugRoomConnection(errorGettingPlayer);
+                                });
+
+                          })
+                          .catch(function(errorGettingPlayer) {
+                            debugRoomConnection(errorGettingPlayer);
+                          });
+
+                    })
+                    .catch(function(errorGettingBannedChampions) {
+                      debugRoomConnection(errorGettingBannedChampions);
+                    });
+                }
+              })
+              .catch(function(errorGettingGame) {
+                debugRoomConnection(errorGettingGame);
               });
+          }
+        })
+        .catch(function(errorGettingStreamer) {
+          debugRoomConnection(errorGettingStreamer);
+        });
 
-            }
-          });
-        }
-      });//End of lookup
-
-    });//End of room request listener
+    }); //End of room request listener
 
     //TODO TRY TO REMOVE THE ELSE WHEN WORKING
-    socket.on('placeBet', function(msg){
+    socket.on('placeBet', function(msg) {
       //Data
 
       //TODO check for undefined
@@ -86,44 +118,58 @@ startSocketIO = function (io) {
 
 
       database.users.getUserByUsername(username)
-      .then(function(user){
-        if(!user){
-          return socket.emit('betResponse',{success:false,error:"Could not find the user"});
-        }
-        else{
-          debugRegisterBet("User exist");
-          database.streamers.getStreamerByChannelName(channelName)
-          .then(function(streamer){
-            if(!streamer){
-              return socket.emit('betResponse',{success:false,error:"Could not find the streamer"});
-            }
-            else{
-              debugRegisterBet("Streamer exist");
-              database.games.getGameOfStreamer(streamer.channelname)
-              .then(function(game){
-                if(!game){
-                  return socket.emit('betResponse',{success:false,error:"This streamer is not in a game"});
-                }
-                else{
-                  debugRegisterBet("Game exist");
-                  registerBet.register(user,streamer,game,team,amount,socket,io);
-
+        .then(function(user) {
+          if (!user) {
+            return socket.emit('betResponse', {
+              success: false,
+              error: "Could not find the user"
+            });
+          } else {
+            debugRegisterBet("User exist");
+            database.streamer.getStreamerByChannelName(channelName)
+              .then(function(streamer) {
+                if (!streamer) {
+                  return socket.emit('betResponse', {
+                    success: false,
+                    error: "Could not find the streamer"
+                  });
+                } else {
+                  debugRegisterBet("Streamer exist");
+                  database.games.getGameOfStreamer(streamer.channelname)
+                    .then(function(game) {
+                      if (!game) {
+                        return socket.emit('betResponse', {
+                          success: false,
+                          error: "This streamer is not in a game"
+                        });
+                      } else {
+                        debugRegisterBet("Game exist");
+                        registerBet.register(user, streamer, game, team, amount, socket, io);
+                      }
+                    })
+                    .catch(function(errorGettingGame) {
+                      return socket.emit('betResponse', {
+                        success: false,
+                        error: "Internal server error for game"
+                      });
+                    });
                 }
               })
-              .catch(function(errorGettingGame){
-                return socket.emit('betResponse',{success:false,error:"Internal server error for game"});
+              .catch(function(errorGetingStreamer) {
+                return socket.emit('betResponse', {
+                  success: false,
+                  error: "Internal server error for streamer"
+                });
               });
-            }
-          })
-          .catch(function(errorGetingStreamer){
-            return socket.emit('betResponse',{success:false,error:"Internal server error for streamer"});
+          }
+        })
+        .catch(function(errorGettingUser) {
+          debugRegisterBet(errorGettingUser);
+          return socket.emit('betResponse', {
+            success: false,
+            error: "Internal server error for user"
           });
-        }
-      })
-      .catch(function(errorGettingUser){
-        debugRegisterBet(errorGettingUser);
-        return socket.emit('betResponse',{success: false, error:"Internal server error for user"});
-      });
+        });
       /*
 
       User.findOne({_id: userId},function(errUser,userDb){
@@ -227,5 +273,5 @@ startSocketIO = function (io) {
 //io.to('room name').emit('msg',{ object: 'msg' });
 
 module.exports = {
-  startSocketIO : startSocketIO
-}
+  startSocketIO: startSocketIO
+};

@@ -32,7 +32,7 @@ app.io = io;
 //Start socket io
 socketIOManagement.startSocketIO(io);
 //Starting api update routines
-apiRoutines.startApiRoutineLoop(io);
+//apiRoutines.startApiRoutineLoop(io);
 
 //Make the app use Swig to render file
 app.engine('html', swig.renderFile);
@@ -57,7 +57,8 @@ var mongoStore = new MongoStore({ mongooseConnection: mongoose.connection });
 app.use(session({
     secret: process.env.SESSION_SECRET || 'keyboard monkey',
     resave: false,
-    store: mongoStore
+    store: mongoStore,
+    saveUninitialized:false
 }));
 
 
@@ -67,7 +68,7 @@ io.use(passportSocketIo.authorize({
   cookieParser: cookieParser,       // the same middleware you registrer in express
   key:          'connect.sid',       // the name of the cookie where express/connect stores its session_id
   secret:       'keyboard monkey',    // the session_secret to parse the cookie
-  store:        mongoStore,     // we NEED to use a sessionstore. no memorystore please
+  store:        mongoStore,   // we NEED to use a sessionstore. no memorystore please
   //success:      onAuthorizeSuccess,  // *optional* callback on success - read more below
   fail:         onAuthorizeFail     // *optional* callback on fail/error - read more below
 }));

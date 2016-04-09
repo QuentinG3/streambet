@@ -21,6 +21,7 @@ function updateTimeStamp(data) {
 
 /* Update game info */
 function updateGame(object) {
+
     //Start chrono
     updateTimeStamp(object.timestamp);
 
@@ -34,22 +35,21 @@ function updateGame(object) {
     //Champion index
     var r = 0;
     var b = 0;
-
     for (var i = 0; i < player.length; i++) {
         //Red team
-        if (player[i].teamId == TEAM_LEFT) {
+        if (player[i].teamid == TEAM_LEFT) {
             //Set picture
-            LeftPicture[r].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/" + player[i].championName + "_0.jpg";
+            LeftPicture[r].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/" + player[i].championname + "_0.jpg";
             //Set name
-            LeftName[r].innerHTML = player[i].summonerName;
-            LeftName[r].title = player[i].summonerName;
+            LeftName[r].innerHTML = player[i].summonername;
+            LeftName[r].title = player[i].summonername;
             //Set Summoner link
-            LeftName[r].href = "http://www.lolking.net/summoner/" + object.region + "/" + player[i].summonerId;
+            LeftName[r].href = "http://www.lolking.net/summoner/" + object.region + "/" + player[i].summonerid;
             //Set Mastery
-            if (player[i].finalMasteryId < 0) {
+            if (player[i].finalmasteryid < 0) {
                 LeftMastery[r].src = "/static/lolbet/img/no-mastery.png";
             } else {
-                LeftMastery[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/" + player[i].finalMasteryId + ".png";
+                LeftMastery[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/" + player[i].finalmasteryid + ".png";
             }
             //Set spell1 spell2
             LeftSpell1[r].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/" + player[i].spell1 + ".png";
@@ -60,19 +60,19 @@ function updateGame(object) {
         }
 
         //Blue team
-        if (player[i].teamId == TEAM_RIGHT) {
+        if (player[i].teamid == TEAM_RIGHT) {
             //Set picture
-            RightPicture[b].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/" + player[i].championName + "_0.jpg";
+            RightPicture[b].src = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/" + player[i].championname + "_0.jpg";
             //Set name
-            RightName[b].innerHTML = player[i].summonerName;
-            RightName[b].title = player[i].summonerName;
+            RightName[b].innerHTML = player[i].summonername;
+            RightName[b].title = player[i].summonername;
             //Set Summoner link
-            RightName[b].href = "http://www.lolking.net/summoner/" + object.region + "/" + player[i].summonerId;
+            RightName[b].href = "http://www.lolking.net/summoner/" + object.region + "/" + player[i].summonerid;
             //Set Mastery
-            if (player[i].finalMasteryId < 0) {
+            if (player[i].finalmasteryid < 0) {
                 RightMaster[b].src = "/static/lolbet/img/no-mastery.png";
             } else {
-                RightMaster[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/" + player[i].finalMasteryId + ".png";
+                RightMaster[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/mastery/" + player[i].finalmasteryid + ".png";
             }
             //Set spell1 spell2
             RightSpell1[b].src = "http://ddragon.leagueoflegends.com/cdn/6.1.1/img/spell/" + player[i].spell1 + ".png";

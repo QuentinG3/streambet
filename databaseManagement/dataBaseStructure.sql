@@ -55,9 +55,3 @@ CREATE TABLE bets(gameId TEXT NOT NULL,
                     users TEXT NOT NULL REFERENCES users(username),
                     PRIMARY KEY(gameid,region,users),
                     FOREIGN KEY(gameid,region) REFERENCES games(gameid,region));
-
-CREATE TABLE "session" ("sid" varchar NOT NULL COLLATE "default",
-	                        "sess" json NOT NULL,
-	                        "expire" timestamp(6) NOT NULL)
-WITH (OIDS=FALSE);
-ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;

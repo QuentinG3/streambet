@@ -94,14 +94,12 @@ module.exports = {
             valid = false;
             error_list.push("Enter a password.");
         }
-
         if (!valid) {
             res.render('login', {
                 username: username,
                 error_list: error_list
             });
         } else {
-
             //passport login user
             passport.authenticate('local', function(err, user, info) {
                 //Error
@@ -110,19 +108,21 @@ module.exports = {
                 }
                 //Fail to log user
                 if (!user) {
+                  console.log("NO user");
                     error_list.push("Username/email or password invalid.");
-                    return res.render('login', {
+                    res.render('login', {
                         username: username,
                         error_list: error_list
                     });
+                }else{
+                  //Login user
+                  req.login(user, loginErr => {
+                      if (loginErr) {
+                          return next(loginErr);
+                      }
+                      return res.redirect('/');
+                  });
                 }
-                //Login user
-                req.login(user, loginErr => {
-                    if (loginErr) {
-                        return next(loginErr);
-                    }
-                    return res.redirect('/');
-                });
             })(req, res, next);
         }
 

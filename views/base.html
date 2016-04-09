@@ -33,6 +33,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <!-- Sticky footer -->
   <link rel="stylesheet" href="/css/sticky-footer.css">
+  {% block CSS %}
+  {% endblock %}
   <!-- Bootstrap Grid -->
   <link rel="stylesheet" href="/css/bootstrap3-block-grid.min.css">
   <!-- Loading Animation -->
@@ -86,7 +88,15 @@
           <span class="icon-bar"></span>
         </button>
         <!-- Brand -->
-        <a class="navbar-brand brand" href="/" title="Bet on your favorite streamer"><span class="gold">STREAM</span>BET</a>
+        <a class="navbar-brand brand" href="/" title="Bet on your favorite streamer">
+          <div class="visible-sm">
+            <span class="gold">S</span>B
+          </div>
+          <div class="hidden-sm">
+            <span class="gold">STREAM</span>BET
+          </div>
+
+        </a>
       </div><!-- nav header -->
 
       <!-- LINKS -->
@@ -102,6 +112,11 @@
           <li {% block nav-about %}{% endblock %} ><a href="/about">
             <i class="hidden-xs fa fa-info-circle fa-lg"></i><i class="pull-right visible-xs fa fa-info-circle fa-lg" style="padding-top:4px"></i> About
           </a></li>
+          {% if isAuthenticated %}
+          <li {% block nav-request %}{% endblock %} ><a href="/requests">
+            <i class="hidden-xs fa fa-plus-circle fa-lg"></i><i class="pull-right visible-xs fa fa-plus-circle fa-lg" style="padding-top:4px"></i> Requests
+          </a></li>
+          {% endif %}
         </ul>
       <!-- USER -->
       <hr class="visible-xs" style="margin:5px">

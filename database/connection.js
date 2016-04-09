@@ -184,11 +184,11 @@ var transactionFunctions = {
       var requestList = [];
 
       //Deleting players
-      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [PLAYER_TABLE_NAME,gameId,region]);
+      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [PLAYER_TABLE_NAME,gameId,region]));
       //Deleting bannedchampions
-      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [BANNEDCHAMPION_TABLE_NAME,gameId,region]);
+      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [BANNEDCHAMPION_TABLE_NAME,gameId,region]));
       //Deleting game
-      t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [GAME_TABLE_NAME,gameId,region]);
+      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [GAME_TABLE_NAME,gameId,region]));
 
       return t.batch(requestList);
     });

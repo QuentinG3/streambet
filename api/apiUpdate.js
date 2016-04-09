@@ -132,7 +132,6 @@ module.exports = {
                     gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer);
                   })
                   .catch(function(errorGettingGameFromApi) {
-
                     if (errorGettingGameFromApi != "Error: Error getting current game: 404 Not Found") {
 
                       UpdateCurrentGameDebug("Error other than game not found : " + errorGettingGameFromApi);
@@ -174,6 +173,7 @@ module.exports = {
                   })
                   .catch(function(errorGettingGameFromApi) {
                     UpdateCurrentGameDebug(errorGettingGameFromApi);
+                    UpdateCurrentGameDebug("Previous error might be because of a server stop... wait for the game to be processed");
                     callbackSummonerOfOnlineStreamer();
                   });
               });
@@ -241,7 +241,8 @@ module.exports = {
               //GET ALL THE BEST AND PROCESS BLABLA
 
 
-
+              console.log(currentGame.gameid)
+              console.log(currentGame.region)
               database.transactions.deleteGameAndProcessBets(currentGame.gameid,currentGame.region)
               .then(function(){
                 processBetDebug("Game fully deleted and bet process for game of " + currentGame.streamer);

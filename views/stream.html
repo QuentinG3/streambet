@@ -31,8 +31,11 @@
 			</div>
 
 			<div class="panel" id="looking">
-				<div class="panel-heading">
+				<div class="panel-heading" style="position:relative;">
 					<i class="fa fa-search"></i> Looking for a ranked solo queue
+					<button class="btn btn-lolbet" style="position:absolute;top:4px;right:4px;bottom:4px;" type="button" name="button" data-toggle="modal" data-target="#modal-summoner">
+						<i class="fa fa-lg fa-plus-circle"></i> Summoner
+					</button>
 				</div>
 				<div class="panel-body">
 					<!-- Loading animation while no bet to show -->
@@ -175,6 +178,65 @@
 | |  | | (_) | (_| | (_| | |
 |_|  |_|\___/ \__,_|\__,_|_|
 -->
+
+
+	<!-- Summoners Modal -->
+	<div class="modal" id="modal-summoner" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 class=" text-center modal-title"><span class="gold">Requested</span> summoners</h3>
+				</div>
+				<div class="modal-body">
+					<ul class="streamer-list">
+						{% for i in "123" %}
+						<li>
+							<div class="row">
+								<div class="col-sm-1 col-xs-2" style="padding: 0;">
+									<span class="vote">
+										<div class="text-center increment up" onclick=""><i class="fa fa fa-caret-up"></i></div>
+										<div class="text-center count">252</div>
+										<div class="text-center increment down" onclick=""><i class="fa fa fa-caret-down"></i></div>
+									</span>
+								</div>
+								<div class="col-sm-11 col-xs-10" style="padding-top:19.5px;">
+									Summoner name (serveur)
+								</div>
+							</div>
+						</li>
+						{% endfor %}
+						<li>
+							<div class="row">
+								<div class="col-sm-1 col-xs-2">
+									<button class="btn btn-lolbet center-block" style="margin-top:9px" type="button" name="button"><i class="fa fa-plus"></i></button>
+								</div>
+								<div class="col-sm-11 col-xs-10" style="max-width:600px;">
+									<div class="form-group" style="margin-bottom:0;margin-top:9px;">
+										<div class="row" >
+											<!-- Summoner Name -->
+											<div class="form-group col-sm-6" style="margin-bottom:0">
+												<input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
+												<div class="help-block with-errors"></div>
+											</div>
+											<!-- Region Name -->
+											<div class="form-group col-sm-6" style="margin-bottom:0">
+												<select class="form-control">
+													{% for region in region_list %}
+													<option>{{ region.name }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- Win modal -->
 	<div id="WinModal" class="modal" data-easein="bounceIn" tabindex="-1" role="dialog" aria-labelledby="WinAnimation" aria-hidden="true">

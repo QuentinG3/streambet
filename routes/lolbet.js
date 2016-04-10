@@ -22,6 +22,7 @@ module.exports = {
     },
 
     /* Show the stream, game info and bet system. */
+    //TODO check if streamer is online?
     stream: function(req, res, next) {
         //Getting the streamer name
         var name = req.params.name;
@@ -86,18 +87,6 @@ module.exports = {
           });
           lolbetRoutesDebug(error);
         });
-    },
-
-    /* Allow the user to request a streamer. */
-    add_streamer: function(req, res, next) {
-      if(req.isAuthenticated()){
-        res.render('add_streamer', {
-            isAuthenticated: req.isAuthenticated(),
-            user: req.user
-        });
-      }else{
-        res.redirect('/login');
-      }
     },
 
     requests: function(req, res, next) {

@@ -70,6 +70,10 @@ button.btn-join
   color: white
   font-size: 180%
 
+button.btn-join:hover, button.btn-join:focus
+  +gradient-lolbet2()
+  color: white
+
 button.btn-request
   background-color: transparent
   border: solid 1px $navcolor
@@ -262,11 +266,12 @@ p.info
 //Streamer list
 ul.streamer-list
   list-style-type: none
-
   margin: 0
   padding: 0
 
   li
+    color: white
+    font-weight: normal
     padding: 5px 10px
 
 

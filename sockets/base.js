@@ -64,8 +64,7 @@ startSocketIO = function(io) {
                                       betAmount = oneBet.betAmount;
                                     }
                                   }
-                                  console.log(amount100);
-                                  console.log(amount200);
+
                                   var gameToSend = {
                                     players: playerList,
                                     bannedChampions: bannedChampionList,

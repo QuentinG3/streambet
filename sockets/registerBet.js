@@ -20,7 +20,7 @@ var register = function(user, streamer, game, team, amount, socket, io) {
       error: "The id of the winning team does not exist"
     });
   } else {
-    if (!(timeSinceBeginning < MILLISTOBET || game.timestamp == "0")) {
+    if (!(timeSinceBeginning > MILLISTOBET || game.timestamp == "0")) {
       debugRegisterBet("Can't bet after the 5 minuts mark.");
       return socket.emit('betResponse', {
         success: false,
@@ -53,12 +53,13 @@ var register = function(user, streamer, game, team, amount, socket, io) {
                 success: true,
                 error: null
               });
-              database.bets.findBetsForGame(game.gameId, game.region)
+
+              database.bets.findBetsForGame(game.gameid, game.region)
                 .then(function(betList) {
 
                   var amount100 = 0;
                   var amount200 = 0;
-
+                  console.log("length = " + betList.length);
                   for (var i = 0; i < betList.length; i++) {
                     var oneBet = betList[i];
                     if (oneBet.teamidwin == "100") {
@@ -68,6 +69,8 @@ var register = function(user, streamer, game, team, amount, socket, io) {
                       amount200 += oneBet.amount;
                     }
                   }
+                  console.log(amount200);
+                  console.log(amount100);
                   io.to(streamer.channelname).emit('bet', {
                     amount200: amount200,
                     amount100: amount100

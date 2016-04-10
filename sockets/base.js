@@ -53,15 +53,15 @@ startSocketIO = function(io) {
 
                                   for(var i =0;i<betList.length;i++){
                                     var oneBet = betList[i];
-                                    if(oneBet.teamidwin == "100"){
+                                    if(oneBet.teamidwin === "100"){
                                       amount100 += oneBet.amount;
                                     }
-                                    if(oneBet.teamidwin == "200"){
+                                    if(oneBet.teamidwin === "200"){
                                       amount200 += oneBet.amount;
                                     }
                                     if(oneBet.users == username){
                                       betTeam = oneBet.teamidwin;
-                                      betAmount = oneBet.betAmount;
+                                      betAmount = oneBet.amount;
                                     }
                                   }
 
@@ -73,7 +73,10 @@ startSocketIO = function(io) {
                                     teamOfSummoner: game.summonerteam,
                                     timestamp: parseInt(game.timestamp)
                                   };
-
+                                  console.log(amount200);
+                                  console.log(amount100);
+                                  console.log(betTeam);
+                                  console.log(betAmount);
                                   socket.emit('game', {
                                     game: gameToSend,
                                     betTeam: betTeam,
@@ -120,7 +123,7 @@ startSocketIO = function(io) {
       var amount = parseInt(msg.amount);
       var channelName = msg.streamer;
 
-
+      console.log("TEAM : "+team);
       database.users.getUserByUsername(username)
         .then(function(user) {
           if (!user) {

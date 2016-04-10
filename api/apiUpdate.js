@@ -19,9 +19,9 @@ var processBetDebug = require('debug')('processBet');
 
 
 //Quentin API
-//LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
+LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
 //Nicolas API
-LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
+//LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
 
 
 
@@ -240,10 +240,12 @@ module.exports = {
 
               database.bets.findBetsForGame(currentGame.gameid, currentGame.region)
                 .then(function(betsForCurrentGame) {
+                  var gainList = [];
+                  amount100 = 0;
+                  amount200 = 0;
                   if (betsForCurrentGame.length > 1) {
                     //We compute the total bet amount for each team
-                    amount100 = 0;
-                    amount200 = 0;
+
 
                     for (var j = 0; j < betsForCurrentGame.length; j++) {
                       oneBet = betsForCurrentGame[j];
@@ -254,15 +256,15 @@ module.exports = {
                         amount200 += oneBet.amount;
                       }
                     }
-                    var gainList = [];
+
                     //Computing gain and lose for all user that bet on the game
                     for (var k = 0; k < betsForCurrentGame.length; k++) {
                       oneBet = betsForCurrentGame[k];
                       if (winnerTeamId == oneBet.teamidwin) {
                         if (winnerTeamId == "100") {
-                          gainAmount = (amountBet / totalAmount100) * totalAmount200;
+                          gainAmount = (oneBet.amount / amount100) * amount200;
                         } else {
-                          gainAmount = (amountBet / totalAmount200) * totalAmount100;
+                          gainAmount = (oneBet.amount / amount200) * amount100;
                         }
                       } else {
                         gainAmount = -1 * (oneBet.amount);
@@ -270,10 +272,14 @@ module.exports = {
 
                       gainList.push([oneBet.users,gainAmount]);
                     }
+                  }
+                  else{
+                      processBetDebug("Only one bet was made for streamer " + currentGame.channelname +" : No bets to process");
+                  }
 
 
                     //Now we start a transaction to give the gain or loose to player and delete the game(with the players and bannedchampions)
-                    database.transactions.deleteGameAndProcessBets(currentGame.gameid, currentGame.region,betsToProcessList)
+                    database.transactions.deleteGameAndProcessBets(currentGame.gameid, currentGame.region,gainList)
                       .then(function() {
                         processBetDebug("Game fully deleted and bet process for game of " + currentGame.streamer);
                         io.to(currentGame.channelName).emit('finishedGame',{
@@ -288,7 +294,8 @@ module.exports = {
                         callBackResultOfMatch();
                       });
 
-                  }
+
+
                 })
                 .catch(function(errorGettingBets) {
                   processBetDebug(errorGettingBets);

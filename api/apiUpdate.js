@@ -163,7 +163,7 @@ module.exports = {
                     //If the timestamp is set we update it
                     if (gameFromApi.gameStartTime !== 0) {
                       UpdateCurrentGameDebug("Updating timestamp for " + summonerOfOnlineStreamer.channelname);
-                      gameUpdate.updateTimeStamp(gameOfTheStreamer, gameFromApi.gameStartTime,summonerOfOnlineStreamer.channelname,io, callbackSummonerOfOnlineStreamer);
+                      gameUpdate.updateTimeStamp(gameOfTheStreamer, gameFromApi.gameStartTime, summonerOfOnlineStreamer.channelname, io, callbackSummonerOfOnlineStreamer);
                     }
                     //If it isn't set yet we just go to the next summoners to update
                     else {
@@ -198,11 +198,11 @@ module.exports = {
       .then(function(allCurrentGames) {
         var asyncEachPromise = Q.denodeify(async.each);
         asyncEachPromise(allCurrentGames, getResultsOfMatchs)
-        .then(function(){
-          processBetDebug("All bets processed");
-          callbackFinal();
-        }).
-        catch(function(asyncEachError){
+          .then(function() {
+            processBetDebug("All bets processed");
+            callbackFinal();
+          }).
+        catch(function(asyncEachError) {
           processBetDebug(asyncEachError);
           callbackFinal();
         });
@@ -213,21 +213,21 @@ module.exports = {
         callbackFinal();
       });
 
-      //Function of the asycn each call abvoe for each item
-      var getResultsOfMatchs = function(currentGame,callBackResultOfMatch){
-        //We check the api call left with the limiters
-        smallLimitAPI.removeTokens(1, function(errSmallAPI, remainingRequestsSmall) {
-          bigLimitAPI.removeTokens(1, function(errBigAPI, remainingRequestsBig) {
-            if (errSmallAPI || errBigAPI) {
-              processBetDebug(errSmallAPI);
-              processBetDebug(errBigAPI);
-              return callBackResultOfMatch();
-            }
+    //Function of the asycn each call abvoe for each item
+    var getResultsOfMatchs = function(currentGame, callBackResultOfMatch) {
+      //We check the api call left with the limiters
+      smallLimitAPI.removeTokens(1, function(errSmallAPI, remainingRequestsSmall) {
+        bigLimitAPI.removeTokens(1, function(errBigAPI, remainingRequestsBig) {
+          if (errSmallAPI || errBigAPI) {
+            processBetDebug(errSmallAPI);
+            processBetDebug(errBigAPI);
+            return callBackResultOfMatch();
+          }
 
-            //We try to get the result of the match
-            var getMatchResultNoCallback = Q.denodeify(LolApi.getMatch);
-            getMatchResultNoCallback(currentGame.gameid,false,currentGame.region)
-            .then(function(gameApi){
+          //We try to get the result of the match
+          var getMatchResultNoCallback = Q.denodeify(LolApi.getMatch);
+          getMatchResultNoCallback(currentGame.gameid, false, currentGame.region)
+            .then(function(gameApi) {
 
               //Getting the id of the winning team
               var winnerTeamId = -1;
@@ -238,26 +238,66 @@ module.exports = {
                 }
               }
 
-              //GET ALL THE BEST AND PROCESS BLABLA
+              database.bets.findBetsForGame(currentGame.gameid, currentGame.region)
+                .then(function(betsForCurrentGame) {
+                  if (betsForCurrentGame.length > 1) {
+                    //We compute the total bet amount for each team
+                    amount100 = 0;
+                    amount200 = 0;
+
+                    for (var j = 0; j < betsForCurrentGame.length; j++) {
+                      oneBet = betsForCurrentGame[j];
+                      if (oneBet.teamidwin == "100") {
+                        amount100 += oneBet.amount;
+                      }
+                      if (oneBet.teamidwin == "200") {
+                        amount200 += oneBet.amount;
+                      }
+                    }
+                    var gainList = [];
+                    //Computing gain and lose for all user that bet on the game
+                    for (var k = 0; k < betsForCurrentGame.length; k++) {
+                      oneBet = betsForCurrentGame[k];
+                      if (winnerTeamId == oneBet.teamidwin) {
+                        if (winnerTeamId == "100") {
+                          gainAmount = (amountBet / totalAmount100) * totalAmount200;
+                        } else {
+                          gainAmount = (amountBet / totalAmount200) * totalAmount100;
+                        }
+                      } else {
+                        gainAmount = -1 * (oneBet.amount);
+                      }
+
+                      gainList.push([oneBet.users,gainAmount]);
+                    }
 
 
-              console.log(currentGame.gameid)
-              console.log(currentGame.region)
-              database.transactions.deleteGameAndProcessBets(currentGame.gameid,currentGame.region)
-              .then(function(){
-                processBetDebug("Game fully deleted and bet process for game of " + currentGame.streamer);
-                callBackResultOfMatch();
+                    //Now we start a transaction to give the gain or loose to player and delete the game(with the players and bannedchampions)
+                    database.transactions.deleteGameAndProcessBets(currentGame.gameid, currentGame.region,betsToProcessList)
+                      .then(function() {
+                        processBetDebug("Game fully deleted and bet process for game of " + currentGame.streamer);
+                        io.to(currentGame.channelName).emit('finishedGame',{
+                          winner:winnerTeamId,
+                          amount100:amount100,
+                          amount200:amount200});
+                        callBackResultOfMatch();
 
-              })
-              .catch(function(errorTransctionDeleteGameAndProcessBets){
-                processBetDebug(errorTransctionDeleteGameAndProcessBets);
-                callBackResultOfMatch();
-              });
+                      })
+                      .catch(function(errorTransctionDeleteGameAndProcessBets) {
+                        processBetDebug(errorTransctionDeleteGameAndProcessBets);
+                        callBackResultOfMatch();
+                      });
 
+                  }
+                })
+                .catch(function(errorGettingBets) {
+                  processBetDebug(errorGettingBets);
+                  callBackResultOfMatch();
 
+                });
 
             })
-            .catch(function(errorGettingResult){
+            .catch(function(errorGettingResult) {
               if (errorGettingResult != "Error: Error getting match: 404 Not Found") {
                 processBetDebug("Error other than game not found : " + errorGettingResult);
 
@@ -269,9 +309,9 @@ module.exports = {
               }
             });
 
-          });//END BIG API
-        });//END SMALL API
-      };
+        }); //END BIG API
+      }); //END SMALL API
+    };
     /*
         Game.find({}, function(err, gameList) {
           async.each(gameList, function(game, callbackGame) {

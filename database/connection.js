@@ -2,14 +2,19 @@
 var pgp = require('pg-promise')();
 
 
-var cn = {
+/*var cn = {
   host: 'localhost', // server name or IP address;
   port: 5432,
   database: 'streambet',
   user: 'quentin',
   password: 'azerty'
-};
+};*/
 
+
+var cn = "postgresql://quentin:azerty@localhost:5432/streambet";
+if(process.env.OPENSHIFT_APP_NAME){
+  cn = process.env.OPENSHIFT_POSTGRESQL_DB_URL +'/'+process.env.OPENSHIFT_APP_NAME;
+}
 var db = pgp(cn);
 
 /*
@@ -103,7 +108,7 @@ var gameFunctions = {
   },
   getGameOfStreamerWithSummonerName : function(channelName){
     return db.oneOrNone("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_GAME + "=$3 AND $1~.$4~=$2~.$5~", [GAME_TABLE_NAME,SUMMONERS_TABLE_NAME,channelName,SUMMONERID_COL_GAME,SUMMONERID_COL_SUMMONERS]);
-  }
+  },
 };
 
 /*
@@ -150,50 +155,7 @@ var playerFunctions = {
     return db.any("SELECT * FROM $1~ WHERE "+GAMEID_COL_PLAYER+"=$2 AND "+REGION_COL_PLAYER+"=$3", [PLAYER_TABLE_NAME,gameId,region]);
   }
 };
-/*
-_______ _____            _   _  _____         _____ _______ _____ ____  _   _  _____
-|__   __|  __ \     /\   | \ | |/ ____|  /\   / ____|__   __|_   _/ __ \| \ | |/ ____|
-  | |  | |__) |   /  \  |  \| | (___   /  \ | |       | |    | || |  | |  \| | (___
-  | |  |  _  /   / /\ \ | . ` |\___ \ / /\ \| |       | |    | || |  | | . ` |\___ \
-  | |  | | \ \  / ____ \| |\  |____) / ____ \ |____   | |   _| || |__| | |\  |____) |
-  |_|  |_|  \_\/_/    \_\_| \_|_____/_/    \_\_____|  |_|  |_____\____/|_| \_|_____/
-*/
 
-var transactionFunctions = {
-  addEntierGameTransaction: function(gameId, summonerOfTheGame, teamOfSummoner, timestamp, playerList, bannedChampionList) {
-    return db.tx(function(t) {
-      var requestList = [];
-      //Adding request to add the game
-      requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7)", [GAME_TABLE_NAME, gameId, summonerOfTheGame.region, summonerOfTheGame.channelname, summonerOfTheGame.summonerid, teamOfSummoner, timestamp]));
-      //Adding request for the bannedChampion
-      for (var i = 0; i < bannedChampionList.length; i++) {
-        var bannedChampion = bannedChampionList[i];
-        requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5)", [BANNEDCHAMPION_TABLE_NAME, gameId, summonerOfTheGame.region, bannedChampion.name, bannedChampion.teamid]));
-      }
-      //Adding request for the players of the game
-      for (var p = 0; p < playerList.length; p++) {
-        var player = playerList[p];
-        requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7,$8,$9,$10,$11)", [PLAYER_TABLE_NAME, gameId, summonerOfTheGame.region, player.summonername, player.championname, player.teamid, player.summonerid, player.spell1, player.spell2, player.rank, player.finalmasteryid]));
-      }
-
-      return t.batch(requestList);
-    });
-  },
-  deleteGameAndProcessBets : function(gameId,region){
-    return db.tx(function(t) {
-      var requestList = [];
-
-      //Deleting players
-      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [PLAYER_TABLE_NAME,gameId,region]));
-      //Deleting bannedchampions
-      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [BANNEDCHAMPION_TABLE_NAME,gameId,region]));
-      //Deleting game
-      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [GAME_TABLE_NAME,gameId,region]));
-
-      return t.batch(requestList);
-    });
-  }
-};
 
 /*
 _    _  _____ ______ _____   _____
@@ -256,6 +218,60 @@ var betsFunctions = {
     return db.any("SELECT*FROM $1~ WHERE "+GAMEID_COL_BETS+"=$2 AND "+REGION_COL_BETS+"=$3",[BETS_TABLE_NAME, gameId, region]);
   }
 };
+
+
+
+/*
+_______ _____            _   _  _____         _____ _______ _____ ____  _   _  _____
+|__   __|  __ \     /\   | \ | |/ ____|  /\   / ____|__   __|_   _/ __ \| \ | |/ ____|
+  | |  | |__) |   /  \  |  \| | (___   /  \ | |       | |    | || |  | |  \| | (___
+  | |  |  _  /   / /\ \ | . ` |\___ \ / /\ \| |       | |    | || |  | | . ` |\___ \
+  | |  | | \ \  / ____ \| |\  |____) / ____ \ |____   | |   _| || |__| | |\  |____) |
+  |_|  |_|  \_\/_/    \_\_| \_|_____/_/    \_\_____|  |_|  |_____\____/|_| \_|_____/
+*/
+
+var transactionFunctions = {
+  addEntierGameTransaction: function(gameId, summonerOfTheGame, teamOfSummoner, timestamp, playerList, bannedChampionList) {
+    return db.tx(function(t) {
+      var requestList = [];
+      //Adding request to add the game
+      requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7)", [GAME_TABLE_NAME, gameId, summonerOfTheGame.region, summonerOfTheGame.channelname, summonerOfTheGame.summonerid, teamOfSummoner, timestamp]));
+      //Adding request for the bannedChampion
+      for (var i = 0; i < bannedChampionList.length; i++) {
+        var bannedChampion = bannedChampionList[i];
+        requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5)", [BANNEDCHAMPION_TABLE_NAME, gameId, summonerOfTheGame.region, bannedChampion.name, bannedChampion.teamid]));
+      }
+      //Adding request for the players of the game
+      for (var p = 0; p < playerList.length; p++) {
+        var player = playerList[p];
+        requestList.push(t.none("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7,$8,$9,$10,$11)", [PLAYER_TABLE_NAME, gameId, summonerOfTheGame.region, player.summonername, player.championname, player.teamid, player.summonerid, player.spell1, player.spell2, player.rank, player.finalmasteryid]));
+      }
+
+      return t.batch(requestList);
+    });
+  },
+
+  deleteGameAndProcessBets : function(gameId,region,gainList){
+    return db.tx(function(t) {
+      var requestList = [];
+
+      for(var i =0;i<gainList.length;i++){
+        oneGain = gainList[i];
+        requestList.push(t.query("UPDATE $1~ SET $2~ = $2~ + $3 WHERE $4~ = $5;", [PLAYER_TABLE_NAME,MONEY_COL,oneGain[1],USERNAME_COL,oneGain[0]]));
+      }
+
+      //Deleting players
+      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [PLAYER_TABLE_NAME,gameId,region]));
+      //Deleting bannedchampions
+      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [BANNEDCHAMPION_TABLE_NAME,gameId,region]));
+      //Deleting game
+      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [GAME_TABLE_NAME,gameId,region]));
+
+      return t.batch(requestList);
+    });
+  }
+};
+
 
 module.exports = {
   streamer: streamerFunctions,

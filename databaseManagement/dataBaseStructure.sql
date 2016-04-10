@@ -3,7 +3,8 @@ CREATE TABLE users(name TEXT NOT NULL,
                     password TEXT NOT NULL,
                     email TEXT NOT NULL UNIQUE,
                     money INT NOT NULL,
-                    birthdate DATE DEFAULT CURRENT_DATE);
+                    birthdate DATE DEFAULT CURRENT_DATE,
+                    CHECK (money>=0));
 
 CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,
                         channelname TEXT NOT NULL PRIMARY KEY,

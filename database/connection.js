@@ -258,9 +258,10 @@ var transactionFunctions = {
 
       for(var i =0;i<gainList.length;i++){
         oneGain = gainList[i];
-        requestList.push(t.query("UPDATE $1~ SET $2~ = $2~ + $3 WHERE $4~ = $5;", [PLAYER_TABLE_NAME,MONEY_COL,oneGain[1],USERNAME_COL,oneGain[0]]));
+        requestList.push(t.query("UPDATE $1~ SET $2~ = $2~ + $3 WHERE $4~ = $5;", [USERS_TABLE_NAME,MONEY_COL,oneGain[1],USERNAME_COL,oneGain[0]]));
       }
-
+      //Deleting bets
+      requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [BETS_TABLE_NAME,gameId,region]));
       //Deleting players
       requestList.push(t.query("DELETE FROM $1~ WHERE "+GAMEID_COL_GAME+"=$2 AND "+REGION_COL+"=$3", [PLAYER_TABLE_NAME,gameId,region]));
       //Deleting bannedchampions

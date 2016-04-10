@@ -84,7 +84,7 @@ function updateGame(object) {
     }
 
     //Update Streamer team
-    STREAMER_TEAM = object.teamOfSummoner;
+    STREAMER_TEAM = parseInt(object.teamOfSummoner);
     if (STREAMER_TEAM === 100) {
         NON_STREAMER_TEAM = 200;
     } else {

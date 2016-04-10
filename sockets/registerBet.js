@@ -3,8 +3,7 @@ var database = require('../database/connection');
 //debugs
 var debugRegisterBet = require('debug')('debugRegisterBet');
 
-//const MILLISTOBET = 300000;
-const MILLISTOBET = 30000000;
+const MILLISTOBET = 300000;
 const MAXAMOUNT = 20;
 const MINAMOUNT = 5;
 

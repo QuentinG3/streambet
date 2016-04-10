@@ -6,7 +6,7 @@ var cn = {
   host: 'localhost', // server name or IP address;
   port: 5432,
   database: 'streambet',
-  user: 'quentin',
+  user: 'sbrole',
   password: 'azerty'
 };
 
@@ -218,13 +218,13 @@ var usersFunctions = {
     return db.oneOrNone("SELECT * FROM $1~ WHERE " + USERNAME_COL + "=$2", [USERS_TABLE_NAME, username]);
   },
   saveUser : function(name, username, hashPassword, email, birthdate){
-    return db.query("INSERT INTO $1~ VALUES($2, $3, $4, $5, $6, make_date($7,$8,$9))", [USERS_TABLE_NAME, name, username, hashPassword, email, 500, birthdate.getFullYear(), birthdate.getMonth()+1, birthdate.getDate()]);
+    return db.query("INSERT INTO $1~ VALUES($2, $3, $4, $5, $6, date'$7-$8-$9')", [USERS_TABLE_NAME, name, username, hashPassword, email, 500, birthdate.getFullYear(), birthdate.getMonth()+1, birthdate.getDate()]);
   },
   updateUserEmail : function(username, email){
     return db.query("UPDATE $1~ SET " + EMAIL_COL + "=$2 WHERE username = $3",[USERS_TABLE_NAME, email, username]);
   },
   updateUserBirthdate : function(username, birthdate){
-    return db.query("UPDATE $1~ SET " + DATE_COL + "=make_date($2,$3,$4) WHERE username = $5",[USERS_TABLE_NAME, birthdate.getFullYear(), birthdate.getMonth()+1, birthdate.getDate(), username]);
+    return db.query("UPDATE $1~ SET " + DATE_COL + "=date'$2-$3-$4' WHERE username = $5",[USERS_TABLE_NAME, birthdate.getFullYear(), birthdate.getMonth()+1, birthdate.getDate(), username]);
   },
   updateUserPassword : function(username, hashPassword){
     return db.query("UPDATE $1~ SET " + PASSWORD_COL + "=$2 WHERE username = $3",[USERS_TABLE_NAME, hashPassword, username]);

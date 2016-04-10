@@ -17,8 +17,8 @@ socket.emit('room connection', channel_name);
 //Listening game message
 socket.on('game', function(data) {
     //updateBet amount
-    userBetTeam = data.betTeam;
-    userBetAmount = data.betAmount;
+    userBetTeam = parseInt(data.betTeam);
+    userBetAmount = parseInt(data.betAmount);
 
     if (userBetAmount === 0) {
         notAlreadyBetView();

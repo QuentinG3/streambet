@@ -269,16 +269,16 @@ ul.streamer-list
   margin: 0
   padding: 0
 
-  li
+  li.list
     color: white
     font-weight: normal
     padding: 5px 10px
 
 
-  li:nth-child(even)
+  li.list:nth-child(even)
     background-color: $navbg
 
-  li:nth-child(odd)
+  li.list:nth-child(odd)
     background-color: lighten($navbg, 5%)
 
 //Summoner list
@@ -290,15 +290,21 @@ ul.summoner-list
   margin: 0
   padding: 0
 
-  li
+  li.list
     padding: 5px 10px
     border-bottom: solid 1px $navcolor
 
-  li:nth-child(odd)
+  li.list:nth-child(odd)
     background-color: $navbg
 
-  li:nth-child(even)
+  li.list:nth-child(even)
     background-color: lighten($navbg, 5%)
+
+div.incrementUp
+  color: green
+
+div.incrementDown
+  color: red
 
 div.increment
   cursor: pointer

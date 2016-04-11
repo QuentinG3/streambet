@@ -4,6 +4,7 @@ var router = express.Router();
 var base = require('./base');
 var account = require('./account');
 var lolbet = require('./lolbet');
+var request = require('./request');
 
 
 /* GET Home page. */
@@ -53,6 +54,12 @@ router.get('/recover', account.recover);
 
 /* GET Request streamer page */
 router.get('/requests', lolbet.requests);
+
+/* AJAX Vote Streamer */
+router.post('/vote-streamer', request.voteStreamer);
+
+/* AJAX Vote Summoner */
+router.post('/vote-summoner', request.voteSummoner);
 
 /* GET stream page. */
 router.get('/stream/:name', lolbet.stream);

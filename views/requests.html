@@ -22,13 +22,13 @@
     <!-- Streamer list -->
     <ul class="streamer-list">
       {% for e in "12345" %}
-      <li>
+      <li class="list">
         <div class="row">
           <div class="col-sm-1 col-xs-2" style="padding:0;">
             <span class="vote">
-              <div class="text-center increment up" onclick=""><i class="fa fa-2x fa-caret-up"></i></div>
-              <div class="text-center count">3556</div>
-              <div class="text-center increment down" onclick=""><i class="fa fa-2x fa-caret-down"></i></div>
+              <div class="text-center increment up" id="arrowUp-channelName" onclick="voteStreamer('channelName',true)"><i class="fa fa-2x fa-caret-up"></i></div>
+              <div class="text-center count" id="count-channelName">3556</div>
+              <div class="text-center increment down" id="arrowDown-channelName" onclick="voteStreamer('channelName',false)"><i class="fa fa-2x fa-caret-down"></i></div>
             </span>
           </div>
           <div class="col-sm-11 col-xs-10" style="">
@@ -40,13 +40,13 @@
             <div id="c{{e}}" class="collapse">
               <ul class="summoner-list">
                 {% for i in "123" %}
-                <li>
+                <li class="list">
                   <div class="row">
                     <div class="col-sm-1 col-xs-2" style="padding: 0;">
                       <span class="vote">
-                        <div class="text-center increment up" onclick=""><i class="fa fa fa-caret-up"></i></div>
-                        <div class="text-center count">252</div>
-                        <div class="text-center increment down" onclick=""><i class="fa fa fa-caret-down"></i></div>
+                        <div class="text-center increment up" id="arrowUp-summ-name-server" onclick="voteSummoner('name-server',true)"><i class="fa fa fa-caret-up"></i></div>
+                        <div class="text-center count" name="252" id="count-summ-name-server">252</div>
+                        <div class="text-center increment down" id="arrowDown-summ-name-server" onclick="voteSummoner('name-server',false)"><i class="fa fa fa-caret-down"></i></div>
                       </span>
                     </div>
                     <div class="col-sm-11 col-xs-10" style="padding-top:19.5px;">
@@ -55,31 +55,33 @@
                   </div>
                 </li>
                 {% endfor %}
-                <li>
-                  <div class="row">
-                    <div class="col-sm-1 col-xs-2">
-                      <button class="btn btn-lolbet center-block" style="margin-top:9px" type="button" name="button"><i class="fa fa-plus"></i></button>
-                    </div>
-                    <div class="col-sm-11 col-xs-10" style="max-width:600px;">
-                      <div class="form-group" style="margin-bottom:0;margin-top:9px;">
-                        <div class="row" >
-                          <!-- Summoner Name -->
-                          <div class="form-group col-sm-6" style="margin-bottom:0">
-                            <input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
-                            <div class="help-block with-errors"></div>
-                          </div>
-                          <!-- Region Name -->
-                          <div class="form-group col-sm-6" style="margin-bottom:0">
-                            <select class="form-control">
-                              {% for region in region_list %}
-                              <option>{{ region.name }}</option>
-                              {% endfor %}
-                            </select>
+                <li class="list">
+                  <form data-toggle="validator" role="form" data-disable="false" method="post" action="/TODO">
+                    <div class="row">
+                      <div class="col-sm-1 col-xs-2">
+                        <button class="btn btn-lolbet center-block" style="margin-top:9px" type="submit"><i class="fa fa-plus"></i></button>
+                      </div>
+                      <div class="col-sm-11 col-xs-10" style="max-width:600px;">
+                        <div class="form-group" style="margin-bottom:0;margin-top:9px;">
+                          <div class="row" >
+                            <!-- Summoner Name -->
+                            <div class="form-group col-sm-6" style="margin-bottom:0">
+                              <input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
+                              <div class="help-block with-errors"></div>
+                            </div>
+                            <!-- Region Name -->
+                            <div class="form-group col-sm-6" style="margin-bottom:0">
+                              <select class="form-control">
+                                {% for region in region_list %}
+                                <option>{{ region.name }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </form>
                 </li>
               </ul> <!-- Summoner list -->
             </div>
@@ -165,7 +167,6 @@
 {% block JS %}
 <!-- Add Streamer js -->
 <script src="js/add_streamer.js"></script>
-<script type="text/javascript">
+<script src="js/vote_requests.js"></script>
 
-</script>
-{% endblock %}
+  {% endblock %}

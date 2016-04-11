@@ -192,7 +192,7 @@
 					{% if isAuthenticated %}
 					<ul class="streamer-list">
 						{% for i in "123" %}
-						<li>
+						<li class="list">
 							<div class="row">
 								<div class="col-sm-1 col-xs-2" style="padding: 0;">
 									<span class="vote">
@@ -207,31 +207,33 @@
 							</div>
 						</li>
 						{% endfor %}
-						<li>
-							<div class="row">
-								<div class="col-sm-1 col-xs-2">
-									<button class="btn btn-lolbet center-block" style="margin-top:9px" type="button" name="button"><i class="fa fa-plus"></i></button>
-								</div>
-								<div class="col-sm-11 col-xs-10" style="max-width:600px;">
-									<div class="form-group" style="margin-bottom:0;margin-top:9px;">
-										<div class="row" >
-											<!-- Summoner Name -->
-											<div class="form-group col-sm-6" style="margin-bottom:0">
-												<input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
-												<div class="help-block with-errors"></div>
-											</div>
-											<!-- Region Name -->
-											<div class="form-group col-sm-6" style="margin-bottom:0">
-												<select class="form-control">
-													{% for region in region_list %}
-													<option>{{ region.name }}</option>
-													{% endfor %}
-												</select>
+						<li class="list">
+							<form data-toggle="validator" role="form" data-disable="false" method="post" action="/TODO">
+								<div class="row">
+									<div class="col-sm-1 col-xs-2">
+										<button class="btn btn-lolbet center-block" style="margin-top:9px" type="submit" name="button"><i class="fa fa-plus"></i></button>
+									</div>
+									<div class="col-sm-11 col-xs-10" style="max-width:600px;">
+										<div class="form-group" style="margin-bottom:0;margin-top:9px;">
+											<div class="row" >
+												<!-- Summoner Name -->
+												<div class="form-group col-sm-6" style="margin-bottom:0">
+													<input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
+													<div class="help-block with-errors"></div>
+												</div>
+												<!-- Region Name -->
+												<div class="form-group col-sm-6" style="margin-bottom:0">
+													<select class="form-control">
+														{% for region in region_list %}
+														<option>{{ region.name }}</option>
+														{% endfor %}
+													</select>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							</form>
 						</li>
 					</ul>
 					{% else %}

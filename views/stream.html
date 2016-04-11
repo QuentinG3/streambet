@@ -189,6 +189,7 @@
 					<h3 class=" text-center modal-title"><span class="gold">Requested</span> summoners</h3>
 				</div>
 				<div class="modal-body">
+					{% if isAuthenticated %}
 					<ul class="streamer-list">
 						{% for i in "123" %}
 						<li>
@@ -233,6 +234,20 @@
 							</div>
 						</li>
 					</ul>
+					{% else %}
+					<p class="text-center" style="color:white;">
+						You need to be logged in to add a summoner.
+					</p>
+					<ul class="list-inline text-center">
+						<li>
+							<button class="btn navbar-btn btn-signup" onclick="location.href='/signup';"><i class="fa fa-user-plus fa-lg"></i> Sign Up</button>
+						</li>
+						<li>
+							<button class="btn navbar-btn btn-login" onclick="location.href='/login';"><i class="fa fa-sign-in fa-lg"></i> Login</button>
+						</li>
+					</ul>
+					<button class="btn btn-lolbet center-block" data-dismiss="modal" id="dismiss-red-modal">Cancel</button>
+					{% endif %}
 				</div>
 			</div>
 		</div>

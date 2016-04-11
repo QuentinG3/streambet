@@ -32,7 +32,7 @@ app.io = io;
 //Start socket io
 socketIOManagement.startSocketIO(io);
 //Starting api update routines
-//apiRoutines.startApiRoutineLoop(io);
+apiRoutines.startApiRoutineLoop(io);
 
 //Make the app use Swig to render file
 app.engine('html', swig.renderFile);

@@ -273,7 +273,7 @@ module.exports = {
                                             gainList.push([oneBet.users, gainAmount]);
                                         }
                                     } else {
-                                        processBetDebug("Only one bet was made for streamer " + currentGame.channelname + " : No bets to process");
+                                        processBetDebug("Only one bet was made for streamer " + currentGame.streamer + " : No bets to process");
                                     }
 
 
@@ -281,7 +281,7 @@ module.exports = {
                                     database.transactions.deleteGameAndProcessBets(currentGame.gameid, currentGame.region, currentGame.streamer, gainList)
                                         .then(function() {
                                             processBetDebug("Game fully deleted and bet process for game of " + currentGame.streamer);
-                                            io.to(currentGame.channelname).emit('finishedGame', {
+                                            io.to(currentGame.streamer).emit('finishedGame', {
                                                 winner: winnerTeamId,
                                                 amount100: amount100,
                                                 amount200: amount200

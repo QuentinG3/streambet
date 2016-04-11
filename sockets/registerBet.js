@@ -45,9 +45,9 @@ var register = function(user, streamer, game, team, amount, socket, io) {
                     });
                 } else {
                     debugRegisterBet("The amount bet is valid");
-                    database.bets.insertBetIfNotAlreadyBet(game.gameid, game.region, game.streamer, team, amount, user.username)
+                    database.bets.tBetIfNotAlreadyBet(game.gameid, game.region, game.streamer, team, amount, user.username)
                         .then(function() {
-                            console.log("inserted sucesfully");
+                            debugRegisterBet("Bet inserted sucesfully");
                             socket.emit('betResponse', {
                                 success: true,
                                 error: null
@@ -58,7 +58,6 @@ var register = function(user, streamer, game, team, amount, socket, io) {
 
                                     var amount100 = 0;
                                     var amount200 = 0;
-                                    console.log("length = " + betList.length);
                                     for (var i = 0; i < betList.length; i++) {
                                         var oneBet = betList[i];
                                         if (oneBet.teamidwin == "100") {

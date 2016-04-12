@@ -1,4 +1,3 @@
-var Streamer = require('../models/Streamer');
 var base = require('./base');
 var database = require('../database/connection');
 

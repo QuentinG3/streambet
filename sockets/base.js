@@ -1,10 +1,5 @@
 /* jshint moz:true */
 
-var Streamer = require('../models/Streamer');
-var User = require('../models/User');
-var Game = require('../models/Game');
-var Bet = require('../models/Bet');
-
 var database = require('../database/connection');
 
 var registerBet = require('./registerBet');

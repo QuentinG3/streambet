@@ -19,9 +19,9 @@ var processBetDebug = require('debug')('processBet');
 
 
 //Quentin API
-LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
+//LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
 //Nicolas API
-//LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
+LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
 
 
 
@@ -103,7 +103,6 @@ module.exports = {
 
         //This function is the callback of the asyncEach above
         var updateCurrentGameForSummoners = function(summonerOfOnlineStreamer, callbackSummonerOfOnlineStreamer) {
-
             //First we look in the database if the user is in a game already
             database.games.getGameOfStreamer(summonerOfOnlineStreamer.channelname)
                 .then(function(gameOfTheStreamer) {
@@ -127,9 +126,14 @@ module.exports = {
                                     .then(function(gameFromApi) {
 
                                         UpdateCurrentGameDebug("Game found in API for " + summonerOfOnlineStreamer.summonersname);
-
                                         //We create a new game with the informations gotten from the api
-                                        gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer);
+                                        if (summonerOfOnlineStreamer.lastgameid == gameFromApi.gameId && summonerOfOnlineStreamer.lastgameregion == summonerOfOnlineStreamer.region) {
+
+                                            UpdateCurrentGameDebug("Old game not deleted from the API yet: Not adding game to database anymore for " + summonerOfOnlineStreamer.channelname);
+                                            callbackSummonerOfOnlineStreamer();
+                                        } else {
+                                            gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer);
+                                        }
                                     })
                                     .catch(function(errorGettingGameFromApi) {
                                         if (errorGettingGameFromApi != "Error: Error getting current game: 404 Not Found") {
@@ -179,7 +183,7 @@ module.exports = {
                             });
                         });
                     } else {
-                        UpdateCurrentGameDebug(summonerOfOnlineStreamer.summonersname + " already in a game in DB");
+                        UpdateCurrentGameDebug(summonerOfOnlineStreamer.channelname + " already in a game in DB");
                         callbackSummonerOfOnlineStreamer();
                     }
                 })
@@ -243,7 +247,7 @@ module.exports = {
                                     var gainList = [];
                                     amount100 = 0;
                                     amount200 = 0;
-                                    if (betsForCurrentGame.length > 1) {
+                                    if (betsForCurrentGame.length != 1) {
                                         //We compute the total bet amount for each team
 
 
@@ -270,10 +274,24 @@ module.exports = {
                                                 gainAmount = -1 * (oneBet.amount);
                                             }
 
-                                            gainList.push([oneBet.users, gainAmount]);
+                                            gainList.push({
+                                                user: oneBet.users,
+                                                gain: gainAmount,
+                                                teamidwin: oneBet.teamidwin,
+                                                winner: winnerTeamId,
+                                                amount: oneBet.amount
+                                            });
                                         }
                                     } else {
                                         processBetDebug("Only one bet was made for streamer " + currentGame.streamer + " : No bets to process");
+                                        oneBet = betsForCurrentGame[0];
+                                        gainList.push({
+                                            user: oneBet.users,
+                                            gain: 0,
+                                            teamidwin: oneBet.teamidwin,
+                                            winner: winnerTeamId,
+                                            amount: oneBet.amount
+                                        });
                                     }
 
 

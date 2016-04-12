@@ -44,7 +44,8 @@ INSERT INTO streamers
                           ('feed l0rd','na','35301382','imaqtpie',true);
                           --Summoners iwilldominate
                           INSERT INTO summoners VALUES
-                          ('IWDominate3','na','50529339','iwilldominate',true);
+                          ('IWDominate3','na','50529339','iwilldominate',true),
+                          ('IWDominate2','na','50759303','iwilldominate,true');
                           --Summoners taourrr1030
                           INSERT INTO summoners VALUES
                           ('EagleStick','euw','27689318','taourrr1030',true);

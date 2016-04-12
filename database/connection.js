@@ -11,7 +11,7 @@ var pgp = require('pg-promise')();
 };*/
 
 
-var cn = "postgresql://sbrole:azerty@localhost:5432/streambet";
+var cn = "postgresql://quentin:azerty@localhost:5432/streambet";
 //var cn = "postgresql://quentin:azerty@localhost:5432/streambet";
 if (process.env.OPENSHIFT_APP_NAME) {
     cn = process.env.OPENSHIFT_POSTGRESQL_DB_URL + '/' + process.env.OPENSHIFT_APP_NAME;
@@ -33,6 +33,8 @@ const ONLINE_COL = "online";
 const VIEWERS_COL = "viewers";
 const CHANNELNAME_COL = "channelname";
 const VALID_COL = "valid";
+const LASTGAMEID_COL_STREAMERS = "lastgameid";
+const LASTGAMEREGION_COL_STREAMERS = "lastgameregion";
 
 var streamerFunctions = {
     getValidStreamers: function(field) {
@@ -69,7 +71,7 @@ const SUMMONERID_COL_SUMMONERS = "summonerid";
 
 var summonerFunctions = {
     getSummonerOfOnlineValidStreamers: function() {
-        return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=true AND $3~=true", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME,VALID_COL]);
+        return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=$4 AND $1~.$3~=$4", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME,VALID_COL,true]);
     },
 
     getSummonerOfStreamer: function(channelname) {
@@ -223,6 +225,19 @@ var betsFunctions = {
     }
 };
 
+/*
+____  ______ _______   _    _ _____  _____ _______ ____  _______     __
+|  _ \|  ____|__   __| | |  | |_   _|/ ____|__   __/ __ \|  __ \ \   / /
+| |_) | |__     | |    | |__| | | | | (___    | | | |  | | |__) \ \_/ /
+|  _ <|  __|    | |    |  __  | | |  \___ \   | | | |  | |  _  / \   /
+| |_) | |____   | |    | |  | |_| |_ ____) |  | | | |__| | | \ \  | |
+|____/|______|  |_|    |_|  |_|_____|_____/   |_|  \____/|_|  \_\ |_|
+*/
+const BETHISTORY_TABLE_NAME = "bethistory";
+var betHistoryFunctions = {
+
+};
+
 
 
 /*
@@ -261,8 +276,13 @@ var transactionFunctions = {
 
             for (var i = 0; i < gainList.length; i++) {
                 oneGain = gainList[i];
-                requestList.push(t.query("UPDATE $1~ SET $2~ = $2~ + $3 WHERE $4~ = $5;", [USERS_TABLE_NAME, MONEY_COL, oneGain[1], USERNAME_COL, oneGain[0]]));
+                //Updating money of user
+                requestList.push(t.query("UPDATE $1~ SET $2~ = $2~ + $3 WHERE $4~ = $5;", [USERS_TABLE_NAME, MONEY_COL, oneGain.gain, USERNAME_COL, oneGain.user]));
+                //Creating an history for the bet
+                requestList.push(t.query("INSERT INTO $1~ VALUES($2,$3,$4,$5,$6,$7,$8,$9)",[BETHISTORY_TABLE_NAME,gameId,region,oneGain.teamidwin,oneGain.winner,oneGain.amount,oneGain.gain,streamer,oneGain.user]));
             }
+            //Update streamer lastgameid and lastgameregion
+            requestList.push(t.query("UPDATE $1~ SET $2~=$3,$4~=$5 WHERE $6~=$7 ", [STREAMER_TABLE_NAME,LASTGAMEID_COL_STREAMERS,gameId,LASTGAMEREGION_COL_STREAMERS,region,CHANNELNAME_COL,streamer]));
             //Deleting bets
             requestList.push(t.query("DELETE FROM $1~ WHERE $6~=$2 AND $7~=$3 AND $4~=$5", [BETS_TABLE_NAME, gameId, region, STREAMER_COL_BETS, streamer, GAMEID_COL_BETS, REGION_COL]));
             //Deleting players
@@ -286,6 +306,7 @@ module.exports = {
     players: playerFunctions,
     transactions: transactionFunctions,
     users: usersFunctions,
-    bets: betsFunctions
+    bets: betsFunctions,
+    betHistory : betHistoryFunctions,
 
 };

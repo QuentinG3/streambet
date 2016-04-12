@@ -147,6 +147,7 @@ startSocketIO = function(io) {
                                             }
                                         })
                                         .catch(function(errorGettingGame) {
+                                          console.log(errorGettingGame);
                                             return socket.emit('betResponse', {
                                                 success: false,
                                                 error: "Internal server error for game"

@@ -32,10 +32,11 @@ const STREAMER_TABLE_NAME = "streamers";
 const ONLINE_COL = "online";
 const VIEWERS_COL = "viewers";
 const CHANNELNAME_COL = "channelname";
+const VALID_COL = "valid";
 
 var streamerFunctions = {
-    getStreamers: function(field) {
-        return db.any("SELECT $1~ FROM streamers", field);
+    getValidStreamers: function(field) {
+        return db.any("SELECT $1~ FROM streamers WHERE $2~=$3", [field,VALID_COL,true]);
     },
     setStreamerOffLine: function(channelName) {
         return db.query("UPDATE $1~ SET " + ONLINE_COL + "=$2, " + VIEWERS_COL + "=$3 WHERE " + CHANNELNAME_COL + "=$4", [STREAMER_TABLE_NAME, false, 0, channelName]);
@@ -44,7 +45,7 @@ var streamerFunctions = {
         return db.query("UPDATE $1~ SET " + ONLINE_COL + "=$2, " + VIEWERS_COL + "=$3 WHERE " + CHANNELNAME_COL + "=$4", [STREAMER_TABLE_NAME, true, viewers, channelName]);
     },
     getOnlineStreamers: function() {
-        return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2", [STREAMER_TABLE_NAME, true]);
+        return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2 AND ", [STREAMER_TABLE_NAME, true]);
     },
     getOnlineStreamersSorted: function() {
         return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2 ORDER BY " + VIEWERS_COL + " DESC", [STREAMER_TABLE_NAME, true]);
@@ -67,8 +68,8 @@ const STREAMER_COL_SUMMONERS = "streamer";
 const SUMMONERID_COL_SUMMONERS = "summonerid";
 
 var summonerFunctions = {
-    getSummonerOfOnlineStreamers: function() {
-        return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=true", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME]);
+    getSummonerOfOnlineValidStreamers: function() {
+        return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=true AND $3~=true", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME,VALID_COL]);
     },
 
     getSummonerOfStreamer: function(channelname) {

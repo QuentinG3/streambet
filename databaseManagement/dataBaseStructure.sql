@@ -11,12 +11,14 @@ CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,
                         online BOOL NOT NULL,
                         viewers INT NOT NULL,
                         preview TEXT NOT NULL,
+                        valid BOOL NOT NULL,
                         creationdate DATE DEFAULT CURRENT_DATE);
 
 CREATE TABLE summoners(summonersname TEXT NOT NULL,
                         region TEXT NOT NULL,
                         summonerid TEXT NOT NULL,
                         streamer TEXT NOT NULL REFERENCES streamers(channelname),
+                        valid BOOL NOT NULL,
                         PRIMARY KEY(region,summonerid));
 
 CREATE TABLE games(gameid TEXT NOT NULL,
@@ -59,3 +61,15 @@ CREATE TABLE bets(gameId TEXT NOT NULL,
                     streamer TEXT NOT NULL,
                     PRIMARY KEY(gameid,region,users,streamer),
                     FOREIGN KEY(gameid,region,streamer) REFERENCES games(gameid,region,streamer));
+
+CREATE TABLE user_vote_streamers(users TEXT NOT NULL REFERENCES users(username),
+                                streamer TEXT NOT NULL REFERENCES streamers(channelname),
+                                vote BOOL NOT NULL,
+                                PRIMARY KEY(users,streamer));
+
+CREATE TABLE user_vote_summoners(users TEXT NOT NULL REFERENCES users(username),
+                                summonerid TEXT NOT NULL,
+                                region TEXT NOT NULL,
+                                vote BOOL NOT NULL,
+                                PRIMARY KEY(users,summonerid,region),
+                                FOREIGN KEY(summonerid,region) REFERENCES summoners(summonerid,region));

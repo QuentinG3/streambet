@@ -32,7 +32,7 @@ module.exports = {
     */
     updateStreamers: function(callbackFinal) {
         //Fetching streamers from database
-        database.streamer.getStreamers(["channelname"])
+        database.streamer.getValidStreamers("channelname")
             .then(function(channelNameList) {
 
                 //Execute asyncEach to featch data on each channelName
@@ -82,7 +82,7 @@ module.exports = {
         var GetGameApiNoCallBack = Q.denodeify(LolApi.getCurrentGame);
 
 
-        database.summoners.getSummonerOfOnlineStreamers().then(function(summonersOfOnlineStreamersList) {
+        database.summoners.getSummonerOfOnlineValidStreamers().then(function(summonersOfOnlineStreamersList) {
                 //Execute asyncEach loop throught the summoners of onlineStreamerList
                 var asyncEachPromise = Q.denodeify(async.each);
                 asyncEachPromise(summonersOfOnlineStreamersList, updateCurrentGameForSummoners)

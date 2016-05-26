@@ -96,7 +96,7 @@ app.use('/', routes);
 
 // passport config
 var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-var User = require('./models/User');
+
 passport.use(new LocalStrategy(
   function(username, password, done) {
 

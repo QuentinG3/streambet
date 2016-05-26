@@ -20,7 +20,7 @@ var register = function(user, streamer, game, team, amount, socket, io) {
             error: "The id of the winning team does not exist"
         });
     } else {
-        if (!(timeSinceBeginning > MILLISTOBET || game.timestamp == "0")) {
+        if (!(timeSinceBeginning < MILLISTOBET || game.timestamp == "0")) {
             debugRegisterBet("Can't bet after the 5 minuts mark.");
             return socket.emit('betResponse', {
                 success: false,
@@ -45,7 +45,7 @@ var register = function(user, streamer, game, team, amount, socket, io) {
                     });
                 } else {
                     debugRegisterBet("The amount bet is valid");
-                    database.bets.tBetIfNotAlreadyBet(game.gameid, game.region, game.streamer, team, amount, user.username)
+                    database.bets.insertBetIfNotAlreadyBet(game.gameid, game.region, game.streamer, team, amount, user.username)
                         .then(function() {
                             debugRegisterBet("Bet inserted sucesfully");
                             socket.emit('betResponse', {

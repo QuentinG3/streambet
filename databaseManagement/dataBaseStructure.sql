@@ -12,6 +12,8 @@ CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,
                         viewers INT NOT NULL,
                         preview TEXT NOT NULL,
                         valid BOOL NOT NULL,
+                        lastgameid TEXT,
+                        lastgameregion TEXT,
                         creationdate DATE DEFAULT CURRENT_DATE);
 
 CREATE TABLE summoners(summonersname TEXT NOT NULL,
@@ -73,3 +75,12 @@ CREATE TABLE user_vote_summoners(users TEXT NOT NULL REFERENCES users(username),
                                 vote BOOL NOT NULL,
                                 PRIMARY KEY(users,summonerid,region),
                                 FOREIGN KEY(summonerid,region) REFERENCES summoners(summonerid,region));
+
+CREATE TABLE betHistory(gameId TEXT NOT NULL,
+                        region TEXT NOT NULL,
+                        teamidwin TEXT NOT NULL,
+                        winner TEXT NOT NULL,
+                        amount INT NOT NULL,
+                        gain INT NOT NULL,
+                        streamer TEXT NOT NULL,
+                        users TEXT NOT NULL REFERENCES users(username));

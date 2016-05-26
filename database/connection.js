@@ -69,7 +69,7 @@ const SUMMONERID_COL_SUMMONERS = "summonerid";
 
 var summonerFunctions = {
     getSummonerOfOnlineValidStreamers: function() {
-        return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=true AND $3~=true", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME,VALID_COL]);
+        return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=true AND $1~.$3~=true", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME,VALID_COL]);
     },
 
     getSummonerOfStreamer: function(channelname) {

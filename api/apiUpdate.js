@@ -19,9 +19,9 @@ var processBetDebug = require('debug')('processBet');
 
 
 //Quentin API
-//LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
+LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
 //Nicolas API
-LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
+//LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
 
 
 
@@ -176,9 +176,16 @@ module.exports = {
                                         }
                                     })
                                     .catch(function(errorGettingGameFromApi) {
-                                        UpdateCurrentGameDebug(errorGettingGameFromApi);
-                                        UpdateCurrentGameDebug("Previous error might be because of a server stop... wait for the game to be processed or summoner " + summonerOfOnlineStreamer.channelname);
-                                        callbackSummonerOfOnlineStreamer();
+                                        if (errorGettingGameFromApi != "Error: Error getting current game: 404 Not Found") {
+
+                                            UpdateCurrentGameDebug("Error other than game not found : " + errorGettingGameFromApi);
+
+                                            callbackSummonerOfOnlineStreamer();
+                                        } else {
+                                            UpdateCurrentGameDebug(summonerOfOnlineStreamer.summonersname + " check api for another summoenrs that hasn't timestamp set yet");
+
+                                            callbackSummonerOfOnlineStreamer();
+                                        }
                                     });
                             });
                         });

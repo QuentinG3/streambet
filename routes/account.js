@@ -6,6 +6,7 @@ var passport = require('passport');
 var validator = require("email-validator");
 var https = require('https');
 var bcrypt = require("bcrypt-nodejs");
+var crypto = require("crypto");
 var Q = require("q");
 
 var database = require('../database/connection');
@@ -445,6 +446,40 @@ module.exports = {
             res.render('recover', {});
         else
             res.redirect('/');
+    },
+
+    sendRecover: function(req, res, next) {
+      var email = req.body.email;
+      //Get user with his email
+      database.users.getUserByEmail(email.toLowerCase())
+      .then(function(user){
+        if (!user) {
+          //no user found
+          res.render('recover', {error: "No user with this e-mail address"});
+        }
+        //Create pswd random token
+        const buf = crypto.randomBytes(20);
+        var token = buf.toString('hex');
+        //Create pswd expire
+
+        //Save in DB
+
+        //Send mail with address 'http://' + req.headers.host + '/reset/' + token + '\n\n'
+
+        //mail successfuly sent
+        res.render('recover', {success: 'An e-mail has been sent to ' + user.email + ' with further instructions.'});
+      })
+      .catch(function(){
+        userPassportDebug(errorGettingUserByEmail);
+        //error get user by mail
+        res.render('recover', {error: "Internal Error"});
+      });
+    },
+
+    reset: function(req, res, next) {
+      //find in db user with token req.params.token that is not expired
+      //if no user render forgot with error message
+      //else render reset
     },
 
     /* Log off the user. */

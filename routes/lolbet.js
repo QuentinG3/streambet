@@ -12,6 +12,7 @@ module.exports = {
         res.render('streamers', {
             streamer_list: streamerList,
             isAuthenticated: req.isAuthenticated(),
+            host: req.headers.host,
             user: req.user
         });
       })

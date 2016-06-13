@@ -21,17 +21,23 @@
     <h1 class="text-center"><span class="gold bold">Recover</span> account</h1>
     <hr>
 
-    {% if error_list %}
+    {% if error %}
     <div class="alert alert-danger" style="padding-left:0">
       <ul>
-      {% for error in error_list %}
         <li><strong>{{ error }}</strong></li>
-      {% endfor %}
       </ul>
     </div>
     {% endif %}
 
-    <form data-toggle="validator" role="form" method="post" action="TODO">
+    {% if success %}
+    <div class="alert alert-success" style="padding-left:0">
+      <ul>
+        <li><strong>{{ success }}</strong></li>
+      </ul>
+    </div>
+    {% endif %}
+
+    <form data-toggle="validator" role="form" method="post" action="">
 
       <!-- Username -->
       <div class="form-group">

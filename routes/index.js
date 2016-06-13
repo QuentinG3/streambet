@@ -52,6 +52,12 @@ router.get('/logoff', account.logoff);
 /* GET Recover account page. */
 router.get('/recover', account.recover);
 
+/* POST Recover account page. */
+router.post('/recover', account.sendRecover);
+
+/* GET Reset account password. */
+//router.get('/reset/:token', account.reset);
+
 /* GET Request streamer page */
 router.get('/requests', lolbet.requests);
 

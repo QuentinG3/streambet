@@ -44,8 +44,6 @@ socket.on('timeStamp', function(data) {
 //Listening bet change message
 socket.on('bet', function(data) {
     //updateBet
-    console.log(data.amount200);
-    console.log(data.amount100);
     updateBetAmount(data.amount200, data.amount100);
 });
 
@@ -54,7 +52,6 @@ socket.on('betResponse', function(data) {
     if (data.success) {
         alreadyBetView();
         successView();
-
     } else {
         messageErrorView(data.error);
     }
@@ -62,7 +59,6 @@ socket.on('betResponse', function(data) {
 
 //Listening when game is finished
 socket.on('finishedGame', function(data) {
-    console.log(data);
     var winnerID = parseInt(data.winner);
     var fAmount100 = parseInt(data.amount100);
     var fAmount200 = parseInt(data.amount200);

@@ -102,7 +102,7 @@ module.exports = {
 
         //This function is the callback of the asyncEach above
         var updateCurrentGameForSummoners = function(summonerOfOnlineStreamer, callbackSummonerOfOnlineStreamer) {
-          
+
             //First we look in the database if the user is in a game already
             database.games.getGameOfStreamer(summonerOfOnlineStreamer.channelname)
                 .then(function(gameOfTheStreamer) {

@@ -461,25 +461,37 @@ module.exports = {
         const buf = crypto.randomBytes(20);
         var token = buf.toString('hex');
         //Create pswd expire
+        var expire = Date.now() + 3600000; // 1 hour
 
         //Save in DB
+        database.users.updateResetToken(user.username,token,expire)
+        .then(function(){
+          //Send mail with address 'http://' + req.headers.host + '/reset/' + token + '\n\n'
 
-        //Send mail with address 'http://' + req.headers.host + '/reset/' + token + '\n\n'
-
-        //mail successfuly sent
-        res.render('recover', {success: 'An e-mail has been sent to ' + user.email + ' with further instructions.'});
+          //mail successfuly sent
+          res.render('recover', {success: 'An e-mail has been sent to ' + user.email + ' with further instructions.'});
+        })
+        .catch(function(err){
+          //error get user by mail
+          console.log(err);
+          res.render('recover', {error: "Internal Error1"});
+        });
       })
-      .catch(function(){
-        userPassportDebug(errorGettingUserByEmail);
+      .catch(function(err){
         //error get user by mail
+        console.log(err);
         res.render('recover', {error: "Internal Error"});
       });
     },
 
     reset: function(req, res, next) {
-      //find in db user with token req.params.token that is not expired
-      //if no user render forgot with error message
-      //else render reset
+      if (req.isAuthenticated()){
+        res.redirect('/');
+      }else{
+        //find in db user with token req.params.token that is not expired
+        //if no user render forgot with error message
+        //else render reset
+      }
     },
 
     /* Log off the user. */

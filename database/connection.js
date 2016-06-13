@@ -168,6 +168,8 @@ const EMAIL_COL = "email";
 const DATE_COL = "birthdate";
 const PASSWORD_COL = "password";
 const MONEY_COL = "money";
+const TOKEN_COL = "resetPasswordToken";
+const EXPIRATION_COL = "resetPasswordExpires";
 
 var usersFunctions = {
     getUserByEmail: function(email) {
@@ -175,6 +177,9 @@ var usersFunctions = {
     },
     getUserByUsername: function(username) {
         return db.oneOrNone("SELECT * FROM $1~ WHERE " + USERNAME_COL + "=$2", [USERS_TABLE_NAME, username]);
+    },
+    getUserByToken: function(token) {
+        return db.oneOrNone("SELECT * FROM $1~ WHERE " + TOKEN_COL + "=$2", [USERS_TABLE_NAME, token]);
     },
     saveUser: function(name, username, hashPassword, email, birthdate) {
         return db.query("INSERT INTO $1~ VALUES($2, $3, $4, $5, $6, date'$7-$8-$9')", [USERS_TABLE_NAME, name, username, hashPassword, email, 500, birthdate.getFullYear(), birthdate.getMonth() + 1, birthdate.getDate()]);
@@ -187,6 +192,9 @@ var usersFunctions = {
     },
     updateUserPassword: function(username, hashPassword) {
         return db.query("UPDATE $1~ SET " + PASSWORD_COL + "=$2 WHERE username = $3", [USERS_TABLE_NAME, hashPassword, username]);
+    },
+    updateResetToken: function(username, token, expiration) {
+        return db.query("UPDATE $1~ SET " + TOKEN_COL + "=$2, " + EXPIRATION_COL + "=$3 WHERE " + USERNAME_COL + " = $4", [USERS_TABLE_NAME, token, expiration, email]);
     },
     getBestUser: function() {
         return db.query("SELECT * FROM $1~ ORDER BY " + MONEY_COL + " DESC LIMIT 20", [USERS_TABLE_NAME]);

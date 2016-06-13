@@ -97,7 +97,6 @@
                 </label>
                 <div class="row center-block" style="margin:0">
                   <!-- Day -->
-                  <!-- TODO : only day -->
                   <div class="form-group col-xs-3" style="padding:0;margin:0;">
                     <input type="number" name="day" data-error="Invalid day" min="1" max="31" class="form-control text-center" id="inputDay" placeholder="dd" style="padding:0" value="{{ day }}" required>
                     <div class="help-block with-errors"></div>
@@ -106,7 +105,6 @@
                   <div class="col-xs-1 date-slash">/</div>
 
                   <!-- Month -->
-                  <!-- TODO : only month -->
                   <div class="form-group col-xs-3" style="padding:0;margin:0;">
                     <input  type="number" name="month" data-error="Invalid month" min="1" max="12" class="form-control text-center" id="inputMonth" placeholder="mm"  style="padding:0" value="{{ month }}" required>
                     <div class="help-block with-errors"></div>
@@ -115,7 +113,6 @@
                   <div class="col-xs-1 date-slash">/</div>
 
                   <!-- Year -->
-                  <!-- TODO : only year -->
                   <div class="form-group col-xs-4" style="padding:0;margin:0;">
                     <input type="number" name="year" data-error="Invalid year" min="1900" max="2015" class="form-control text-center" id="inputYear" placeholder="yyyy"  style="padding:0" value="{{ user.birthdate.getFullYear() }}" required>
                     <div class="help-block with-errors"></div>
@@ -178,26 +175,44 @@
       </div>
     </div>
 
-    <!-- Statictics -->
-    <div class="panel">
-      <div class="panel-heading">
-        <i class="fa fa-line-chart"></i> Statistics
-      </div>
-      <div class="panel-body">
-        Coming Soon ...
-      </div>
-
-    </div>
-
     <!-- Bet history -->
     <div class="panel">
       <div class="panel-heading">
         <i class="fa fa-list"></i> Bet history
       </div>
       <div class="panel-body">
-        Coming Soon ...
+        <div class="table-responsive">
+          <table class="table ">
+            <thead>
+              <tr>
+                <th><i class="fa fa-calendar gold"></i> Date </th>
+                <th><i class="fa fa-database gold"></i> Gain </th>
+                <th><i class="fa fa-video-camera gold"></i> Streamer </th>
+                <th><i class="fa fa-flash gold"></i> Summoner </th>
+                <th><i class="fa fa-globe gold"></i> Region </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for bet in "01234" %}
+              <tr class="bet-won">
+                <td>10 / 06 / 2016</td>
+                <td>50 <i class="fa fa-arrow-up gold"></i></td>
+                <td>StreamerName</td>
+                <td>SummonerName</td>
+                <td>NA/EUW/?</td>
+              </tr>
+              <tr class="bet-lost">
+                <td>10 / 06 / 2016</td>
+                <td>50 <i class="fa fa-arrow-down gold"></i></td>
+                <td>StreamerName</td>
+                <td>SummonerName</td>
+                <td>NA/EUW/?</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
-
     </div>
 
   </div><!-- Content box -->
@@ -220,7 +235,4 @@
 {% block JS %}
 <!-- Edit account -->
 <script src="js/edit_account.js"></script>
-<!-- Add Streamer js TODO add this when we use the add streamer
-<script src="js/add_streamer.js"></script>
--->
 {% endblock %}

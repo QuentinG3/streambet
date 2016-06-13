@@ -17,6 +17,21 @@
     <h1 class="text-center"><span class="gold bold">Reset</span> password</h1>
     <hr>
 
+    {% if error %}
+    <div class="alert alert-danger" style="padding-left:0">
+      <ul>
+        <li><strong>{{ error }}</strong></li>
+      </ul>
+    </div>
+    <button class="btn btn-login center-block" onclick="location.href='/recover';" name="button"><i class="fa fa-key"></i> Recover password</button>
+    {% elseif success  %}
+    <div class="alert alert-success" style="padding-left:0">
+      <ul>
+        <li><strong>{{ success }}</strong></li>
+      </ul>
+    </div>
+    <button class="btn btn-login center-block" onclick="location.href='/login';" name="button"><i class="fa fa-sign-in"></i> Login</button>
+    {% else %}
     {% if error_list %}
     <div class="alert alert-danger" style="padding-left:0">
       <ul>
@@ -26,8 +41,7 @@
       </ul>
     </div>
     {% endif %}
-
-    <form data-toggle="validator" role="form" method="post" action="TODO">
+    <form data-toggle="validator" role="form" method="post" action="">
 
       <!-- Password -->
       <div class="form-group">
@@ -49,6 +63,7 @@
       </div>
 
     </form>
+    {% endif %}
   </div>
 
 </div>

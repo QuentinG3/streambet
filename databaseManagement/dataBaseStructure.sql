@@ -4,6 +4,8 @@ CREATE TABLE users(name TEXT NOT NULL,
                     email TEXT NOT NULL UNIQUE,
                     money INT NOT NULL,
                     birthdate DATE DEFAULT CURRENT_DATE,
+                    resetPasswordToken  TEXT UNIQUE,
+                    resetPasswordExpires  BIGINT,
                     CHECK (money>=0));
 
 CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,

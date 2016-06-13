@@ -19,9 +19,9 @@ var processBetDebug = require('debug')('processBet');
 
 
 //Quentin API
-LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
+//LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
 //Nicolas API
-//LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
+LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
 
 
 
@@ -102,7 +102,7 @@ module.exports = {
 
         //This function is the callback of the asyncEach above
         var updateCurrentGameForSummoners = function(summonerOfOnlineStreamer, callbackSummonerOfOnlineStreamer) {
-          
+
             //First we look in the database if the user is in a game already
             database.games.getGameOfStreamer(summonerOfOnlineStreamer.channelname)
                 .then(function(gameOfTheStreamer) {

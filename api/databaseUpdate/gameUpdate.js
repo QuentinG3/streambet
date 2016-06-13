@@ -1,14 +1,17 @@
+/* jshint moz:true */
 var LolApi = require('leagueapi');
 var Q = require("q");
 
 var database = require('../../database/connection');
 
+var ia = require('./ia');
+
 //debugs
 var UpdateCurrentGameDebug = require('debug')('updateCurrentGame');
 
 
-FINAL_MASTERIES_LIST = [6161, 6162, 6164, 6261, 6262, 6263, 6361, 6362, 6363];
-ALLOWED_QUEUE_TYPE = [4, 410];
+const FINAL_MASTERIES_LIST = [6161, 6162, 6164, 6261, 6262, 6263, 6361, 6362, 6363];
+const ALLOWED_QUEUE_TYPE = [4, 410];
 
 var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer) {
 
@@ -113,6 +116,9 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                                                 });
 
                                                 UpdateCurrentGameDebug("Game added to the database for summoner " + summonerOfOnlineStreamer.summonersname);
+
+                                                ia.placeBetForRandomUsers(gameFromApi.gameId, summonerOfOnlineStreamer.region, summonerOfOnlineStreamer.channelname, io, callbackSummonerOfOnlineStreamer);
+
                                                 callbackSummonerOfOnlineStreamer();
                                             })
                                             .catch(function(errorTransactionCreateGame) {

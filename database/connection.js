@@ -163,6 +163,7 @@ _    _  _____ ______ _____   _____
 */
 const USERS_TABLE_NAME = "users";
 const USERNAME_COL = "username";
+const PASSWORD_COL_USERS = "password";
 const EMAIL_COL = "email";
 const DATE_COL = "birthdate";
 const PASSWORD_COL = "password";
@@ -189,6 +190,9 @@ var usersFunctions = {
     },
     getBestUser: function() {
         return db.query("SELECT * FROM $1~ ORDER BY " + MONEY_COL + " DESC LIMIT 20", [USERS_TABLE_NAME]);
+    },
+    getAutomateUsers: function(password) {
+      return db.any("SELECT * FROM $1~ WHERE $2~=$3",[USERS_TABLE_NAME,PASSWORD_COL_USERS,password]);
     }
 };
 
@@ -205,6 +209,8 @@ const GAMEID_COL_BETS = "gameid";
 const REGION_COL_BETS = "region";
 const USERS_COL_BETS = "users";
 const STREAMER_COL_BETS = "streamer";
+const AMOUNT_COL_BETS = "amount";
+const TEAMIDWIN_COL_BETS = "teamidwin";
 
 var betsFunctions = {
     insertBetIfNotAlreadyBet: function(gameId, region, streamer, timeIdWin, amount, username) {
@@ -212,6 +218,9 @@ var betsFunctions = {
     },
     findBetsForGame: function(gameId, region, streamer) {
         return db.any("SELECT*FROM $1~ WHERE $6~=$2 AND $7~=$3 AND $4~=$5", [BETS_TABLE_NAME, gameId, region, STREAMER_COL_BETS, streamer, GAMEID_COL_BETS, REGION_COL_BETS]);
+    },
+    sumAmountByTeamId : function(gameId,region,streamer){
+      return db.oneOrNone("SELECT COALESCE(SUM(CASE WHEN $3~='100' THEN $2~ END),0) as sum100,COALESCE(SUM(CASE WHEN $3~='200' THEN $2~ END),0) as sum200 FROM $1~ WHERE $4~=$5 AND $6~=$7 AND $8~=$9",[BETS_TABLE_NAME,AMOUNT_COL_BETS,TEAMIDWIN_COL_BETS,GAMEID_COL_BETS,gameId.toString(),REGION_COL_BETS,region,STREAMER_COL_BETS,streamer]);
     }
 };
 

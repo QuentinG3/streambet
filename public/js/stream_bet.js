@@ -94,14 +94,14 @@ function updateBetAmount(amountBlue, amountRed) {
             } else {
                 RightGain.innerHTML = 0;
             }
-            LeftGain.innerHTML = Math.ceil((userBetAmount / amountRed) * amountBlue);
+            LeftGain.innerHTML = "+" + Math.ceil((userBetAmount / amountRed) * amountBlue);
         } else {
             if (amountRed > 0) {
                 LeftGain.innerHTML = -userBetAmount;
             } else {
                 LeftGain.innerHTML = 0;
             }
-            RightGain.innerHTML = Math.ceil((userBetAmount / amountBlue) * amountRed);
+            RightGain.innerHTML = "+" + Math.ceil((userBetAmount / amountBlue) * amountRed);
         }
 
     }

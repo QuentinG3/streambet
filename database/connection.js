@@ -2,17 +2,7 @@
 var pgp = require('pg-promise')();
 
 
-/*var cn = {
-  host: 'localhost', // server name or IP address;
-  port: 5432,
-  database: 'streambet',
-  user: 'sbrole',
-  password: 'azerty'
-};*/
-
-
 var cn = "postgresql://quentin:azerty@localhost:5432/streambet";
-//var cn = "postgresql://quentin:azerty@localhost:5432/streambet";
 if (process.env.OPENSHIFT_APP_NAME) {
     cn = process.env.OPENSHIFT_POSTGRESQL_DB_URL + '/' + process.env.OPENSHIFT_APP_NAME;
 }

@@ -56,7 +56,10 @@ router.get('/recover', account.recover);
 router.post('/recover', account.sendRecover);
 
 /* GET Reset account password. */
-//router.get('/reset/:token', account.reset);
+router.get('/reset/:token', account.reset);
+
+/* POST Reset account password. */
+router.post('/reset/:token', account.resetPassword);
 
 /* GET Request streamer page */
 router.get('/requests', lolbet.requests);

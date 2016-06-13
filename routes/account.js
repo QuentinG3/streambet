@@ -1,22 +1,21 @@
 /* jshint esversion : 6*/
 
-//var User = require('../models/User');
-//var Streamer = require('../models/Streamer');
 var passport = require('passport');
 var validator = require("email-validator");
 var https = require('https');
 var bcrypt = require("bcrypt-nodejs");
 var crypto = require("crypto");
 var Q = require("q");
-
+var nodemailer = require("nodemailer");
 var database = require('../database/connection');
-
-var email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-var username_regex = /^[_A-z0-9]{3,}$/;
 
 var userAccountDebug = require('debug')('userAccount');
 
+const email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+const username_regex = /^[_A-z0-9]{3,}$/;
+
 const CAPTCHA_API_KEY = "6LdS0hwTAAAAAApkTHy8_QmUbcapYk6LwDJ2BExD";
+
 
 function getBDay(birthdate){
   var day = birthdate.getDate();
@@ -440,7 +439,6 @@ module.exports = {
     },
 
     /* Recover the user password. */
-    //TODO do the post for this section
     recover: function(req, res, next) {
         if (!req.isAuthenticated())
             res.render('recover', {});
@@ -448,6 +446,7 @@ module.exports = {
             res.redirect('/');
     },
 
+    /* Send mail with the recover token. */
     sendRecover: function(req, res, next) {
       var email = req.body.email;
       //Get user with his email
@@ -467,31 +466,128 @@ module.exports = {
         database.users.updateResetToken(user.username,token,expire)
         .then(function(){
           //Send mail with address 'http://' + req.headers.host + '/reset/' + token + '\n\n'
+          var mailOpts, smtpTrans;
 
-          //mail successfuly sent
-          res.render('recover', {success: 'An e-mail has been sent to ' + user.email + ' with further instructions.'});
+          smtpTrans = nodemailer.createTransport({
+              service: 'Gmail',
+              auth: {
+                  user: "noreply.streambettv@gmail.com",
+                  pass: "streamcoin"
+              }
+          });
+
+          mailOpts = {
+              to: user.email,
+              subject: "StreamBet.tv password reset",
+              text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+          };
+
+          smtpTrans.sendMail(mailOpts, function(error, info) {
+              if (error) {
+                userAccountDebug(error);
+                res.render('recover', {error: "Internal Error with the mail service"});
+              } else {
+                //mail successfuly sent
+                res.render('recover', {success: 'An e-mail has been sent to ' + user.email + ' with further instructions.'});
+              }
+          });
         })
-        .catch(function(err){
-          //error get user by mail
-          console.log(err);
-          res.render('recover', {error: "Internal Error1"});
+        .catch(function(error){
+          userAccountDebug(error);
+          res.render('recover', {error: "Internal Error with the database"});
         });
+
       })
-      .catch(function(err){
-        //error get user by mail
-        console.log(err);
-        res.render('recover', {error: "Internal Error"});
+      .catch(function(error){
+        userAccountDebug(error);
+        res.render('recover', {error: "Internal Error with the database"});
       });
     },
 
+    /* Get the view to reser the user password. */
     reset: function(req, res, next) {
       if (req.isAuthenticated()){
         res.redirect('/');
       }else{
         //find in db user with token req.params.token that is not expired
-        //if no user render forgot with error message
-        //else render reset
+        database.users.getUserByToken(req.params.token)
+        .then(function(user){
+          if(!user){
+            res.render('reset', {error: "Password reset token is invalid or has expired."})
+          }else if(user.resetPasswordExpires > Date.now()){
+            res.render('reset', {error: "Password reset token is invalid or has expired."})
+          }else{
+            res.render('reset');
+          }
+        })
+        .catch(function(error){
+          res.render('reset', {error: "Internal error with the database"})
+        });
       }
+    },
+
+    /* Reset the user password. */
+    resetPassword: function(req, res, next) {
+      //find in db user with token req.params.token that is not expired
+      database.users.getUserByToken(req.params.token)
+      .then(function(user){
+        if(!user){
+          res.render('reset', {error: "Password reset token is invalid or has expired."})
+        }else if(user.resetPasswordExpires > Date.now()){
+          res.render('reset', {error: "Password reset token is invalid or has expired."})
+        }else{
+          var password = req.body.password;
+          var confirm = req.body.confirm;
+          var error_list = [];
+          var valid = true;
+
+          //Password
+          if (!password || password === "") {
+              valid = false;
+              error_list.push("Enter a password.");
+          } else if (password.length < 3) {
+              valid = false;
+              error_list.push("Your password must contain at least 3 characters.");
+          }
+          //Confirm
+          if (!confirm || confirm === "") {
+              valid = false;
+              error_list.push("Enter your password confirmation.");
+          } else if (password != confirm) {
+              valid = false;
+              error_list.push("Passwords doesn't match.");
+          }
+
+          if (valid) {
+            //Hash password
+            var hashNoCallBack = Q.denodeify(bcrypt.hash);
+            hashNoCallBack(password, null, null)
+            .then(function(hashPassword){
+              database.users.updateUserPasswordAndRemoveToken(user.username, hashPassword)
+              .then(function(){
+                res.render('reset', {success: "Your password was successfuly modified !"})
+              })
+              .catch(function(error){
+                userAccountDebug(error);
+                res.render('reset', {error: "Internal error with the database"})
+              });
+            })
+            .catch(function(error){
+              userAccountDebug(error);
+              res.render('reset', {error: "Internal error"})
+            });
+          }else{
+            res.render('reset', {error_list: error_list})
+          }
+
+        }
+      })
+      .catch(function(error){
+        res.render('reset', {error: "Internal error with the database"})
+      });
     },
 
     /* Log off the user. */

@@ -193,8 +193,11 @@ var usersFunctions = {
     updateUserPassword: function(username, hashPassword) {
         return db.query("UPDATE $1~ SET " + PASSWORD_COL + "=$2 WHERE username = $3", [USERS_TABLE_NAME, hashPassword, username]);
     },
+    updateUserPasswordAndRemoveToken: function(username, hashPassword) {
+        return db.query("UPDATE $1~ SET " + PASSWORD_COL + "=$2, "+ TOKEN_COL +"=NULL, "+ EXPIRATION_COL +"=NULL WHERE "+ USERNAME_COL +" = $3", [USERS_TABLE_NAME, hashPassword, username]);
+    },
     updateResetToken: function(username, token, expiration) {
-        return db.query("UPDATE $1~ SET " + TOKEN_COL + "=$2, " + EXPIRATION_COL + "=$3 WHERE " + USERNAME_COL + " = $4", [USERS_TABLE_NAME, token, expiration, email]);
+        return db.query("UPDATE $1~ SET " + TOKEN_COL + "=$2, " + EXPIRATION_COL + "=$3 WHERE " + USERNAME_COL + " = $4", [USERS_TABLE_NAME, token, expiration, username]);
     },
     getBestUser: function() {
         return db.query("SELECT * FROM $1~ ORDER BY " + MONEY_COL + " DESC LIMIT 20", [USERS_TABLE_NAME]);

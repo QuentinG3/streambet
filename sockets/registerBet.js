@@ -49,6 +49,8 @@ var register = function(user, streamer, game, team, amount, socket, io) {
                         .then(function() {
                             debugRegisterBet("Bet inserted sucesfully");
                             socket.emit('betResponse', {
+                                userBetTeam : team,
+                                userBetAmount : amount,
                                 success: true,
                                 error: null
                             });

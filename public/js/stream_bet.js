@@ -38,11 +38,6 @@ function betRed() {
         amount: amount
     });
 
-    //Put the view in already bet mode
-    userBetTeam = NON_STREAMER_TEAM;
-    userBetAmount = amount;
-    //alreadyBetView();
-
     //Modal in loading State
     loadingView();
 
@@ -57,11 +52,6 @@ function betBlue() {
         team: STREAMER_TEAM,
         amount: amount
     });
-
-    //Put the view in already bet mode
-    userBetTeam = STREAMER_TEAM;
-    userBetAmount = amount;
-    //alreadyBetView();
 
     //Modal in loading State
     loadingView();

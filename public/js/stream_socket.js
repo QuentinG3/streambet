@@ -52,6 +52,9 @@ socket.on('betResponse', function(data) {
     if (data.success) {
         alreadyBetView();
         successView();
+        //Update Team and Amount of user
+        userBetTeam = data.userBetTeam;
+        userBetAmount = data.userBetAmount;
     } else {
         messageErrorView(data.error);
     }

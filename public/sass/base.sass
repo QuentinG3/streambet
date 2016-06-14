@@ -181,7 +181,7 @@ div.user-overflow
   color: $navcolor2
 
 .tab-content
-  border-radius: 0px 15px 15px 15px !important
+  border-radius: 0px 0px 15px 15px !important
   margin-top: 0px !important
 
 //Span color
@@ -322,6 +322,16 @@ tr.bet-won
 tr.bet-lost
   +gradient2(lighten($red2,15%),lighten($navline,8%))
   opacity: 1
+
+//TABLE
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th
+  background-color: $navcolor
+  cursor: pointer
+
+tr.tr-with-button
+  td
+    vertical-align: middle !important
+
 
 //Text Area
 textarea

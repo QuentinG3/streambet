@@ -5,6 +5,10 @@ var base = require('./base');
 var account = require('./account');
 var lolbet = require('./lolbet');
 var request = require('./request');
+var admin = require('./admin');
+
+//TODO
+router.get('/admin', admin.home);
 
 
 /* GET Home page. */

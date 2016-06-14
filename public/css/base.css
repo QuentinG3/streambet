@@ -220,7 +220,7 @@ div.user-overflow {
   color: #FFFFFF; }
 
 .tab-content {
-  border-radius: 0px 15px 15px 15px !important;
+  border-radius: 0px 0px 15px 15px !important;
   margin-top: 0px !important; }
 
 span.gold {
@@ -360,6 +360,13 @@ tr.bet-lost {
   background: -moz-linear-gradient(#ff1a1a, #1c1c1c);
   background: linear-gradient(#ff1a1a, #1c1c1c);
   opacity: 1; }
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #9D9D9D;
+  cursor: pointer; }
+
+tr.tr-with-button td {
+  vertical-align: middle !important; }
 
 textarea {
   resize: vertical; }

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+{% block title %}Admin{% endblock %}
+
+<!-- Content -->
+{% block content %}
+<div class="container-fluid">
+  <!-- Content -->
+  <div class="content-box ">
+    <h2>Streamers</h2>
+    <hr>
+    <div class="row">
+      <!-- Streamer list -->
+      <div class="col-sm-7">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th><i class="fa fa-user gold"></i> Name </th>
+                <th><i class="fa fa-video-camera gold"></i> channelName </th>
+                <th class="text-center"><i class="fa fa-power-off gold"></i> Online </th>
+                <th class="text-center"><i class="fa fa-check gold"></i> Valid </th>
+                <th class="text-center"><i class="fa fa-star gold"></i> Score </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for streamer in streamer_list %}
+                <tr data-toggle="tab" href="#tab{{streamer.channelname}}">
+                  <td>{{ streamer.name }}</td>
+                  <td>{{ streamer.channelname }}</td>
+                  <td class="text-center">{% if streamer.online %}<i class="fa fa-check" style="color:green;"></i>{% else %}<i class="fa fa-times" style="color:red;"></i>{% endif %}</td>
+                  <td class="text-center">{% if streamer.valid %}<i class="fa fa-check" style="color:green;"></i>{% else %}<i class="fa fa-times" style="color:red;"></i>{% endif %}</td>
+                  <td class="text-center">{{ streamer.score }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <form data-toggle="validator" role="form" data-disable="false" method="post" action="">
+          <div class="form-group">
+            <div class="col-xs-10">
+              <input type="text" name="channelName" class="form-control" placeholder="channelName"required>
+            </div>
+            <button type="submit" class="col-xs-2 btn btn-lolbet"><i class="fa fa-plus fa-lg"></i> Add</button>
+          </div>
+        </form>
+
+      </div>
+
+      <!-- Padding on small screen -->
+      <div class="col-xs-12 visible-xs" style="height:20px;">
+      </div>
+
+      <!-- Streamer info -->
+      <div class="tab-content col-sm-5">
+        {% for streamer in streamer_list %}
+        <div class="tab-pane" id="tab{{streamer.channelname}}">
+          <form data-toggle="validator" role="form" data-disable="false" method="post" action="">
+            <!-- Name -->
+            <div class="form-group">
+              <label for="inputName" class="control-label"><i class="fa fa-user gold"></i> Name</label>
+              <input type="text" name="name" data-error="Enter a name" class="form-control" id="inputName" placeholder="Name" value="{{ streamer.name }}" required>
+              <div class="help-block with-errors"></div>
+            </div>
+
+            <!-- Channel name -->
+            <div class="form-group">
+              <label for="inputChannelName" class="control-label"><i class="fa fa-video-camera gold"></i> Channel name</label>
+              <input type="text" name="name" data-error="Enter a channel name" class="form-control" id="inputChannelName" placeholder="channelName" value="{{ streamer.channelname }}" required>
+              <div class="help-block with-errors"></div>
+            </div>
+
+          </form>
+
+          <ul class="text-center inline-list list-inline">
+            <li><button type="button" name="button" class="btn btn-lolbet center-block"><i class="fa fa-pencil"></i> Edit</button></li>
+            {% if streamer.valid %}
+            <li><button type="button" name="button" class="btn btn-danger center-block"><i class="fa fa-times"></i> Unvalidate</button></li>
+            {% else %}
+            <li><button type="button" name="button" class="btn btn-success center-block"><i class="fa fa-check"></i> Validate</button></li>
+            {% endif %}
+          </ul>
+          <hr>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th><i class="fa fa-flash gold"></i> Name </th>
+                  <th><i class="fa fa-globe gold"></i> Region </th>
+                  <th class="text-center"><i class="fa fa-check gold"></i> Valid </th>
+                  <th class="text-center"><i class="fa fa-star gold"></i> Score </th>
+                  <th class="text-center"><i class="fa fa-check gold"></i> Validate </th>
+                  <th class="text-center"><i class="fa fa-trash gold"></i> Delete </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for summoner in streamer.summonerList %}
+                  <tr class="tr-with-button" data-toggle="tab" href="#tab{{streamer.channelname}}">
+                    <td>{{ summoner.name }}</td>
+                    <td>{{ summoner.region }}</td>
+                    <td class="text-center">{% if summoner.valid %}<i class="fa fa-check" style="color:green;"></i>{% else %}<i class="fa fa-times" style="color:red;"></i>{% endif %}</td>
+                    <td class="text-center">{{ summoner.score }}</td>
+                    {% if summoner.valid %}
+                    <td class="text-center"><button type="button" class="btn btn-danger" name="button"><i class="fa fa-times"></button></td>
+                    {% else %}
+                    <td class="text-center"><button type="button" class="btn btn-success" name="button"><i class="fa fa-check"></button></td>
+                    {% endif %}
+                    <td class="text-center"><button type="button" class="btn btn-danger" name="button"><i class="fa fa-trash"></button></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <form data-toggle="validator" role="form" data-disable="false" method="post" action="">
+            <div class="form-group">
+              <div class="col-xs-5">
+                <input type="text" name="summonerName" class="form-control" placeholder="summonerName"required>
+              </div>
+              <div class="col-xs-5">
+                <select class="form-control">
+                  {% for region in region_list %}
+                  <option>{{ region.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <button type="submit" class="col-xs-2 btn btn-lolbet"><i class="fa fa-plus fa-lg"></i> Add</button>
+            </div>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+{% endblock %}

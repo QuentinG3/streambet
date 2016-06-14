@@ -27,6 +27,9 @@ const LASTGAMEID_COL_STREAMERS = "lastgameid";
 const LASTGAMEREGION_COL_STREAMERS = "lastgameregion";
 
 var streamerFunctions = {
+    getAllStreamers: function(){
+      return db.any("SELECT * FROM $1~ ORDER BY name", [STREAMER_TABLE_NAME]);
+    },
     getValidStreamers: function(field) {
         return db.any("SELECT $1~ FROM streamers WHERE $2~=$3", [field,VALID_COL,true]);
     },

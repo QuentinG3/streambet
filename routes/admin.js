@@ -6,7 +6,18 @@ module.exports = {
     home: function(req, res, next) {
         database.streamer.getAllStreamers()
         .then(function(streamerList){
-          res.render('admin', {streamer_list: streamerList});
+          streamerList.forEach(function(item, index){
+            database.summoners.getSummonerOfStreamer(item.channelname)
+            .then(function(list){
+              item['summonerList'] = list;
+              if(index == streamerList.length-1){
+                res.render('admin', {streamer_list: streamerList});
+              }
+            })
+            .catch(function(error){
+              adminDebug(error);
+            })
+          });
         })
         .catch(function(error){
           adminDebug(error);

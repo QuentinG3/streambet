@@ -85,5 +85,5 @@ CREATE TABLE betHistory(gameId TEXT NOT NULL,
                         amount INT NOT NULL,
                         gain INT NOT NULL,
                         streamer TEXT NOT NULL,
-                        processDate DATE DEFAULT CURRENT_DATE,
-                        users TEXT NOT NULL REFERENCES users(username));
+                        users TEXT NOT NULL REFERENCES users(username),
+                        processDate DATE DEFAULT CURRENT_DATE);

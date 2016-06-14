@@ -455,51 +455,51 @@ module.exports = {
         if (!user) {
           //no user found
           res.render('recover', {error: "No user with this e-mail address"});
+        }else{
+          //Create pswd random token
+          const buf = crypto.randomBytes(20);
+          var token = buf.toString('hex');
+          //Create pswd expire
+          var expire = Date.now() + 3600000; // 1 hour
+
+          //Save in DB
+          database.users.updateResetToken(user.username,token,expire)
+          .then(function(){
+            //Send mail with address 'http://' + req.headers.host + '/reset/' + token + '\n\n'
+            var mailOpts, smtpTrans;
+
+            smtpTrans = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: "noreply.streambettv@gmail.com",
+                    pass: "streamcoin"
+                }
+            });
+
+            mailOpts = {
+                to: user.email,
+                subject: "StreamBet.tv password reset",
+                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+            'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+            'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+            'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+            };
+
+            smtpTrans.sendMail(mailOpts, function(error, info) {
+                if (error) {
+                  userAccountDebug(error);
+                  res.render('recover', {error: "Internal Error with the mail service"});
+                } else {
+                  //mail successfuly sent
+                  res.render('recover', {success: 'An e-mail has been sent to ' + user.email + ' with further instructions.'});
+                }
+            });
+          })
+          .catch(function(error){
+            userAccountDebug(error);
+            res.render('recover', {error: "Internal Error with the database"});
+          });
         }
-        //Create pswd random token
-        const buf = crypto.randomBytes(20);
-        var token = buf.toString('hex');
-        //Create pswd expire
-        var expire = Date.now() + 3600000; // 1 hour
-
-        //Save in DB
-        database.users.updateResetToken(user.username,token,expire)
-        .then(function(){
-          //Send mail with address 'http://' + req.headers.host + '/reset/' + token + '\n\n'
-          var mailOpts, smtpTrans;
-
-          smtpTrans = nodemailer.createTransport({
-              service: 'Gmail',
-              auth: {
-                  user: "noreply.streambettv@gmail.com",
-                  pass: "streamcoin"
-              }
-          });
-
-          mailOpts = {
-              to: user.email,
-              subject: "StreamBet.tv password reset",
-              text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-          };
-
-          smtpTrans.sendMail(mailOpts, function(error, info) {
-              if (error) {
-                userAccountDebug(error);
-                res.render('recover', {error: "Internal Error with the mail service"});
-              } else {
-                //mail successfuly sent
-                res.render('recover', {success: 'An e-mail has been sent to ' + user.email + ' with further instructions.'});
-              }
-          });
-        })
-        .catch(function(error){
-          userAccountDebug(error);
-          res.render('recover', {error: "Internal Error with the database"});
-        });
-
       })
       .catch(function(error){
         userAccountDebug(error);

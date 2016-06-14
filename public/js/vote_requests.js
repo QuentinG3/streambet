@@ -1,10 +1,10 @@
 function voteSummoner(summonerInfo, voteType){
   //Get data
-  var summonerName = summonerInfo.split('-')[0];
+  var summonerID = summonerInfo.split('-')[0];
   var region = summonerInfo.split('-')[1];
   //Post vote
   $.post("/vote-summoner",{
-      summoner : summonerName,
+      summoner : summonerID,
       region : region,
       vote : voteType
     },

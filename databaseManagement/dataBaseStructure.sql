@@ -16,17 +16,19 @@ CREATE TABLE streamers(name TEXT NOT NULL UNIQUE,
                         valid BOOL NOT NULL,
                         lastgameid TEXT,
                         lastgameregion TEXT,
+                        score INT,
                         creationdate DATE DEFAULT CURRENT_DATE);
 
 CREATE TABLE summoners(summonersname TEXT NOT NULL,
-                        region TEXT NOT NULL,
+                        region TEXT NOT NULL REFERENCES region(code),
                         summonerid TEXT NOT NULL,
                         streamer TEXT NOT NULL REFERENCES streamers(channelname),
                         valid BOOL NOT NULL,
+                        score INT,
                         PRIMARY KEY(region,summonerid));
 
 CREATE TABLE games(gameid TEXT NOT NULL,
-                    region TEXT NOT NULL,
+                    region TEXT NOT NULL REFERENCES region(code),
                     streamer TEXT NOT NULL UNIQUE,
                     summonerid TEXT NOT NULL,
                     summonerteam TEXT NOT NULL,
@@ -36,7 +38,7 @@ CREATE TABLE games(gameid TEXT NOT NULL,
                     FOREIGN KEY(summonerid,region) REFERENCES summoners(summonerid,region));
 
 CREATE TABLE bannedchampions(gameid TEXT NOT NULL,
-                            region TEXT NOT NULL,
+                            region TEXT NOT NULL REFERENCES region(code),
                             name TEXT NOT NULL,
                             teamid TEXT NOT NULL,
                             streamer TEXT NOT NULL,
@@ -44,7 +46,7 @@ CREATE TABLE bannedchampions(gameid TEXT NOT NULL,
                             FOREIGN KEY(gameid,region,streamer) REFERENCES games(gameid,region,streamer));
 
 CREATE TABLE players(gameid TEXT NOT NULL,
-                    region TEXT NOT NULL,
+                    region TEXT NOT NULL REFERENCES region(code),
                     summonername TEXT NOT NULL,
                     championname TEXT NOT NULL,
                     teamId TEXT NOT NULL,
@@ -58,7 +60,7 @@ CREATE TABLE players(gameid TEXT NOT NULL,
                     FOREIGN KEY(gameId,region,streamer) REFERENCES games(gameid,region,streamer));
 
 CREATE TABLE bets(gameId TEXT NOT NULL,
-                    region TEXT NOT NULL,
+                    region TEXT NOT NULL REFERENCES region(code),
                     teamidwin TEXT NOT NULL,
                     amount INT NOT NULL,
                     users TEXT NOT NULL REFERENCES users(username),
@@ -73,13 +75,13 @@ CREATE TABLE user_vote_streamers(users TEXT NOT NULL REFERENCES users(username),
 
 CREATE TABLE user_vote_summoners(users TEXT NOT NULL REFERENCES users(username),
                                 summonerid TEXT NOT NULL,
-                                region TEXT NOT NULL,
+                                region TEXT NOT NULL REFERENCES region(code),
                                 vote BOOL NOT NULL,
                                 PRIMARY KEY(users,summonerid,region),
                                 FOREIGN KEY(summonerid,region) REFERENCES summoners(summonerid,region));
 
 CREATE TABLE betHistory(gameId TEXT NOT NULL,
-                        region TEXT NOT NULL,
+                        region TEXT NOT NULL REFERENCES region(code),
                         teamidwin TEXT NOT NULL,
                         winner TEXT NOT NULL,
                         amount INT NOT NULL,
@@ -87,3 +89,7 @@ CREATE TABLE betHistory(gameId TEXT NOT NULL,
                         streamer TEXT NOT NULL,
                         users TEXT NOT NULL REFERENCES users(username),
                         processDate DATE DEFAULT CURRENT_DATE);
+
+CREATE TABLE region(code TEXT NOT NULL PRIMARY KEY,
+                    platform TEXT NOT NULL,
+                    name TEXT NOT NULL);

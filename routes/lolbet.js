@@ -87,18 +87,5 @@ module.exports = {
           });
           lolbetRoutesDebug(error);
         });
-    },
-
-    requests: function(req, res, next) {
-      if(req.isAuthenticated()){
-        res.render('requests', {
-            isAuthenticated: req.isAuthenticated(),
-            user: req.user
-        });
-      }else{
-        res.redirect('/login');
-      }
-
     }
-
 };

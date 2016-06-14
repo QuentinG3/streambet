@@ -1,3 +1,8 @@
+
+CREATE TABLE region(code TEXT NOT NULL PRIMARY KEY,
+                    platform TEXT NOT NULL,
+                    name TEXT NOT NULL);
+
 CREATE TABLE users(name TEXT NOT NULL,
                     username TEXT NOT NULL PRIMARY KEY,
                     password TEXT NOT NULL,
@@ -89,7 +94,3 @@ CREATE TABLE betHistory(gameId TEXT NOT NULL,
                         streamer TEXT NOT NULL,
                         users TEXT NOT NULL REFERENCES users(username),
                         processDate DATE DEFAULT CURRENT_DATE);
-
-CREATE TABLE region(code TEXT NOT NULL PRIMARY KEY,
-                    platform TEXT NOT NULL,
-                    name TEXT NOT NULL);

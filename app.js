@@ -61,8 +61,6 @@ app.use(session({
     saveUninitialized:false
 }));
 
-
-
 var passportSocketIo = require("passport.socketio");
 io.use(passportSocketIo.authorize({
   cookieParser: cookieParser,       // the same middleware you registrer in express

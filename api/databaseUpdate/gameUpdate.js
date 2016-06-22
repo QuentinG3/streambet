@@ -6,6 +6,8 @@ var database = require('../../database/connection');
 
 var ia = require('./ia');
 
+
+
 //debugs
 var UpdateCurrentGameDebug = require('debug')('updateCurrentGame');
 
@@ -117,7 +119,9 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
 
                                                 UpdateCurrentGameDebug("Game added to the database for summoner " + summonerOfOnlineStreamer.summonersname);
 
-                                                ia.placeBetForRandomUsers(gameFromApi.gameId, summonerOfOnlineStreamer.region, summonerOfOnlineStreamer.channelname, io, callbackSummonerOfOnlineStreamer);
+
+                                                ia.placeBetForRandomUsers(gameFromApi.gameId, summonerOfOnlineStreamer.region, summonerOfOnlineStreamer.channelname, io, timeStamp, callbackSummonerOfOnlineStreamer);
+
 
                                                 callbackSummonerOfOnlineStreamer();
                                             })

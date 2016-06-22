@@ -10,6 +10,7 @@ const POSSIBLE_BET_AMOUNT = [5, 10, 15, 20];
 const POSSIBLE_TEAM_ID = ["100", "200"];
 const LIMITE_TIME_TO_BET = 240000;
 const AUTOMATE_USER_PASSWORD = "anus";
+const MILLISTOBET = 300000;
 
 
 // Returns a random integer between min (included) and max (included)
@@ -18,9 +19,16 @@ function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function createBet(gameId, region, channelName, teamIdWin, amount, users, timeBeforeBet, io) {
+function createBet(gameId, region, channelName, teamIdWin, amount, users, timeBeforeBet, io,timeStamp) {
     setTimeout(function() {
+      var newDate = new Date();
+      var nowMillis = newDate.getTime();
+      var timeSinceBeginning = nowMillis - timeStamp;
+
+        //If the gamestime is before 5 minutes we start the betting IA
+        if (timeSinceBeginning < MILLISTOBET || timeStamp === 0){
         addBetInDatabaseAndSendIo(gameId, region, channelName, teamIdWin, amount, users, io);
+      }
     }, timeBeforeBet);
 }
 
@@ -53,7 +61,7 @@ function addBetInDatabaseAndSendIo(gameId, region, channelName, teamIdWin, amoun
 
 
 module.exports = {
-    placeBetForRandomUsers: function(gameId, region, channelName, io, callbackSummonerOfOnlineStreamer) {
+    placeBetForRandomUsers: function(gameId, region, channelName, io,timeStamp, callbackSummonerOfOnlineStreamer) {
         //Generating the number of bets for the game
         numberOfBetForGame = getRandomIntInclusive(MIN_USER_BET_PER_GAME, MAX_USER_BET_PER_GAME);
         listOfBetsToSend = [];
@@ -81,7 +89,7 @@ module.exports = {
 
 
 
-                    createBet(gameId, region, channelName, teamToBetOn, amountToBet, randomUser.username, timeBeforeBet, io);
+                    createBet(gameId, region, channelName, teamToBetOn, amountToBet, randomUser.username, timeBeforeBet, io,timeStamp);
 
 
 

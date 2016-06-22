@@ -41,7 +41,8 @@ INSERT INTO streamers
                           --Summoners imaqtpie
                           INSERT INTO summoners VALUES
                           ('Imaqtpie','na','19887289','imaqtpie',true),
-                          ('feed l0rd','na','35301382','imaqtpie',true);
+                          ('feed l0rd','na','35301382','imaqtpie',true),
+                          ('clg imaqtpie69','na','20964624','imaqtpie',true);
                           --Summoners iwilldominate
                           INSERT INTO summoners VALUES
                           ('IWDominate3','na','50529339','iwilldominate',true),

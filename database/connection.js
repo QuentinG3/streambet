@@ -33,6 +33,9 @@ var streamerFunctions = {
     getValidStreamers: function(field) {
         return db.any("SELECT $1~ FROM streamers WHERE $2~=$3", [field,VALID_COL,true]);
     },
+    getUnvalidStreamers: function() {
+        return db.any("SELECT * FROM $1~ WHERE $2~=$3", [STREAMER_TABLE_NAME,VALID_COL,false]);
+    },
     setStreamerOffLine: function(channelName) {
         return db.query("UPDATE $1~ SET " + ONLINE_COL + "=$2, " + VIEWERS_COL + "=$3 WHERE " + CHANNELNAME_COL + "=$4", [STREAMER_TABLE_NAME, false, 0, channelName]);
     },
@@ -47,6 +50,9 @@ var streamerFunctions = {
     },
     getStreamerByChannelName: function(channelName) {
         return db.oneOrNone("SELECT * FROM $1~ WHERE " + CHANNELNAME_COL + "=$2", [STREAMER_TABLE_NAME, channelName]);
+    },
+    addStreamer: function(name, channelName, preview, valid) {
+      return db.query("INSERT INTO $1~ VALUES ($2, $3, false, 0, $4, $5)",[STREAMER_TABLE_NAME, name, channelName, preview, valid]);
     }
 };
 
@@ -69,6 +75,9 @@ var summonerFunctions = {
 
     getSummonerOfStreamer: function(channelname) {
         return db.any("SELECT * FROM $1~ WHERE " + STREAMER_COL_SUMMONERS + "=$2", [SUMMONERS_TABLE_NAME, channelname]);
+    },
+    addSummoner: function(name, region, id, streamer, valid) {
+        return db.query("INSERT INTO $1~ VALUES ($2, $3, $4, $5, $6)", [SUMMONERS_TABLE_NAME, name, region, id, streamer, valid]);
     }
 };
 /*
@@ -252,6 +261,23 @@ var betHistoryFunctions = {
 };
 
 
+/*
+ _____            _
+|  __ \          (_)
+| |__) |___  __ _ _  ___  _ __
+|  _  // _ \/ _` | |/ _ \| '_ \
+| | \ \  __/ (_| | | (_) | | | |
+|_|  \_\___|\__, |_|\___/|_| |_|
+            __/ |
+           |___/
+*/
+
+const REGION_TABLE_NAME = "region";
+var regionFunctions = {
+  getRegion: function(){
+    return db.any("SELECT * FROM $1~",[REGION_TABLE_NAME]);
+  }
+} ;
 
 /*
 _______ _____            _   _  _____         _____ _______ _____ ____  _   _  _____
@@ -321,5 +347,5 @@ module.exports = {
     users: usersFunctions,
     bets: betsFunctions,
     betHistory : betHistoryFunctions,
-
+    region: regionFunctions,
 };

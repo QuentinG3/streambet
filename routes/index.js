@@ -7,9 +7,8 @@ var lolbet = require('./lolbet');
 var request = require('./request');
 var admin = require('./admin');
 
-//TODO
+//TODO remove in production
 router.get('/admin', admin.home);
-
 
 /* GET Home page. */
 router.get('/', lolbet.streamers);
@@ -65,8 +64,11 @@ router.get('/reset/:token', account.reset);
 /* POST Reset account password. */
 router.post('/reset/:token', account.resetPassword);
 
-/* GET Request streamer page */
-router.get('/requests', lolbet.requests);
+/* GET Request streamer page. */
+router.get('/requests', request.requests);
+
+/* AJAX Request streamer page. */
+router.post('/add-streamer', request.addStreamer);
 
 /* AJAX Vote Streamer */
 router.post('/vote-streamer', request.voteStreamer);

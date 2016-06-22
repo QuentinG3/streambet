@@ -39,7 +39,10 @@
         </div>
         <form data-toggle="validator" role="form" data-disable="false" method="post" action="">
           <div class="form-group">
-            <div class="col-xs-10">
+            <div class="col-xs-5">
+              <input type="text" name="name" class="form-control" placeholder="name"required>
+            </div>
+            <div class="col-xs-5">
               <input type="text" name="channelName" class="form-control" placeholder="channelName"required>
             </div>
             <button type="submit" class="col-xs-2 btn btn-primary"><i class="fa fa-plus"></i> Add</button>
@@ -123,7 +126,7 @@
               <div class="col-xs-5">
                 <select class="form-control">
                   {% for region in region_list %}
-                  <option>{{ region.name }}</option>
+                  <option value="{{ region.code }}">{{ region.name }}</option>
                   {% endfor %}
                 </select>
               </div>

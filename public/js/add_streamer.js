@@ -11,7 +11,7 @@ function addSummoner() {
     var summoner_input = document.getElementById("inputSummonerName");
     summoner_input.id += summoner_length.toString();
 
-	//Clone element
+		//Clone element
     var itm = document.getElementById("summoner_template");
     var cln = itm.cloneNode(true);
 

@@ -21,36 +21,36 @@
 
     <!-- Streamer list -->
     <ul class="streamer-list">
-      {% for e in "12345" %}
+      {% for streamer in "12345" %}
       <li class="list">
         <div class="row">
           <div class="col-sm-1 col-xs-2" style="padding:0;">
             <span class="vote">
-              <div class="text-center increment up" id="arrowUp-channelName" onclick="voteStreamer('channelName',true)"><i class="fa fa-2x fa-caret-up"></i></div>
-              <div class="text-center count" id="count-channelName">3556</div>
-              <div class="text-center increment down" id="arrowDown-channelName" onclick="voteStreamer('channelName',false)"><i class="fa fa-2x fa-caret-down"></i></div>
+              <div class="text-center increment up" id="arrowUp-{{ streamer.channelname }}" onclick="voteStreamer('{{ streamer.channelname }}',true)"><i class="fa fa-2x fa-caret-up"></i></div>
+              <div class="text-center count" id="count-{{ streamer.channelname }}">{{ streamer.score }}</div>
+              <div class="text-center increment down" id="arrowDown-{{ streamer.channelname }}" onclick="voteStreamer('{{ streamer.channelname }}',false)"><i class="fa fa-2x fa-caret-down"></i></div>
             </span>
           </div>
           <div class="col-sm-11 col-xs-10" style="">
-            channeName
+            {{ streamer.name }}
             <br>
-            <span class="twitch-text">https://www.twitch.tv/</span>channelName
+            <span class="twitch-text">https://www.twitch.tv/</span>{{ streamer.channelname }}
             <br>
             <button class="btn btn-request" data-toggle="collapse" data-target="#c{{e}}"><i class="fa fa-angle-down"></i> Summoners</button>
             <div id="c{{e}}" class="collapse">
               <ul class="summoner-list">
-                {% for i in "123" %}
+                {% for summoner in "123" %}
                 <li class="list">
                   <div class="row">
                     <div class="col-sm-1 col-xs-2" style="padding: 0;">
                       <span class="vote">
-                        <div class="text-center increment up" id="arrowUp-summ-name-server" onclick="voteSummoner('name-server',true)"><i class="fa fa fa-caret-up"></i></div>
-                        <div class="text-center count" name="252" id="count-summ-name-server">252</div>
-                        <div class="text-center increment down" id="arrowDown-summ-name-server" onclick="voteSummoner('name-server',false)"><i class="fa fa fa-caret-down"></i></div>
+                        <div class="text-center increment up" id="arrowUp-summ-{{ summoner.summonerid }}-{{ summoner.region }}" onclick="voteSummoner('{{ summoner.summonerid }}-{{ summoner.region }}',true)"><i class="fa fa fa-caret-up"></i></div>
+                        <div class="text-center count" id="count-summ-{{ summoner.summonerid }}-{{ summoner.region }}">{{ summoner.score }}</div>
+                        <div class="text-center increment down" id="arrowDown-summ-{{ summoner.summonerid }}-{{ summoner.region }}" onclick="voteSummoner('{{ summoner.summonerid }}-{{ summoner.region }}',false)"><i class="fa fa fa-caret-down"></i></div>
                       </span>
                     </div>
                     <div class="col-sm-11 col-xs-10" style="padding-top:19.5px;">
-                      Summoner name (serveur)
+                      {{ summoner.summonersname }} ({{ summoner.region }})
                     </div>
                   </div>
                 </li>
@@ -73,7 +73,7 @@
                             <div class="form-group col-sm-6" style="margin-bottom:0">
                               <select class="form-control">
                                 {% for region in region_list %}
-                                <option>{{ region.name }}</option>
+                                <option value="{{ region.code }}">{{ region.name }}</option>
                                 {% endfor %}
                               </select>
                             </div>
@@ -106,14 +106,14 @@
 					<h3 class=" text-center modal-title"><span class="gold">Requested</span> summoners</h3>
 				</div>
 				<div class="modal-body">
-          <form data-toggle="validator" role="form">
+          <form data-toggle="validator" id="ajaxform" name="ajaxform" action="/add-streamer" method="post" role="form">
 
             <!-- Channel Name -->
             <div class="form-group">
               <label for="inputchannelName" class="control-label">Channel name</label>
               <div class="input-group">
                 <span class="input-group-addon twitch">twitch.tv/</span>
-                <input type="text" data-error="Enter a channel name" class="form-control" id="inputchannelName" placeholder="Channel name" required>
+                <input type="text" name="channelName" data-error="Enter a channel name" class="form-control" id="inputchannelName" placeholder="Channel name" required>
               </div>
               <div class="help-block with-errors"></div>
             </div>
@@ -124,15 +124,15 @@
               <div class="row" >
                 <!-- Summoner Name -->
                 <div class="form-group col-sm-6" style="margin-bottom:0">
-                  <input type="text" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
+                  <input type="text" name="summonerName" data-error="Enter summoner name" class="form-control" id="inputSummonerName" placeholder="Summoner name" required>
                   <div class="help-block with-errors"></div>
                 </div>
 
                 <!-- Region Name -->
                 <div class="form-group col-sm-6" style="margin-bottom:0">
-                  <select class="form-control">
+                  <select name="regionCode" class="form-control">
                     {% for region in region_list %}
-                    <option>{{ region.name }}</option>
+                    <option value="{{ region.code }}">{{ region.name }}</option>
                     {% endfor %}
                   </select>
 
@@ -166,7 +166,28 @@
 
 {% block JS %}
 <!-- Add Streamer js -->
-<script src="js/add_streamer.js"></script>
-<script src="js/vote_requests.js"></script>
+<script src="/js/add_streamer.js"></script>
+<script src="/js/vote_requests.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $("#ajaxform").validator().on('submit', function(e){
+    if(e.isDefaultPrevented()){
+      //do nothing
+    }else{
+      var data = $(this).serializeArray();
+    	var formURL = $(this).attr("action");
+      $.post(formURL,data,function(data, status){
+        if(data.success){
+          alert("todo redirect same page");
+        }else{
+          alert(data.error_list);
+        }
+      });
+      e.preventDefault();	//STOP default action
+    }
+  });
+
+});
+</script>
 
   {% endblock %}

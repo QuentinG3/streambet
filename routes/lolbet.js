@@ -22,25 +22,56 @@ module.exports = {
     },
 
     /* Show the stream, game info and bet system. */
-    //TODO check if streamer is online?
     stream: function(req, res, next) {
         //Getting the streamer name
         var name = req.params.name;
 
-        //Database lookup
+        //Database lookup for streamer
         database.streamer.getStreamerByChannelName(name)
         .then(function(streamer){
           if (streamer) {
+            //Getting valid summoner of streamer
             database.summoners.getSummonerOfStreamer(name)
-            .then(function(summonersList){
-              res.render('stream', {
-                  streamer: streamer,
-                  summonersList: summonersList,
-                  bet_range: [5,10,15,20],
-                  isAuthenticated: req.isAuthenticated(),
-                  user: req.user
+            .then(function(validList){
+              //Getting pending summoner of streamer
+              database.summoners.getPendingSummonerOfStreamer(name)
+              .then(function(pendingList){
+                //Getting regions
+                database.region.getRegion()
+                .then(function(regionList){
+                  res.render('stream', {
+                      streamer: streamer,
+                      summonersList: validList,
+                      summonersPendingList: pendingList,
+                      region_list: regionList,
+                      bet_range: [5,10,15,20],
+                      isAuthenticated: req.isAuthenticated(),
+                      user: req.user
+                  });
+                })
+                //Error in geting regions
+                .catch(function(error){
+                  res.status(404);
+                  res.render('404', {
+                      user: req.user,
+                      isAuthenticated: req.isAuthenticated(),
+                      url: req.url
+                  });
+                  lolbetRoutesDebug(error);
+                });
+              })
+              //error in getting pending summoner
+              .catch(function(error){
+                res.status(404);
+                res.render('404', {
+                    user: req.user,
+                    isAuthenticated: req.isAuthenticated(),
+                    url: req.url
+                });
+                lolbetRoutesDebug(error);
               });
             })
+            //error in getting valid summoner
             .catch(function(error){
               res.status(404);
               res.render('404', {

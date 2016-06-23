@@ -4,7 +4,7 @@ var router = express.Router();
 var base = require('./base');
 var account = require('./account');
 var lolbet = require('./lolbet');
-var request = require('./request');
+var summoners= require('./summoners');
 var admin = require('./admin');
 
 //TODO remove in production
@@ -64,20 +64,17 @@ router.get('/reset/:token', account.reset);
 /* POST Reset account password. */
 router.post('/reset/:token', account.resetPassword);
 
-/* GET Request streamer page. */
-router.get('/requests', request.requests);
-
-/* AJAX Request streamer page. */
-router.post('/add-streamer', request.addStreamer);
-
-/* AJAX Vote Streamer */
-router.post('/vote-streamer', request.voteStreamer);
-
-/* AJAX Vote Summoner */
-router.post('/vote-summoner', request.voteSummoner);
-
 /* GET stream page. */
 router.get('/stream/:name', lolbet.stream);
+
+/* AJAX GET summoners pending list. */
+router.get('/stream/:name/summoners', summoners.pendingList);
+
+/* AJAX POST add summoner. */
+router.post('/stream/:name/add-summoner', summoners.addSummoner);
+
+/* AJAX POST vote summoner. */
+router.post('/stream/:name/vote-summoner', summoners.voteSummoner);
 
 /* GET Ranking page. */
 router.get('/ranking', lolbet.ranking);

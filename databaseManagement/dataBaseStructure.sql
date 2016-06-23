@@ -28,9 +28,14 @@ CREATE TABLE summoners(summonersname TEXT NOT NULL,
                         region TEXT NOT NULL REFERENCES region(code),
                         summonerid TEXT NOT NULL,
                         streamer TEXT NOT NULL REFERENCES streamers(channelname),
-                        valid BOOL NOT NULL,
+                        PRIMARY KEY(region, summonerid));
+
+CREATE TABLE pendingsummoners(summonersname TEXT NOT NULL,
+                        region TEXT NOT NULL REFERENCES region(code),
+                        summonerid TEXT NOT NULL,
+                        streamer TEXT NOT NULL REFERENCES streamers(channelname),
                         score INT,
-                        PRIMARY KEY(region,summonerid));
+                        PRIMARY KEY(region, summonerid, streamer));
 
 CREATE TABLE games(gameid TEXT NOT NULL,
                     region TEXT NOT NULL REFERENCES region(code),

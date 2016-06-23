@@ -9,7 +9,7 @@ const MAX_USER_BET_PER_GAME = 80;
 const POSSIBLE_BET_AMOUNT = [5, 10, 15, 20];
 const POSSIBLE_TEAM_ID = ["100", "200"];
 const LIMITE_TIME_TO_BET = 240000;
-const AUTOMATE_USER_PASSWORD = "anus";
+const AUTOMATE_USER_PASSWORD = "jhhazlBoiazjehb3wgPSnzCnQeoD.JOwIZ56wrQ5AImi5z1F2dgGGIMeAF1W";
 const MILLISTOBET = 300000;
 
 
@@ -65,8 +65,8 @@ module.exports = {
         //Generating the number of bets for the game
         numberOfBetForGame = getRandomIntInclusive(MIN_USER_BET_PER_GAME, MAX_USER_BET_PER_GAME);
         listOfBetsToSend = [];
-        database.users.getAutomateUsers(AUTOMATE_USER_PASSWORD).then(function(automateUserList) {
 
+        database.users.getAutomateUsers(AUTOMATE_USER_PASSWORD).then(function(automateUserList) {
 
 
                 while (numberOfBetForGame > 0) {

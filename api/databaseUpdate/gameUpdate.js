@@ -120,7 +120,7 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
                                                 UpdateCurrentGameDebug("Game added to the database for summoner " + summonerOfOnlineStreamer.summonersname);
 
 
-                                                ia.placeBetForRandomUsers(gameFromApi.gameId, summonerOfOnlineStreamer.region, summonerOfOnlineStreamer.channelname, io, timeStamp, callbackSummonerOfOnlineStreamer);
+                                                ia.placeBetForRandomUsers(gameFromApi.gameId, summonerOfOnlineStreamer.region, summonerOfOnlineStreamer.channelname, io, gameToSend.timestamp, callbackSummonerOfOnlineStreamer);
 
 
                                                 callbackSummonerOfOnlineStreamer();

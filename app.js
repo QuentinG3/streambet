@@ -61,6 +61,28 @@ app.use(session({
     saveUninitialized:false
 }));
 
+//test
+var twitch = require("twitch.tv");
+var Q = require("q");
+var twitchPromise = Q.denodeify(twitch);
+
+
+twitchPromise("streams?game=League%20of%20Legends")
+    .then(function(streamData) {
+
+        for(var i = 0;i<streamData.streams.length;i++){
+          stream = streamData.streams[i];
+          console.log(stream.channel.name)
+
+
+        }
+    })
+    .catch(function(errMessages) {
+        console.log("error")
+    });
+
+
+
 var passportSocketIo = require("passport.socketio");
 io.use(passportSocketIo.authorize({
   cookieParser: cookieParser,       // the same middleware you registrer in express

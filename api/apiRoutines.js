@@ -14,16 +14,20 @@ var riotAPILimitBig = new RateLimiter(REQUEST_PER_BIG, WAIT_SECONDS_BIG*1000);
 
 
 INTERVAL_BETWEEN_UPDATE_SECONDS = 10;
+INTERVAL_BETWEEN_STREAMER_UPDATE = 60;
 //var io;
 var entierUpdateRoutine = function(io){
   async.series({
-    one: function(callbackFinal){
-      apiUpdate.updateStreamers(callbackFinal);
+    one:function(callbackFinal){
+      apiUpdate.updateStreamersDatabase(callbackFinal);
     },
     two: function(callbackFinal){
-      apiUpdate.updateCurrentGames(callbackFinal,riotAPILimitSmall,riotAPILimitBig,io);
+      apiUpdate.updateStreamers(callbackFinal);
     },
     three: function(callbackFinal){
+      apiUpdate.updateCurrentGames(callbackFinal,riotAPILimitSmall,riotAPILimitBig,io);
+    },
+    four: function(callbackFinal){
       apiUpdate.processBet(callbackFinal,riotAPILimitSmall,riotAPILimitBig,io);
     }
 },
@@ -39,7 +43,12 @@ startApiRoutineLoop = function(io){
   setTimeout(function(){entierUpdateRoutine(io);},INTERVAL_BETWEEN_UPDATE_SECONDS*1000);
 };
 
+startApiRoutineUpdateStreamer = function(){
+  setTimeout(function(){entierUpdateRoutine(io);},INTERVAL_BETWEEN_STREAMER_UPDATE*1000);
+};
+
 
 module.exports = {
-  startApiRoutineLoop : startApiRoutineLoop
+  startApiRoutineLoop : startApiRoutineLoop,
+  startApiRoutineUpdateStreamer : startApiRoutineUpdateStreamer
 };

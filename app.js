@@ -31,6 +31,7 @@ app.io = io;
 
 //Start socket io
 socketIOManagement.startSocketIO(io);
+
 //Starting api update routines
 apiRoutines.startApiRoutineLoop(io);
 
@@ -60,27 +61,6 @@ app.use(session({
     store: mongoStore,
     saveUninitialized:false
 }));
-
-//test
-var twitch = require("twitch.tv");
-var Q = require("q");
-var twitchPromise = Q.denodeify(twitch);
-
-
-twitchPromise("streams?game=League%20of%20Legends")
-    .then(function(streamData) {
-
-        for(var i = 0;i<streamData.streams.length;i++){
-          stream = streamData.streams[i];
-          console.log(stream.channel.name)
-
-
-        }
-    })
-    .catch(function(errMessages) {
-        console.log("error")
-    });
-
 
 
 var passportSocketIo = require("passport.socketio");

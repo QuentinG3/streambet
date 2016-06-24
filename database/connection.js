@@ -1,5 +1,6 @@
 /* jshint moz:true */
 var pgp = require('pg-promise')();
+var Q = require("q");
 
 
 var cn = "postgresql://quentin:azerty@localhost:5432/streambet";
@@ -68,26 +69,43 @@ const SUMMONERS_TABLE_NAME = "summoners";
 const PENDING_SUMMONERS_TABLE_NAME = "pendingsummoners";
 const STREAMER_COL_SUMMONERS = "streamer";
 const SUMMONERID_COL_SUMMONERS = "summonerid";
+const REGION_COL_SUMMONERS = "region";
 
 var summonerFunctions = {
     getSummonerOfOnlineValidStreamers: function() {
-        return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=$4", [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME,VALID_COL,true]);
+        return db.any("SELECT * FROM $1~,$2~ WHERE $1~." + STREAMER_COL_SUMMONERS + "=$2~." + CHANNELNAME_COL + " AND $2~." + ONLINE_COL + "=$4",
+        [SUMMONERS_TABLE_NAME, STREAMER_TABLE_NAME,VALID_COL,true]);
     },
 
     getSummonerOfStreamer: function(channelname) {
-        return db.any("SELECT * FROM $1~ WHERE " + STREAMER_COL_SUMMONERS + "=$2", [SUMMONERS_TABLE_NAME, channelname]);
+        return db.any("SELECT * FROM $1~ WHERE " + STREAMER_COL_SUMMONERS + "=$2",
+        [SUMMONERS_TABLE_NAME, channelname]);
     },
 
     getPendingSummonerOfStreamer: function(channelname) {
-      return db.any("SELECT * FROM $1~ WHERE " + STREAMER_COL_SUMMONERS + "=$2 ", [PENDING_SUMMONERS_TABLE_NAME, channelname]);
+      return db.any("SELECT * FROM $1~ WHERE " + STREAMER_COL_SUMMONERS + "=$2 ",
+      [PENDING_SUMMONERS_TABLE_NAME, channelname]);
     },
 
     addValidSummoner: function(name, region, id, streamer) {
-        return db.query("INSERT INTO $1~ VALUES ($2, $3, $4, $5)", [SUMMONERS_TABLE_NAME, name, region, id, streamer]);
+        return db.query("INSERT INTO $1~ VALUES ($2, $3, $4, $5)",
+        [SUMMONERS_TABLE_NAME, name, region, id, streamer]);
     },
 
     addPendingSummoner: function(name, region, id, streamer) {
-        return db.query("INSERT INTO $1~ VALUES ($2, $3, $4, $5, 0)", [PENDING_SUMMONERS_TABLE_NAME, name, region, id, streamer]);
+        return db.query("INSERT INTO $1~ VALUES ($2, $3, $4, $5, 0)",
+        [PENDING_SUMMONERS_TABLE_NAME, name, region, id, streamer]);
+    },
+
+    getPendingSummoner: function(id, region, streamer){
+      return db.oneOrNone("SELECT * FROM $1~ WHERE $2~=$5 AND $3~=$6 AND $4~=$7",
+      [PENDING_SUMMONERS_TABLE_NAME, SUMMONERID_COL_SUMMONERS, REGION_COL_SUMMONERS, STREAMER_COL_SUMMONERS, id, region, streamer])
+    },
+
+    getSummoner: function(id, region){
+      return db.oneOrNone("SELECT * FROM $1~ WHERE $2~=$4 AND $3~=$5",
+      [SUMMONERS_TABLE_NAME, SUMMONERID_COL_SUMMONERS, REGION_COL_SUMMONERS, id, region]);
+
     }
 };
 /*

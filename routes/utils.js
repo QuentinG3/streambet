@@ -1,8 +1,42 @@
 var twitch = require("twitch.tv");
 var LolApi = require('leagueapi');
+var database = require('../database/connection');
 var Q = require("q");
 
+var summonersRouteDebug = require('debug')('summonersRoute');
+
 module.exports = {
+  checkSummonerDB: function(id, region, streamer){
+    var deferred = Q.defer();
+
+    //Check in pending list
+    database.summoners.getPendingSummoner(id, region, streamer)
+    .then(function(pending){
+      if(pending){
+        deferred.reject(pending.summonersname+" was already requested");
+      }else{
+        //Check in active list
+        database.summoners.getSummoner(id, region)
+        .then(function(active){
+          if(active){
+            deferred.reject(active.summonersname+" is already used by "+active.streamer);
+          }else{
+            deferred.resolve(true);
+          }
+        })
+        .catch(function(error){
+          summonersRouteDebug(error);
+          deferred.reject("Internal error with the database");
+        });
+      }
+    })
+    .catch(function(error){
+      summonersRouteDebug(error);
+      deferred.reject("Internal error with the database");
+    });
+    return deferred.promise;
+  },
+
   streamerExist: function(channelName){
     var deferred = Q.defer();
     var twitchPromise = Q.denodeify(twitch);
@@ -28,7 +62,6 @@ module.exports = {
 
     summonerGetByNamePromise(summonersName,region)
         .then(function(summonersData) {
-          console.log(summonersData);
           if(summonersData[summonersName].summonerLevel !== 30){
             deferred.reject(summonersName+" is not level 30 in "+region);
           }
@@ -40,5 +73,5 @@ module.exports = {
           deferred.reject(summonersName+" does not exist in "+region);
         });
       return deferred.promise;
-  }
+  },
 };

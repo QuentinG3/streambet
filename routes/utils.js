@@ -22,20 +22,22 @@ module.exports = {
       return deferred.promise;
   },
 
-  getSummonersId: function(summonersName,region){
+  getSummoners: function(summonersName,region){
     var deferred = Q.defer();
     var summonerGetByNamePromise = Q.denodeify(LolApi.Summoner.getByName);
-  
+
     summonerGetByNamePromise(summonersName,region)
         .then(function(summonersData) {
+          console.log(summonersData);
           if(summonersData[summonersName].summonerLevel !== 30){
-            deferred.reject(new Error("summoners is not level 30"));
+            deferred.reject(summonersName+" is not level 30 in "+region);
           }
           else{
-            deferred.resolve(summonersData[summonersName].id);
+            //Get rank TODO QUENTIN
+            deferred.resolve(summonersData[summonersName]);
           }
         }).catch(function(getStreamerError){
-          deferred.reject(new Error("summoners does not exist"));
+          deferred.reject(summonersName+" does not exist in "+region);
         });
       return deferred.promise;
   }

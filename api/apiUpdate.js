@@ -10,8 +10,10 @@ var database = require('../database/connection');
 
 var streamerUpdate = require('./databaseUpdate/streamerUpdate');
 var gameUpdate = require('./databaseUpdate/gameUpdate');
+var summonerUpdate = require('./databaseUpdate/summonerUpdate');
 
 //debugs
+var UpdateStreamersDatabase = require('debug')('updateStreamersDatabase');
 var UpdateStreamerDebug = require('debug')('updateStreamer');
 var UpdateCurrentGameDebug = require('debug')('updateCurrentGame');
 var doubleLoopDebug = require('debug')('doubleLoop');
@@ -26,6 +28,38 @@ LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
 
 
 module.exports = {
+    updateStreamersDatabase: function(callBackFinal) {
+
+        //Retreive the 25 first streams of league of legneds
+        var twitchPromise = Q.denodeify(twitch);
+        twitchPromise("streams?game=League%20of%20Legends")
+            .then(function(streamData) {
+
+                //Create the string for the request from the retreived only streamers
+                var streamerList = "{";
+
+                for (var i = 0; i < streamData.streams.length; i++) {
+                    stream = streamData.streams[i];
+                    streamerList += "{" + stream.channel.name + "," + stream.viewers + "," + stream.preview + "},";
+                }
+                streamerList = streamerList.substring(0, streamerList.length - 1);
+                streamerList += "}";
+
+                //We add the new streamers found in the database
+                database.procedure.updateStreamerDatabase(streamerList)
+                    .then(function(sucessUpdateStreamerDatabase) {
+                        callBackFinal();
+                    }).catch(function(errorUpdateStreamerDatabase) {
+                        UpdateStreamersDatabase(errorUpdateStreamerDatabase);
+                        callBackFinal();
+                    });
+
+            })
+            .catch(function(errMessages) {
+                UpdateStreamersDatabase(errMessages);
+                callBackFinal();
+            });
+    },
     /*
     Function to update streamers viewers and online in the database by
     requesting the API.
@@ -127,12 +161,20 @@ module.exports = {
 
                                         UpdateCurrentGameDebug("Game found in API for " + summonerOfOnlineStreamer.summonersname);
                                         //We create a new game with the informations gotten from the api
+                                        //If the game id is the same as the last game id it mean the api was not updated yet so we don't do anything
                                         if (summonerOfOnlineStreamer.lastgameid == gameFromApi.gameId && summonerOfOnlineStreamer.lastgameregion == summonerOfOnlineStreamer.region) {
 
                                             UpdateCurrentGameDebug("Old game not deleted from the API yet: Not adding game to database anymore for " + summonerOfOnlineStreamer.channelname);
                                             callbackSummonerOfOnlineStreamer();
                                         } else {
-                                            gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer);
+                                            //We update the summonersName from the summoners id
+                                            summonerUpdate.updateSummonersNameFromApiBySummonersId(summonerOfOnlineStreamer.summonerid, summonerOfOnlineStreamer.region,smallLimitAPI,bigLimitAPI)
+                                                .then(function(result) {
+                                                    gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer);
+                                                }).catch(function(error) {
+                                                    UpdateCurrentGameDebug(summonerOfOnlineStreamer.summonersname + ' could not update the summmonersName from the summonerId in api' + error);
+                                                    callbackSummonerOfOnlineStreamer();
+                                                });
                                         }
                                     })
                                     .catch(function(errorGettingGameFromApi) {

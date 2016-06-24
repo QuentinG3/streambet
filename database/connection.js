@@ -69,6 +69,7 @@ const SUMMONERS_TABLE_NAME = "summoners";
 const PENDING_SUMMONERS_TABLE_NAME = "pendingsummoners";
 const STREAMER_COL_SUMMONERS = "streamer";
 const SUMMONERID_COL_SUMMONERS = "summonerid";
+const SUMMONERNAME_COL_SUMMONERS = "summonersname";
 const REGION_COL_SUMMONERS = "region";
 
 var summonerFunctions = {
@@ -80,6 +81,13 @@ var summonerFunctions = {
     getSummonerOfStreamer: function(channelname) {
         return db.any("SELECT * FROM $1~ WHERE " + STREAMER_COL_SUMMONERS + "=$2",
         [SUMMONERS_TABLE_NAME, channelname]);
+    },
+
+    addSummoner: function(name, region, id, streamer, valid) {
+        return db.query("INSERT INTO $1~ VALUES ($2, $3, $4, $5, $6)", [SUMMONERS_TABLE_NAME, name, region, id, streamer, valid]);
+    },
+    updateSummonersNameForSummonerId : function(summonerId,region,summonerName){
+        return db.query("UPDATE $1~ SET $2~=$3 WHERE $4~=$5 AND $6~=$7",[SUMMONERS_TABLE_NAME,SUMMONERNAME_COL_SUMMONERS,summonerName,SUMMONERID_COL_GAME,summonerId.toString(),REGION_COL_SUMMONERS,region]);
     },
 
     getPendingSummonerOfStreamer: function(channelname) {
@@ -307,6 +315,13 @@ var regionFunctions = {
   }
 } ;
 
+//PROCEDURES (TODO BY COMMENT)
+
+var procedureFunctions = {
+  updateStreamerDatabase : function(streamerList){
+    return db.query("SELECT UPDATE_STREAMER_DATABASE($1)",[streamerList]);
+  }
+};
 /*
 _______ _____            _   _  _____         _____ _______ _____ ____  _   _  _____
 |__   __|  __ \     /\   | \ | |/ ____|  /\   / ____|__   __|_   _/ __ \| \ | |/ ____|
@@ -376,4 +391,5 @@ module.exports = {
     bets: betsFunctions,
     betHistory : betHistoryFunctions,
     region: regionFunctions,
+    procedure : procedureFunctions,
 };

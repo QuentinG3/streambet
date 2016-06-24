@@ -1,7 +1,7 @@
 INSERT INTO region VALUES
+('na','NA1','North America'),
 ('euw','EUW1','Europe West'),
 ('eune','EUN1','Europe Nordic & East'),
-('na','NA1','North America'),
 ('lan','LA1','Latin America North'),
 ('las','LA2','Latin America South'),
 ('oce','OC1','Oceania'),

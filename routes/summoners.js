@@ -28,7 +28,7 @@ module.exports = {
     }else{
       //Info
       var channelName = req.body.channelName;
-      var summonerName = req.body.summonerName.toLowerCase();
+      var summonerName = req.body.summonerName.toLowerCase().replace(/\s/g, '');
       var region = req.body.region;
 
       //Check info
@@ -36,10 +36,10 @@ module.exports = {
         res.send({success: false, error: "Couldn't retrieve summoner info"});
       }else{
         //Check summoner
-        utils.getSummonersId(summonerName, region)
-        .then(function(summonerId){
+        utils.getSummoners(summonerName, region)
+        .then(function(summoner){
           //Add summoner to db
-          database.summoners.addPendingSummoner(summonerName, region, summonerId, channelName)
+          database.summoners.addPendingSummoner(summoner.name, region, summoner.id, channelName)
           .then(function(){
             //retrieve list of summoner
             database.summoners.getPendingSummonerOfStreamer(channelName)

@@ -14,7 +14,7 @@ INSERT INTO streamers
               ('Crvor','iamcrvor',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_iamcrvor-320x180.jpg',true),
               ('Sylrus','sylrus',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_sylrus-320x180.jpg',true),
               ('Sneaky','c9sneaky',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_c9sneaky-320x180.jpg',true),
-              ('SummonersInnLive', 'SummonersInnLive', false,0, 'http://static-cdn.jtvnw.net/previews-ttv/live_user_SummonersInnLive-320x180.jpg', true);
+              ('SummonersInnLive', 'SummonersInnLive', false,0, 'http://static-cdn.jtvnw.net/previews-ttv/live_user_summonersinnlive-320x180.jpg', true);
 
 
                           --Summoners gobgg

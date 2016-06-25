@@ -2,11 +2,11 @@ DELETE FROM summoners;
 DELETE FROM streamers;
 INSERT INTO streamers
         VALUES('GoBGG','gobgg',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_gobgg-320x180.jpg',true),
-              ('SirhcEz','SirhcEz',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_sirhcez-320x180.jpg',true),
-              ('Night Blue','Nightblue3',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_nightblue3-320x180.jpg',true),
-              ('Good Guy Garry','GoodGuyGarry',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_goodguygarry-320x180.jpg',true),
-              ('Scarra','Scarra',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_scarra-320x180.jpg',true),
-              ('Wings of Death','Wingsofdeath',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_wingsofdeath-320x180.jpg',true),
+              ('SirhcEz','sirhcez',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_sirhcez-320x180.jpg',true),
+              ('Night Blue','nightblue3',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_nightblue3-320x180.jpg',true),
+              ('Good Guy Garry','goodguygarry',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_goodguygarry-320x180.jpg',true),
+              ('Scarra','scarra',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_scarra-320x180.jpg',true),
+              ('Wings of Death','wingsofdeath',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_wingsofdeath-320x180.jpg',true),
               ('Gosu','mushisgosu',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-320x180.jpg',true),
               ('Imaqtpie','imaqtpie',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_imaqtpie-320x180.jpg',true),
               ('Iwilldominate','iwilldominate',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_iwilldominate-320x180.jpg',true),
@@ -14,7 +14,7 @@ INSERT INTO streamers
               ('Crvor','iamcrvor',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_iamcrvor-320x180.jpg',true),
               ('Sylrus','sylrus',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_sylrus-320x180.jpg',true),
               ('Sneaky','c9sneaky',false,0,'http://static-cdn.jtvnw.net/previews-ttv/live_user_c9sneaky-320x180.jpg',true),
-              ('SummonersInnLive', 'SummonersInnLive', false,0, 'http://static-cdn.jtvnw.net/previews-ttv/live_user_summonersinnlive-320x180.jpg', true);
+              ('SummonersInnLive', 'summonersinnlive', false,0, 'http://static-cdn.jtvnw.net/previews-ttv/live_user_summonersinnlive-320x180.jpg', true);
 
 
                           --Summoners gobgg
@@ -22,19 +22,19 @@ INSERT INTO streamers
                           ('GoB GG','euw','18998522','gobgg');
                           --Summoners SirhcEz
                           INSERT INTO summoners VALUES
-                          ('Liquid SirhcEz','na','20526961','SirhcEz');
+                          ('Liquid SirhcEz','na','20526961','sirhcez');
                           --Summoners Nightblue3
                           INSERT INTO summoners VALUES
-                          ('Nightblue3','na','25850956','Nightblue3'),
-                          ('EU Flamingo','euw','77348710','Nightblue3'),
-                          ('SKT T1 Nightblue','na','28753857','Nightblue3'),
-                          ('Nightbluex','na','67029611','Nightblue3');
+                          ('Nightblue3','na','25850956','nightblue3'),
+                          ('EU Flamingo','euw','77348710','nightblue3'),
+                          ('SKT T1 Nightblue','na','28753857','nightblue3'),
+                          ('Nightbluex','na','67029611','nightblue3');
                           --Summoners GoodGuyGarry
                           INSERT INTO summoners VALUES
-                          ('Bronze 5 Haircut','na','72720995','GoodGuyGarry');
+                          ('Bronze 5 Haircut','na','72720995','goodguygarry');
                           --Summoners Wingsofdeath
                           INSERT INTO summoners VALUES
-                          ('Wingsofdeath','na','53742348','Wingsofdeath');
+                          ('Wingsofdeath','na','53742348','wingsofdeath');
                           --Summoners mushisgosu
                           INSERT INTO summoners VALUES
                           ('hi im gosu','na','23557909','mushisgosu'),

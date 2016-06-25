@@ -78,16 +78,12 @@ CREATE TABLE bets(gameId TEXT NOT NULL,
                     PRIMARY KEY(gameid,region,users,streamer),
                     FOREIGN KEY(gameid,region,streamer) REFERENCES games(gameid,region,streamer));
 
-CREATE TABLE user_vote_streamers(users TEXT NOT NULL REFERENCES users(username),
-                                streamer TEXT NOT NULL REFERENCES streamers(channelname),
-                                vote BOOL NOT NULL,
-                                PRIMARY KEY(users,streamer));
-
 CREATE TABLE user_vote_summoners(users TEXT NOT NULL REFERENCES users(username),
+                                streamer TEXT NOT NULL REFERENCES streamers(channelname),
                                 summonerid TEXT NOT NULL,
                                 region TEXT NOT NULL REFERENCES region(code),
                                 vote BOOL NOT NULL,
-                                PRIMARY KEY(users,summonerid,region),
+                                PRIMARY KEY(users, streamer, summonerid, region),
                                 FOREIGN KEY(summonerid,region) REFERENCES summoners(summonerid,region));
 
 CREATE TABLE betHistory(gameId TEXT NOT NULL,

@@ -102,6 +102,8 @@ function reloadSummonerList(summonerList){
     //New row
     var row = summonerTable.insertRow(i);
 
+    row.className = "tr-with-button";
+
     //New cells
     var id = row.insertCell(0);
     var name = row.insertCell(1);

@@ -82,9 +82,9 @@ CREATE TABLE user_vote_summoners(users TEXT NOT NULL REFERENCES users(username),
                                 streamer TEXT NOT NULL REFERENCES streamers(channelname),
                                 summonerid TEXT NOT NULL,
                                 region TEXT NOT NULL REFERENCES region(code),
-                                vote BOOL NOT NULL,
+                                vote INT NOT NULL,
                                 PRIMARY KEY(users, streamer, summonerid, region),
-                                FOREIGN KEY(summonerid,region) REFERENCES summoners(summonerid,region));
+                                FOREIGN KEY(summonerid,region) REFERENCES pendingsummoners(summonerid,region));
 
 CREATE TABLE betHistory(gameId TEXT NOT NULL,
                         region TEXT NOT NULL REFERENCES region(code),

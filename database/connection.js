@@ -107,13 +107,18 @@ var summonerFunctions = {
 
     getPendingSummoner: function(id, region, streamer){
       return db.oneOrNone("SELECT * FROM $1~ WHERE $2~=$5 AND $3~=$6 AND $4~=$7",
-      [PENDING_SUMMONERS_TABLE_NAME, SUMMONERID_COL_SUMMONERS, REGION_COL_SUMMONERS, STREAMER_COL_SUMMONERS, id, region, streamer])
+      [PENDING_SUMMONERS_TABLE_NAME, SUMMONERID_COL_SUMMONERS, REGION_COL_SUMMONERS, STREAMER_COL_SUMMONERS, id, region, streamer]);
     },
 
     getSummoner: function(id, region){
       return db.oneOrNone("SELECT * FROM $1~ WHERE $2~=$4 AND $3~=$5",
       [SUMMONERS_TABLE_NAME, SUMMONERID_COL_SUMMONERS, REGION_COL_SUMMONERS, id, region]);
 
+    },
+
+    voteSummoner: function(user, streamer, summonerID, region, vote){
+      return db.query("SELECT * FROM VOTE_SUMMONER($1,$2,$3,$4,$5)",
+      [user, streamer, summonerID, regio, vote]);
     }
 };
 /*

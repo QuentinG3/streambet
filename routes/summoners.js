@@ -120,8 +120,31 @@ module.exports = {
   },
 
   voteSummoner: function(req, res){
-    var user = req.user;
+    //Retrieve user
+    var user = req.user
+    if(user === undefined){
+      res.send({success: false, error: "you need to be logged in"});
+    }else{
+      //Info
+      var streamer = req.body.streamer;
+      var summonerID = req.body.summonerID;
+      var region = req.body.region;
+      var vote = req.body.vote;
 
-    res.send({success: true, data: null});
+      //Check info
+      if(streamer === undefined || streamer === "" || summonerID === undefined || summonerID === "" || region === undefined || region === "" || vote === undefined || vote === ""){
+        res.send({success: false, error: "Couldn't retrieve summoner info"});
+      }else{
+        //Vote for the summoner
+        database.summoners.voteSummoner(user, streamer, summonerID, region, vote)
+        .then(function(result){
+          res.send({success: true})
+        })
+        .catch(function(error){
+          summonersRouteDebug(error);
+          res.send({success: false, error: error});
+        });
+      }
+    }
   }
 };

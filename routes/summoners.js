@@ -21,6 +21,7 @@ module.exports = {
   },
 
   getSummoner: function(req, res){
+    console.log("Request");
     //User
     var user = req.user;
     if(user === undefined){

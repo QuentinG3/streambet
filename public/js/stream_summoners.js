@@ -88,9 +88,11 @@ function confirmSummoner(summoner){
   summonerLP.innerHTML = summoner.leaguePoints;
 
   if(summoner.ingame){
-    summonerIG.innerHTML = summoner.name + " is currently in game with " + summoner.champion;
+    summonerIG.innerHTML = summoner.name + " is currently in game with " + summoner.champion+".";
+    summonerIG.style.color = "green";
   }else{
     summonerIG.innerHTML = summoner.name + " is not currently in game.";
+    summonerIG.style.color = "red";
   }
 
 

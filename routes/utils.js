@@ -37,15 +37,19 @@ module.exports = {
             dataById: true
         });
 
+        //We look for the summoner id by summonerName in the api
         summonerGetByNamePromise(summonersName, region)
             .then(function(summonersData) {
+                //If the summoner is not level 30 we returned a rejected deffered
                 if (summonersData[summonersName].summonerLevel !== 30) {
                     deferred.reject(summonersName + " is not level 30 in " + region);
                 } else {
-
+                    //We get the information on the league of the summoner
                     var getLeagueEntryDataPromise = Q.denodeify(LolApi.getLeagueEntryData);
                     getLeagueEntryDataPromise(summonersData[summonersName].id, region)
                         .then(function(rankResponse) {
+
+                            //We create the results we want to return with the informations
                             var result = {
                                 id: summonersData[summonersName].id,
                                 name: summonersData[summonersName].name,
@@ -58,27 +62,31 @@ module.exports = {
                                 wins: rankResponse[summonersData[summonersName].id][0].entries[0].wins,
                                 losses: rankResponse[summonersData[summonersName].id][0].entries[0].losses,
                             };
+
+                            //We check if the summoner is current ingame
                             var GetGameApiNoCallBack = Q.denodeify(LolApi.getCurrentGame);
                             GetGameApiNoCallBack(summonersData[summonersName].id, region)
                                 .then(function(gameFromApi) {
 
                                     result.ingame = true;
-                                    championListPromise.then(function(championList){
-                                      for(var i = 0;i<gameFromApi.participants.length;i++){
-                                        currentParticipant = gameFromApi.participants[i];
 
-                                        if(currentParticipant.summonerId == summonersData[summonersName].id){
-                                          result.champion = championList.data[currentParticipant.championId].key;
+                                    //We get the champion list by id from the static api
+                                    championListPromise.then(function(championList) {
+                                        //We look for the champion of the summoner
+                                        for (var i = 0; i < gameFromApi.participants.length; i++) {
+                                            currentParticipant = gameFromApi.participants[i];
+
+                                            if (currentParticipant.summonerId == summonersData[summonersName].id) {
+                                                result.champion = championList.data[currentParticipant.championId].key;
+
+                                            }
 
                                         }
-
-                                      }
-
-
-                                    console.log("before defered")
-                                    deferred.resolve(result);
-                                    }).catch(function(errorChampionList){
-
+                                        //Returning the final result
+                                        deferred.resolve(result);
+                                    }).catch(function(errorChampionList) {
+                                      result.champion = 'Unknown';
+                                      deferred.resolve(result);
                                     });
 
 
@@ -100,35 +108,35 @@ module.exports = {
             });
         return deferred.promise;
     },
-  checkSummonerDB: function(id, region, streamer){
-    var deferred = Q.defer();
+    checkSummonerDB: function(id, region, streamer) {
+        var deferred = Q.defer();
 
-    //Check in pending list
-    database.summoners.getPendingSummoner(id, region, streamer)
-    .then(function(pending){
-      if(pending){
-        deferred.reject(pending.summonersname+" was already requested");
-      }else{
-        //Check in active list
-        database.summoners.getSummoner(id, region)
-        .then(function(active){
-          if(active){
-            deferred.reject(active.summonersname+" is already used by "+active.streamer);
-          }else{
-            deferred.resolve(true);
-          }
-        })
-        .catch(function(error){
-          summonersRouteDebug(error);
-          deferred.reject("Internal error with the database");
-        });
-      }
-    })
-    .catch(function(error){
-      summonersRouteDebug(error);
-      deferred.reject("Internal error with the database");
-    });
-    return deferred.promise;
-  }
+        //Check in pending list
+        database.summoners.getPendingSummoner(id, region, streamer)
+            .then(function(pending) {
+                if (pending) {
+                    deferred.reject(pending.summonersname + " was already requested");
+                } else {
+                    //Check in active list
+                    database.summoners.getSummoner(id, region)
+                        .then(function(active) {
+                            if (active) {
+                                deferred.reject(active.summonersname + " is already used by " + active.streamer);
+                            } else {
+                                deferred.resolve(true);
+                            }
+                        })
+                        .catch(function(error) {
+                            summonersRouteDebug(error);
+                            deferred.reject("Internal error with the database");
+                        });
+                }
+            })
+            .catch(function(error) {
+                summonersRouteDebug(error);
+                deferred.reject("Internal error with the database");
+            });
+        return deferred.promise;
+    }
 
 };

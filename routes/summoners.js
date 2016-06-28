@@ -43,7 +43,6 @@ module.exports = {
           .then(function(ok){
             //Send summoner info
             summoner.region = region;
-            summoner.rank = "todo";
             res.send({success: true, summoner:summoner});
           })
           //errror check summoner in db

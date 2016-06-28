@@ -190,15 +190,15 @@
 				</div>
 				<div class="modal-body">
 					{% if isAuthenticated %}
-					<div id="summonerRequest" style="display:inherit;">
-						<!-- Error Box -->
-						<div id="errorBox" class="alert alert-danger" style="padding-left:0; display:none">
-							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-				      <ul>
-				        <li id="errorMessage"><strong></strong></li>
-				      </ul>
-				    </div>
+					<!-- Error Box -->
+					<div id="errorBox" class="alert alert-danger" style="padding-left:0; display:none">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<ul>
+							<li id="errorMessage"><strong></strong></li>
+						</ul>
+					</div>
 
+					<div id="summonerRequest" style="display:inherit;">
 						<!-- Summoner list -->
 						<div class="table-responsive">
 	            <table class="table">
@@ -226,12 +226,9 @@
 								</tbody>
 							</table>
 						</div>
-						<form data-toggle="validator" id="addSummonerForm" name="addSummonerForm" action="/stream/{{ streamer.channelname}}/add-summoner" method="post" role="form">
+						<form data-toggle="validator" id="addSummonerForm" name="addSummonerForm" action="/stream/{{ streamer.channelname}}/get-summoner" method="post" role="form">
 							<div class="row">
-								<div class="col-sm-1 col-xs-2">
-									<button class="btn btn-lolbet center-block" style="margin-top:9px" type="submit" name="button"><i class="fa fa-plus"></i></button>
-								</div>
-								<div class="col-sm-11 col-xs-10" style="max-width:600px;">
+								<div class="col-sm-10 col-xs-9" style="max-width:600px;">
 									<div class="form-group" style="margin-bottom:0;margin-top:9px;">
 										<div class="row" >
 											<!-- Channel Name -->
@@ -252,6 +249,9 @@
 										</div>
 									</div>
 								</div>
+								<div class="col-sm-2 col-xs-3 ">
+									<button class="btn btn-lolbet" style="margin-top:9px" type="submit" name="button">Add</button>
+								</div>
 							</div>
 						</form>
 					</div>
@@ -259,25 +259,45 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th><i class="fa fa-user gold"></i> Icon</th>
-									<th><i class="fa fa-ticket gold"></i> ID </th>
-									<th><i class="fa fa-flash gold"></i> Name </th>
-									<th><i class="fa fa-globe gold"></i> Region </th>
-									<th><i class="fa fa-diamond gold"></i> Rank</th>
+									<th class="text-center"><i class="fa fa-user gold"></i> Icon</th>
+									<th class="text-center"><i class="fa fa-ticket gold"></i> ID </th>
+									<th class="text-center"><i class="fa fa-flash gold"></i> Name </th>
+									<th class="text-center"><i class="fa fa-globe gold"></i> Region </th>
+									<th class="text-center"><i class="fa fa-diamond gold"></i> Rank</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr class="tr-with-button">
-									<th><img src="http://ddragon.leagueoflegends.com/cdn/6.12.1/img/profileicon/588.png" class="img-circle" alt="Summoner Icon" width="65" height="65"></th>
-									<th>554566852</th>
-									<th>clg imaqtpie</th>
-									<th>na</th>
-									<th>Diamong II</th>
+									<td class="text-center"><img id="summonerIcon" src="http://ddragon.leagueoflegends.com/cdn/6.12.1/img/profileicon/588.png" class="img-circle" alt="Summoner Icon" width="50" height="50"></td>
+									<td class="text-center" id="summonerID"></td>
+									<td class="text-center" id="summonerName"></td>
+									<td class="text-center" id="summonerRegion"></td>
+									<td class="text-center" id="summonerRank"></td>
 								</tr>
 							</tbody>
 						</table>
 						<br>
-						<button class="btn btn-lolbet" name="button">Add</button>
+						<form data-toggle="validator" id="confirmSummonerForm" name="confirmSummonerForm" action="/stream/{{ streamer.channelname}}/add-summoner" method="post" role="form">
+							<!-- Channel Name -->
+							<input type="hidden" name="channelName" value="{{ streamer.channelname }}">
+							<!-- Summoner ID -->
+							<input id="summonerNameValue" type="hidden" name="summonerName" value="">
+							<!-- Summoner Region -->
+							<input id="summonerRegionValue" type="hidden" name="summonerRegion" value="">
+
+							<ul class="list-inline text-center">
+								<!-- Cancel -->
+								<li>
+									<button type="button" onclick="initialView()" class="btn btn-lolbet" name="button"><i class="fa fa-times"></i> Cancel</button>
+								</li>
+								<!-- Submit -->
+								<li>
+									<button class="btn btn-lolbet" name="button"><i class="fa fa-check"></i> Confirm</button>
+								</li>
+							</ul>
+
+
+						</form>
 					</div>
 					{% else %}
 					<p class="text-center" style="color:white;">

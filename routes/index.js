@@ -70,6 +70,9 @@ router.get('/stream/:name', lolbet.stream);
 /* AJAX GET summoners pending list. */
 router.get('/stream/:name/summoners', summoners.pendingList);
 
+/* AJAX POST get summoner. */
+router.post('/stream/:name/get-summoner', summoners.getSummoner);
+
 /* AJAX POST add summoner. */
 router.post('/stream/:name/add-summoner', summoners.addSummoner);
 

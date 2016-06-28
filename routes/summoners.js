@@ -20,7 +20,7 @@ module.exports = {
 
   },
 
-  addSummoner: function(req, res){
+  getSummoner: function(req, res){
     //User
     var user = req.user;
     if(user === undefined){
@@ -35,27 +35,79 @@ module.exports = {
       if(channelName === undefined || channelName === "" || summonerName === undefined || summonerName === "" || region === undefined || region === ""){
         res.send({success: false, error: "Couldn't retrieve summoner info"});
       }else{
+        //Check summoner with RIOT
+        utils.getSummoners(summonerName, region)
+        .then(function(summoner){
+          //Check summoner in DB
+          utils.checkSummonerDB(summoner.id.toString(), region, channelName)
+          .then(function(ok){
+            //Send summoner info
+            summoner.region = region;
+            summoner.rank = "todo";
+            res.send({success: true, summoner:summoner});
+          })
+          //errror check summoner in db
+          .catch(function(error){
+            summonersRouteDebug(error);
+            res.send({success: false, error: error});
+          });
+
+        })
+        //error check summoner
+        .catch(function(error){
+          summonersRouteDebug(error);
+          res.send({success: false, error: error});
+        });
+      }
+    }
+  },
+
+  addSummoner: function(req, res){
+    //User
+    var user = req.user;
+    if(user === undefined){
+      res.send({success: false, error: "you need to be logged in"});
+    }else{
+      //Info
+      var channelName = req.body.channelName;
+      var summonerName = req.body.summonerName.toLowerCase().replace(/\s/g, '');
+      var region = req.body.summonerRegion;
+
+      //Check info
+      if(channelName === undefined || channelName === "" || summonerName === undefined || summonerName === "" || region === undefined || region === ""){
+        res.send({success: false, error: "Couldn't retrieve summoner info"});
+      }else{
+
         //Check summoner
         utils.getSummoners(summonerName, region)
         .then(function(summoner){
-          //Add summoner to db
-          database.summoners.addPendingSummoner(summoner.name, region, summoner.id, channelName)
-          .then(function(){
-            //retrieve list of summoner
-            database.summoners.getPendingSummonerOfStreamer(channelName)
-            .then(function(summonerList){
-              res.send({success:true, summonerList: summonerList});
+          //Check summoner in DB
+          utils.checkSummonerDB(summoner.id.toString(), region, channelName)
+          .then(function(ok){
+            //Add summoner to db
+            database.summoners.addPendingSummoner(summoner.name, region, summoner.id, channelName)
+            .then(function(){
+              //retrieve list of summoner
+              database.summoners.getPendingSummonerOfStreamer(channelName)
+              .then(function(summonerList){
+                res.send({success:true, summonerList: summonerList});
+              })
+              //error retrieve pending list summoner
+              .catch(function(error){
+                summonersRouteDebug(error);
+                res.send({success:false, error: "Internal error with the database"});
+              });
             })
-            //error retrieve pending list summoner
+            //error add summoner
             .catch(function(error){
               summonersRouteDebug(error);
-              res.send({success:false, error: "Internal error with the database"});
+              res.send({success: false, error: summonerName+" couldn't be added"});
             });
           })
-          //error add summoner
+          //Error when checking summoner in DB
           .catch(function(error){
             summonersRouteDebug(error);
-            res.send({success: false, error: summonerName+" couldn't be added"});
+            res.send({success: false, error: error});
           });
         })
         //error check summoner
@@ -68,8 +120,31 @@ module.exports = {
   },
 
   voteSummoner: function(req, res){
-    var user = req.user;
+    //Retrieve user
+    var user = req.user
+    if(user === undefined){
+      res.send({success: false, error: "you need to be logged in"});
+    }else{
+      //Info
+      var streamer = req.body.streamer;
+      var summonerID = req.body.summonerID;
+      var region = req.body.region;
+      var vote = req.body.vote;
 
-    res.send({success: true, data: null});
+      //Check info
+      if(streamer === undefined || streamer === "" || summonerID === undefined || summonerID === "" || region === undefined || region === "" || vote === undefined || vote === ""){
+        res.send({success: false, error: "Couldn't retrieve summoner info"});
+      }else{
+        //Vote for the summoner
+        database.summoners.voteSummoner(user, streamer, summonerID, region, vote)
+        .then(function(result){
+          res.send({success: true})
+        })
+        .catch(function(error){
+          summonersRouteDebug(error);
+          res.send({success: false, error: error});
+        });
+      }
+    }
   }
 };

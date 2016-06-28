@@ -1,6 +1,9 @@
 var twitch = require("twitch.tv");
 var LolApi = require('leagueapi');
+var database = require('../database/connection');
 var Q = require("q");
+
+var summonersRouteDebug = require('debug')('summonersRoute');
 
 module.exports = {
     streamerExist: function(channelName) {
@@ -16,7 +19,7 @@ module.exports = {
                     deferred.resolve(true);
                 }
             }).catch(function(getStreamerError) {
-                deferred.reject(getStreamerError);
+                deferred.reject(new Error(getStreamerError));
             });
         return deferred.promise;
     },
@@ -27,6 +30,12 @@ module.exports = {
         //Preparing function in promises
         var summonerGetByNamePromise = Q.denodeify(LolApi.Summoner.getByName);
 
+        //Getting champions name from the static api
+
+        var championListNoCallback = Q.denodeify(LolApi.Static.getChampionList);
+        var championListPromise = championListNoCallback({
+            dataById: true
+        });
 
         summonerGetByNamePromise(summonersName, region)
             .then(function(summonersData) {
@@ -51,10 +60,9 @@ module.exports = {
                             };
                             var GetGameApiNoCallBack = Q.denodeify(LolApi.getCurrentGame);
                             GetGameApiNoCallBack(summonersData[summonersName].id, region)
-                                .then(function(gameFromApi) {
-                                    result.online = true;
+                                result.online = true;
 
-                                    deferred.resolve(result);
+
                                 }).catch(function(errorGetingCurrentGame) {
                                     if (errorGetingCurrentGame != "Error: Error getting current game: 404 Not Found") {
                                         deferred.reject("Could not get the current game of " + summonerName);
@@ -72,5 +80,36 @@ module.exports = {
                 deferred.reject(summonersName + " does not exist in " + region);
             });
         return deferred.promise;
-    }
+    },
+  checkSummonerDB: function(id, region, streamer){
+    var deferred = Q.defer();
+
+    //Check in pending list
+    database.summoners.getPendingSummoner(id, region, streamer)
+    .then(function(pending){
+      if(pending){
+        deferred.reject(pending.summonersname+" was already requested");
+      }else{
+        //Check in active list
+        database.summoners.getSummoner(id, region)
+        .then(function(active){
+          if(active){
+            deferred.reject(active.summonersname+" is already used by "+active.streamer);
+          }else{
+            deferred.resolve(true);
+          }
+        })
+        .catch(function(error){
+          summonersRouteDebug(error);
+          deferred.reject("Internal error with the database");
+        });
+      }
+    })
+    .catch(function(error){
+      summonersRouteDebug(error);
+      deferred.reject("Internal error with the database");
+    });
+    return deferred.promise;
+  }
+
 };

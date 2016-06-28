@@ -62,15 +62,21 @@ module.exports = {
                             GetGameApiNoCallBack(summonersData[summonersName].id, region)
 
                                 .then(function(gameFromApi) {
-                                    result.online = true;
+                                    result.ingame = true;
+                                    championListPromise.then(function(championList){
 
+
+                                    deferred.resolve(result);
+                                    }).catch(function(errorChampionList){
+
+                                    });
 
 
                                 }).catch(function(errorGetingCurrentGame) {
                                     if (errorGetingCurrentGame != "Error: Error getting current game: 404 Not Found") {
                                         deferred.reject("Could not get the current game of " + summonerName);
                                     } else {
-                                        result.online = false;
+                                        result.ingame = false;
                                         deferred.resolve(result);
                                     }
                                 });

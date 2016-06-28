@@ -60,7 +60,10 @@ module.exports = {
                             };
                             var GetGameApiNoCallBack = Q.denodeify(LolApi.getCurrentGame);
                             GetGameApiNoCallBack(summonersData[summonersName].id, region)
-                                result.online = true;
+
+                                .then(function(gameFromApi) {
+                                    result.online = true;
+
 
 
                                 }).catch(function(errorGetingCurrentGame) {

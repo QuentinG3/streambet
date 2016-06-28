@@ -60,12 +60,22 @@ module.exports = {
                             };
                             var GetGameApiNoCallBack = Q.denodeify(LolApi.getCurrentGame);
                             GetGameApiNoCallBack(summonersData[summonersName].id, region)
-
                                 .then(function(gameFromApi) {
+
                                     result.ingame = true;
                                     championListPromise.then(function(championList){
+                                      for(var i = 0;i<gameFromApi.participants.length;i++){
+                                        currentParticipant = gameFromApi.participants[i];
+
+                                        if(currentParticipant.summonerId == summonersData[summonersName].id){
+                                          result.champion = championList.data[currentParticipant.championId].key;
+
+                                        }
+
+                                      }
 
 
+                                    console.log("before defered")
                                     deferred.resolve(result);
                                     }).catch(function(errorChampionList){
 

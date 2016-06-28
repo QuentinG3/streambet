@@ -73,6 +73,13 @@ io.use(passportSocketIo.authorize({
   fail:         onAuthorizeFail     // *optional* callback on fail/error - read more below
 }));
 
+var aaa = require('./routes/utils');
+aaa.getSummoners('nightweebxd','na')
+.then(function(success){
+  console.log(success);
+}).catch(function(error){
+  console.log(error);
+});
 
 // This function accepts every client unless there's an error
 function onAuthorizeFail(data, message, error, accept){

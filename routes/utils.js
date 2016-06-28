@@ -90,8 +90,9 @@ module.exports = {
                                     });
 
 
-                                }).catch(function(errorGetingCurrentGame) {
-                                    if (errorGetingCurrentGame != "Error: Error getting current game: 404 Not Found") {
+                                }).catch(function(errorGettingCurrentGame) {
+                                  //IF the error is smth else than just not finding the game
+                                    if (errorGettingCurrentGame != "Error: Error getting current game: 404 Not Found") {
                                         deferred.reject("Could not get the current game of " + summonerName);
                                     } else {
                                         result.ingame = false;

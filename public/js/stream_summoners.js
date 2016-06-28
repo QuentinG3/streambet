@@ -12,6 +12,8 @@ var summonerNameValue = document.getElementById("summonerNameValue");
 var summonerRegion = document.getElementById("summonerRegion");
 var summonerRegionValue = document.getElementById("summonerRegionValue");
 var summonerRank = document.getElementById("summonerRank");
+var summonerLP = document.getElementById("summonerLP");
+var summonerIG = document.getElementById("summonerIG");
 
 //Listener on add summoner form
 $(document).ready(function() {
@@ -27,8 +29,6 @@ $(document).ready(function() {
           confirmSummoner(data.summoner);
           //Hide error
           hideError();
-          //clear summonder name field
-          document.getElementById("inputSummonerName").value = "";
         }else{
           //Show an error message
           showError(data.error);
@@ -51,6 +51,8 @@ $(document).ready(function() {
         if(data.success){
           //Confirm summoner
           reloadSummonerList(data.summonerList);
+          //clear summonder name field
+          document.getElementById("inputSummonerName").value = "";
           //Show summoner list
           initialView();
           //Hide error
@@ -82,6 +84,9 @@ function voteSummoner(ID, region, streamer, vote){
       alert(data.error);
     }
   });
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
 //Confirm view
@@ -97,7 +102,17 @@ function confirmSummoner(summoner){
   summonerNameValue.value = summoner.name;
   summonerRegion.innerHTML = summoner.region;
   summonerRegionValue.value = summoner.region;
-  summonerRank.innerHTML = summoner.rank;
+  summonerRank.innerHTML = capitalizeFirstLetter(summoner.tier) + " " + summoner.division;
+  summonerLP.innerHTML = summoner.leaguePoints;
+
+  if(summoner.ingame){
+    summonerIG.innerHTML = summoner.name + " is currently in game with " + summoner.champion+".";
+    summonerIG.style.color = "green";
+  }else{
+    summonerIG.innerHTML = summoner.name + " is not currently in game.";
+    summonerIG.style.color = "red";
+  }
+
 
 }
 

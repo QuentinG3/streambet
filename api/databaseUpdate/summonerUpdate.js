@@ -7,7 +7,7 @@ var UpdateCurrentGameDebug = require('debug')('updateCurrentGame');
 
 updateSummonersNameFromApiBySummonersId = function(summonerId, region, smallLimitAPI, bigLimitAPI) {
     var deferred = Q.defer();
-    console.log("QSDGFGFGSZERFGDSZAERFHG")
+
     smallLimitAPI.removeTokens(1, function(errSmallAPI, remainingRequestsSmall) {
         bigLimitAPI.removeTokens(1, function(errBigAPI, remainingRequestsBig) {
             if (errSmallAPI || errBigAPI) {

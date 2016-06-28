@@ -185,7 +185,6 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 					<h3 class=" text-center modal-title"><span class="gold">Requested</span> summoners</h3>
 				</div>
 				<div class="modal-body">
@@ -205,7 +204,7 @@
 	              <thead>
 									<tr>
 	                  <th><i class="fa fa-ticket gold"></i> ID </th>
-	                  <th><i class="fa fa-flash gold"></i> Name </th>
+	                  <th><i class="fa fa-user gold"></i> Name </th>
 	                  <th><i class="fa fa-globe gold"></i> Region </th>
 	                  <th class="text-center"><i class="fa fa-star gold"></i> Score </th>
 	                  <th class="text-center"><i class="fa fa-thumbs-up gold"></i> Upvote </th>
@@ -259,11 +258,12 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th class="text-center"><i class="fa fa-user gold"></i> Icon</th>
+									<th class="text-center"><i class="fa fa-flash gold"></i> Icon</th>
 									<th class="text-center"><i class="fa fa-ticket gold"></i> ID </th>
-									<th class="text-center"><i class="fa fa-flash gold"></i> Name </th>
+									<th class="text-center"><i class="fa fa-user gold"></i> Name </th>
 									<th class="text-center"><i class="fa fa-globe gold"></i> Region </th>
 									<th class="text-center"><i class="fa fa-diamond gold"></i> Rank</th>
+									<th class="text-center"><i class="fa fa-star gold"></i> LP</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -273,9 +273,11 @@
 									<td class="text-center" id="summonerName"></td>
 									<td class="text-center" id="summonerRegion"></td>
 									<td class="text-center" id="summonerRank"></td>
+									<td class="text-center" id="summonerLP"></td>
 								</tr>
 							</tbody>
 						</table>
+						<p class="text-center" id="summonerIG"></p>
 						<br>
 						<form data-toggle="validator" id="confirmSummonerForm" name="confirmSummonerForm" action="/stream/{{ streamer.channelname}}/add-summoner" method="post" role="form">
 							<!-- Channel Name -->

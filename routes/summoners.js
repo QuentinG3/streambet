@@ -21,6 +21,7 @@ module.exports = {
   },
 
   getSummoner: function(req, res){
+    console.log("Request");
     //User
     var user = req.user;
     if(user === undefined){
@@ -43,7 +44,6 @@ module.exports = {
           .then(function(ok){
             //Send summoner info
             summoner.region = region;
-            summoner.rank = "todo";
             res.send({success: true, summoner:summoner});
           })
           //errror check summoner in db

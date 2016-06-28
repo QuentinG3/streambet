@@ -127,7 +127,7 @@ module.exports = {
     }else{
       //Info
       var streamer = req.body.streamer;
-      var summonerID = req.body.summonerID;
+      var summonerID = req.body.ID;
       var region = req.body.region;
       var vote = req.body.vote;
 
@@ -136,13 +136,13 @@ module.exports = {
         res.send({success: false, error: "Couldn't retrieve summoner info"});
       }else{
         //Vote for the summoner
-        database.summoners.voteSummoner(user, streamer, summonerID, region, vote)
+        database.summoners.voteSummoner(user.username, streamer, summonerID, region, parseInt(vote))
         .then(function(result){
           res.send({success: true})
         })
         .catch(function(error){
           summonersRouteDebug(error);
-          res.send({success: false, error: error});
+          res.send({success: false, error: "Couldn't vote"});
         });
       }
     }

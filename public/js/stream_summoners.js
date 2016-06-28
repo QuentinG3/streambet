@@ -65,6 +65,25 @@ $(document).ready(function() {
   });
 });
 
+//Vote summoner
+function voteSummoner(ID, region, streamer, vote){
+  //data
+  data = {
+    ID: ID,
+    region: region,
+    streamer: streamer,
+    vote: vote
+  }
+  //Request ajax
+  $.post("/stream/"+channel_name+"/vote-summoner",data,function(data, status){
+    if(data.success){
+      alert("success");
+    }else{
+      alert(data.error);
+    }
+  });
+}
+
 //Confirm view
 function confirmSummoner(summoner){
   //Change view
@@ -119,9 +138,9 @@ function reloadSummonerList(summonerList){
     region.className = "text-center";
     score.innerHTML = summoner.score;
     score.className = "text-center";
-    upvote.innerHTML = '<button type="button" class="btn btn-success" name="button"><i class="fa fa-arrow-up"></button>';
+    upvote.innerHTML = '<button type="button" class="btn btn-success" name="button" onclick="voteSummoner('+"'"+summoner.summonerid+"', '"+summoner.region+"', '"+channel_name+"', "+1+')"><i class="fa fa-arrow-up"></button>';
     upvote.className = "text-center";
-    downvote.innerHTML = '<button type="button" class="btn btn-danger" name="button"><i class="fa fa-arrow-down"></button>';
+    downvote.innerHTML = '<button type="button" class="btn btn-danger" name="button" onclick="voteSummoner('+"'"+summoner.summonerid+"', '"+summoner.region+"', '"+channel_name+"', "+-1+')"><i class="fa fa-arrow-down"></button>';
     downvote.className = "text-center";
 
   }

@@ -80,10 +80,12 @@ function voteSummoner(ID, region, streamer, vote){
   $.post("/stream/"+channel_name+"/vote-summoner",data,function(data, status){
     if(data.success){
       alert("success");
+      //Update score of summoner and buttons
     }else{
-      alert(data.error);
+      //Error message ? do nothing ?
     }
   });
+}
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();

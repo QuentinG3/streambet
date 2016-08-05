@@ -118,7 +118,7 @@ var summonerFunctions = {
 
     voteSummoner: function(user, streamer, summonerID, region, vote){
       return db.query("SELECT * FROM VOTE_SUMMONER($1,$2,$3,$4,$5)",
-      [user, streamer, summonerID, regio, vote]);
+      [user, streamer, summonerID, region, vote]);
     }
 };
 /*

@@ -1,6 +1,6 @@
 //API's
 var twitch = require("twitch.tv");
-var LolApi = require('leagueapi');
+var LolApi = require('./riotApi').getRiotApi();
 
 var async = require("async");
 var asyncq = require("async-q");
@@ -23,7 +23,7 @@ var processBetDebug = require('debug')('processBet');
 //Quentin API
 //LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
 //Nicolas API
-LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
+//LolApi.init("3237f591-a76d-4643-a49e-bc08be9a638b");
 
 
 

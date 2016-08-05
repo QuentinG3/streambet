@@ -1,4 +1,4 @@
-  var express = require('express');
+var express = require('express');
 var socket_io    = require( "socket.io" );
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -23,6 +23,9 @@ var socketIOManagement = require('./sockets/base');
 //debugs
 var userPassportDebug = require('debug')('userPassport');
 
+//initilize Api ofr the whole application
+var RiotApi = require('./api/riotApi');
+RiotApi.initRiotApi();
 
 var app = express();
 
@@ -73,13 +76,6 @@ io.use(passportSocketIo.authorize({
   fail:         onAuthorizeFail     // *optional* callback on fail/error - read more below
 }));
 
-var aaa = require('./routes/utils');
-aaa.getSummoners('nightweebxd','na')
-.then(function(success){
-  console.log(success);
-}).catch(function(error){
-  console.log(error);
-});
 
 // This function accepts every client unless there's an error
 function onAuthorizeFail(data, message, error, accept){

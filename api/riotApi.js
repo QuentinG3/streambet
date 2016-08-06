@@ -1,5 +1,4 @@
 var LolApi = require('leagueapi');
-LolApi.init("0f161ba9-ce84-42ab-b53d-2dbe14dd2f83");
 
 
 function initRiotApi() {

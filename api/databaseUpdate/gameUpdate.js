@@ -15,7 +15,7 @@ var UpdateCurrentGameDebug = require('debug')('updateCurrentGame');
 const FINAL_MASTERIES_LIST = [6161, 6162, 6164, 6261, 6262, 6263, 6361, 6362, 6363];
 const ALLOWED_QUEUE_TYPE = [4, 410];
 
-var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer) {
+var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, io, callbackSummonerOfOnlineStreamer) {
 
     //We first check if the game is played in a ranked mode
     if (ALLOWED_QUEUE_TYPE.indexOf(gameFromApi.gameQueueConfigId) != -1) {
@@ -52,90 +52,87 @@ var createNewGame = function(gameFromApi, summonerOfOnlineStreamer, spellListPro
 
                         //Request the ranks to the API
                         var playerList = [];
-                        smallLimitAPI.removeTokens(1, function(err, remainingRequestsSmall) {
-                            bigLimitAPI.removeTokens(1, function(err, remainingRequestsBig) {
-                                var rankingsNoCallback = Q.denodeify(LolApi.getLeagueEntryData);
-                                rankingsNoCallback(sumIdsString, summonerOfOnlineStreamer.region)
-                                    .then(function(rankings) {
 
-                                        //We get the final masteries of all the players of the game
-                                        for (var l = 0; l < gameFromApi.participants.length; l++) {
-                                            var participant = gameFromApi.participants[l];
+                        var rankingsNoCallback = Q.denodeify(LolApi.getLeagueEntryData);
+                        rankingsNoCallback(sumIdsString, summonerOfOnlineStreamer.region)
+                            .then(function(rankings) {
 
-                                            var finalMastery = -1;
+                                //We get the final masteries of all the players of the game
+                                for (var l = 0; l < gameFromApi.participants.length; l++) {
+                                    var participant = gameFromApi.participants[l];
 
-                                            //Getting the masteries of one player
-                                            for (var m = 0; m < participant.masteries.length; m++) {
-                                                mastery = participant.masteries[m];
-                                                if (FINAL_MASTERIES_LIST.indexOf(mastery.masteryId) != -1) {
-                                                    finalMastery = mastery.masteryId;
-                                                }
-                                            }
+                                    var finalMastery = -1;
 
-                                            //Getting rank of the player
-                                            var playerRank = "UNRANKED";
-                                            if (rankings[participant.summonerId] !== undefined) {
-                                                for (var n = 0; n < rankings[participant.summonerId].length; n++) {
-                                                    if (rankings[participant.summonerId][n].queue == "RANKED_SOLO_5x5") {
-                                                        playerRank = rankings[participant.summonerId][n].tier;
-                                                    }
-                                                }
-                                            }
-
-                                            //We create the player
-                                            playerList.push({
-                                                summonername: participant.summonerName,
-                                                summonerid: participant.summonerId,
-                                                teamid: participant.teamId,
-                                                championname: listChampion.data[participant.championId].key,
-                                                spell1: listSpell.data[participant.spell1Id].key,
-                                                spell2: listSpell.data[participant.spell2Id].key,
-                                                rank: playerRank,
-                                                finalmasteryid: finalMastery,
-                                            });
-
+                                    //Getting the masteries of one player
+                                    for (var m = 0; m < participant.masteries.length; m++) {
+                                        mastery = participant.masteries[m];
+                                        if (FINAL_MASTERIES_LIST.indexOf(mastery.masteryId) != -1) {
+                                            finalMastery = mastery.masteryId;
                                         }
-                                        //Starting the transaction to save the gaem
-                                        database.transactions.addEntierGameTransaction(gameFromApi.gameId, summonerOfOnlineStreamer, summonerTeam, gameFromApi.gameStartTime, playerList, bannedChampionList)
-                                            .then(function() {
-                                                //Prepring the game to send to the socket
-                                                var gameToSend = {
-                                                    players: playerList,
-                                                    bannedChampions: bannedChampionList,
-                                                    region: summonerOfOnlineStreamer.region,
-                                                    summonerName: summonerOfOnlineStreamer.summonersname,
-                                                    teamOfSummoner: summonerTeam,
-                                                    timestamp: gameFromApi.gameStartTime
-                                                };
+                                    }
 
-                                                //Sending the game to the socket
-                                                io.to(summonerOfOnlineStreamer.channelname).emit('game', {
-                                                    game: gameToSend,
-                                                    betTeam: 0,
-                                                    betAmount: 0,
-                                                    amount100: 0,
-                                                    amount200: 0
-                                                });
+                                    //Getting rank of the player
+                                    var playerRank = "UNRANKED";
+                                    if (rankings[participant.summonerId] !== undefined) {
+                                        for (var n = 0; n < rankings[participant.summonerId].length; n++) {
+                                            if (rankings[participant.summonerId][n].queue == "RANKED_SOLO_5x5") {
+                                                playerRank = rankings[participant.summonerId][n].tier;
+                                            }
+                                        }
+                                    }
 
-                                                UpdateCurrentGameDebug("Game added to the database for summoner " + summonerOfOnlineStreamer.summonersname);
+                                    //We create the player
+                                    playerList.push({
+                                        summonername: participant.summonerName,
+                                        summonerid: participant.summonerId,
+                                        teamid: participant.teamId,
+                                        championname: listChampion.data[participant.championId].key,
+                                        spell1: listSpell.data[participant.spell1Id].key,
+                                        spell2: listSpell.data[participant.spell2Id].key,
+                                        rank: playerRank,
+                                        finalmasteryid: finalMastery,
+                                    });
+
+                                }
+                                //Starting the transaction to save the gaem
+                                database.transactions.addEntierGameTransaction(gameFromApi.gameId, summonerOfOnlineStreamer, summonerTeam, gameFromApi.gameStartTime, playerList, bannedChampionList)
+                                    .then(function() {
+                                        //Prepring the game to send to the socket
+                                        var gameToSend = {
+                                            players: playerList,
+                                            bannedChampions: bannedChampionList,
+                                            region: summonerOfOnlineStreamer.region,
+                                            summonerName: summonerOfOnlineStreamer.summonersname,
+                                            teamOfSummoner: summonerTeam,
+                                            timestamp: gameFromApi.gameStartTime
+                                        };
+
+                                        //Sending the game to the socket
+                                        io.to(summonerOfOnlineStreamer.channelname).emit('game', {
+                                            game: gameToSend,
+                                            betTeam: 0,
+                                            betAmount: 0,
+                                            amount100: 0,
+                                            amount200: 0
+                                        });
+
+                                        UpdateCurrentGameDebug("Game added to the database for summoner " + summonerOfOnlineStreamer.summonersname);
 
 
-                                                ia.placeBetForRandomUsers(gameFromApi.gameId, summonerOfOnlineStreamer.region, summonerOfOnlineStreamer.channelname, io, gameToSend.timestamp, callbackSummonerOfOnlineStreamer);
+                                        ia.placeBetForRandomUsers(gameFromApi.gameId, summonerOfOnlineStreamer.region, summonerOfOnlineStreamer.channelname, io, gameToSend.timestamp, callbackSummonerOfOnlineStreamer);
 
 
-                                                callbackSummonerOfOnlineStreamer();
-                                            })
-                                            .catch(function(errorTransactionCreateGame) {
-                                                UpdateCurrentGameDebug(errorTransactionCreateGame);
-                                                callbackSummonerOfOnlineStreamer();
-                                            });
+                                        callbackSummonerOfOnlineStreamer();
                                     })
-                                    .catch(function(errorGettingRankings) {
-                                        UpdateCurrentGameDebug(errorGettingRankings);
+                                    .catch(function(errorTransactionCreateGame) {
+                                        UpdateCurrentGameDebug(errorTransactionCreateGame);
                                         callbackSummonerOfOnlineStreamer();
                                     });
-                            }); //END BIGLIMITAPI
-                        }); //END SMALLLIMITAPI
+                            })
+                            .catch(function(errorGettingRankings) {
+                                UpdateCurrentGameDebug(errorGettingRankings);
+                                callbackSummonerOfOnlineStreamer();
+                            });
 
                     })
                     .catch(function(errorSpellApi) {

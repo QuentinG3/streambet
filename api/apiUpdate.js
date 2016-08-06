@@ -151,9 +151,9 @@ module.exports = {
                                     callbackSummonerOfOnlineStreamer();
                                 } else {
                                     //We update the summonersName from the summoners id
-                                    summonerUpdate.updateSummonersNameFromApiBySummonersId(summonerOfOnlineStreamer.summonerid, summonerOfOnlineStreamer.region, smallLimitAPI, bigLimitAPI)
+                                    summonerUpdate.updateSummonersNameFromApiBySummonersId(summonerOfOnlineStreamer.summonerid, summonerOfOnlineStreamer.region)
                                         .then(function(result) {
-                                            gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, smallLimitAPI, bigLimitAPI, io, callbackSummonerOfOnlineStreamer);
+                                            gameUpdate.createNewGame(gameFromApi, summonerOfOnlineStreamer, spellListPromise, championListPromise, io, callbackSummonerOfOnlineStreamer);
                                         }).catch(function(error) {
                                             UpdateCurrentGameDebug(summonerOfOnlineStreamer.summonersname + ' could not update the summmonersName from the summonerId in api' + error);
                                             callbackSummonerOfOnlineStreamer();

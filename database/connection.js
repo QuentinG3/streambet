@@ -5,7 +5,7 @@ var Q = require("q");
 
 var cn = "postgresql://quentin:azerty@localhost:5432/streambet";
 if (process.env.OPENSHIFT_APP_NAME) {
-    cn = process.env.OPENSHIFT_POSTGRESQL_DB_URL + '/' + process.env.OPENSHIFT_APP_NAME;
+    cn = process.env.OPENSHIFT_POSTGRESQL_DB_URL + process.env.OPENSHIFT_APP_NAME;
 }
 var db = pgp(cn);
 

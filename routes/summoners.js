@@ -121,7 +121,7 @@ module.exports = {
 
   voteSummoner: function(req, res){
     //Retrieve user
-    var user = req.user
+    var user = req.user;
     if(user === undefined){
       res.send({success: false, error: "you need to be logged in"});
     }else{
@@ -138,7 +138,7 @@ module.exports = {
         //Vote for the summoner
         database.summoners.voteSummoner(user.username, streamer, summonerID, region, parseInt(vote))
         .then(function(result){
-          res.send({success: true})
+          res.send({success: true});
         })
         .catch(function(error){
           summonersRouteDebug(error);

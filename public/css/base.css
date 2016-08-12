@@ -54,6 +54,12 @@ button.btn-lolbet:hover, button.btn-lolbet:focus {
   background: linear-gradient(#d38b39, #D39C2C);
   color: white; }
 
+button.btn-vote.btn-success:disabled {
+  color: green !important; }
+
+button.btn-vote.btn-danger:disabled {
+  color: red !important; }
+
 .navbar {
   border-radius: 0; }
 @media(min-width:768px) {

@@ -219,8 +219,8 @@
 									<td>{{ summoner.summonersname }}</td>
 									<td>{{ summoner.region }}</td>
 									<td class="text-center">{{ summoner.score }}</td>
-									<td class="text-center"><button type="button" class="btn btn-success" name="button" onclick="voteSummoner('{{ summoner.summonerid }}', '{{summoner.region}}', '{{ streamer.channelname }}', 1)"><i class="fa fa-arrow-up"></button></td>
-									<td class="text-center"><button type="button" class="btn btn-danger" name="button" onclick="voteSummoner('{{ summoner.summonerid }}', '{{summoner.region}}', '{{ streamer.channelname }}', -1)"><i class="fa fa-arrow-down"></button></td>
+									<td class="text-center"><button type="button" class="btn btn-success btn-vote" name="button" onclick="voteSummoner('{{ summoner.summonerid }}', '{{summoner.region}}', '{{ streamer.channelname }}', 1)"><i class="fa fa-arrow-up"></button></td>
+									<td class="text-center"><button type="button" class="btn btn-danger btn-vote" name="button" onclick="voteSummoner('{{ summoner.summonerid }}', '{{summoner.region}}', '{{ streamer.channelname }}', -1)"><i class="fa fa-arrow-down"></button></td>
 								</tr>
 								{% endfor %}
 								</tbody>

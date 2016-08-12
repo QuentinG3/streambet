@@ -14,7 +14,7 @@ var userAccountDebug = require('debug')('userAccount');
 const email_regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 const username_regex = /^[_A-z0-9]{3,}$/;
 
-const CAPTCHA_API_KEY = "6LdS0hwTAAAAAApkTHy8_QmUbcapYk6LwDJ2BExD";
+const CAPTCHA_API_KEY = "6LdrQicTAAAAAGXURgAhkmrr56zcmO-ZYRrF7AnO";
 
 
 function getBDay(birthdate){

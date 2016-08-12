@@ -1,4 +1,4 @@
-  var express = require('express');
+var express = require('express');
 var socket_io    = require( "socket.io" );
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -23,6 +23,9 @@ var socketIOManagement = require('./sockets/base');
 //debugs
 var userPassportDebug = require('debug')('userPassport');
 
+//initilize Api ofr the whole application
+var RiotApi = require('./api/riotApi');
+RiotApi.initRiotApi();
 
 var app = express();
 
@@ -44,12 +47,9 @@ app.set('view engine', 'html');
 
 //database connection
 mongodb_connection_string = '127.0.0.1:27017/streambet';
-if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
-  mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
-  process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
-  process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-  process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
-  process.env.OPENSHIFT_APP_NAME;
+//take advantage of openshift env vars when available:
+if(process.env.OPENSHIFT_MONGODB_DB_URL){
+    mongodb_connection_string = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
 }
 mongoose.connect(mongodb_connection_string);
 
@@ -73,13 +73,6 @@ io.use(passportSocketIo.authorize({
   fail:         onAuthorizeFail     // *optional* callback on fail/error - read more below
 }));
 
-var aaa = require('./routes/utils');
-aaa.getSummoners('nightweebxd','na')
-.then(function(success){
-  console.log(success);
-}).catch(function(error){
-  console.log(error);
-});
 
 // This function accepts every client unless there's an error
 function onAuthorizeFail(data, message, error, accept){

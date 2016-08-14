@@ -5,7 +5,14 @@ module.exports = {
 
     home: function(req, res, next) {
       var user = req.user;
-      if(! user.admin){
+      if(user === undefined){
+        res.status(404);
+        res.render('404', {
+            user: req.user,
+            isAuthenticated: req.isAuthenticated(),
+            url: req.url
+        });
+      }else if(!user.admin){
         res.status(404);
         res.render('404', {
             user: req.user,

@@ -25,7 +25,6 @@ module.exports = {
     stream: function(req, res, next) {
         //Getting the streamer name
         var name = req.params.name;
-
         //Database lookup for streamer
         database.streamer.getStreamerByChannelName(name)
         .then(function(streamer){
@@ -36,10 +35,10 @@ module.exports = {
               //Getting regions
               database.region.getRegion()
               .then(function(regionList){
+                console.log(regionList);
                 res.render('stream', {
                     streamer: streamer,
                     summonersList: validList,
-                    summonersPendingList: pendingList,
                     region_list: regionList,
                     bet_range: [5,10,15,20],
                     isAuthenticated: req.isAuthenticated(),

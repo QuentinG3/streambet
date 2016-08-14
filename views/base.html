@@ -145,6 +145,11 @@
             <li {% block profil %}{% endblock %}>
               <a href="/profil"><i class="pull-right fa fa-user fa-lg" style="padding-top:3px"></i>Profil</a>
             </li>
+            {% if user.admin %}
+            <li {% block admin %}{% endblock %}>
+              <a href="/admin"><i class="pull-right fa fa-wrench fa-lg" style="padding-top:3px"></i>Admin</a>
+            </li>
+            {% endif %}
             <li>
               <a href="/logoff"><i class="pull-right fa fa-sign-out fa-lg" style="padding-top:3px"></i>Log off</a>
             </li>
@@ -167,6 +172,11 @@
         <li {% block profil.m %}{% endblock %}>
           <a href="/profil">Profil <i class="pull-right fa fa-user fa-lg" style="padding-top:3px"></i></a>
         </li>
+        {% if user.admin %}
+        <li {% block admin.m %}{% endblock %}>
+          <a href="/admin">Admin <i class="pull-right fa fa-wrench fa-lg" style="padding-top:3px"></i></a>
+        </li>
+        {% endif %}
         <li>
           <a href="/logoff">Log off <i class="pull-right fa fa-sign-out fa-lg" style="padding-top:3px"></i></a>
         </li>

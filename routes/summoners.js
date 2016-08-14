@@ -21,7 +21,6 @@ module.exports = {
   },
 
   getSummoner: function(req, res){
-    console.log("Request");
     //User
     var user = req.user;
     if(user === undefined){
@@ -36,15 +35,12 @@ module.exports = {
       if(channelName === undefined || channelName === "" || summonerName === undefined || summonerName === "" || region === undefined || region === ""){
         res.send({success: false, error: "Couldn't retrieve summoner info"});
       }else{
-        console.log("Request2");
         //Check summoner with RIOT
         utils.getSummoners(summonerName, region)
         .then(function(summoner){
-          console.log("Request3");
           //Check summoner in DB
           utils.checkSummonerDB(summoner.id.toString(), region, channelName)
           .then(function(ok){
-            console.log("Request4");
             //Send summoner info
             summoner.region = region;
             res.send({success: true, summoner:summoner});

@@ -7,8 +7,20 @@ var lolbet = require('./lolbet');
 var summoners= require('./summoners');
 var admin = require('./admin');
 
-//TODO remove in production
+/* GET Admin page. */
 router.get('/admin', admin.home);
+
+/* AJAX POST validate streamer. */
+router.post('/validateStreamer', admin.validateStreamer);
+
+/* AJAX POST change name streamer. */
+router.post('/nameStreamer', admin.nameStreamer);
+
+/* AJAX POST delete summoner. */
+router.post('/deleteSummoner', admin.deleteSummoner);
+
+/* AJAX POST add summoner. */
+router.post('/addSummoner', admin.addSummoner);
 
 /* GET Home page. */
 router.get('/', lolbet.streamers);

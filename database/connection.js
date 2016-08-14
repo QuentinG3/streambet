@@ -23,13 +23,14 @@ const STREAMER_TABLE_NAME = "streamers";
 const ONLINE_COL = "online";
 const VIEWERS_COL = "viewers";
 const CHANNELNAME_COL = "channelname";
+const NAME_COL = "name";
 const VALID_COL = "valid";
 const LASTGAMEID_COL_STREAMERS = "lastgameid";
 const LASTGAMEREGION_COL_STREAMERS = "lastgameregion";
 
 var streamerFunctions = {
     getAllStreamers: function(){
-      return db.any("SELECT * FROM $1~ ORDER BY name", [STREAMER_TABLE_NAME]);
+      return db.any("SELECT * FROM $1~ ORDER BY channelname", [STREAMER_TABLE_NAME]);
     },
     getValidStreamers: function(field) {
         return db.any("SELECT $1~ FROM streamers WHERE $2~=$3", [field,VALID_COL,true]);
@@ -47,13 +48,19 @@ var streamerFunctions = {
         return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2 AND ", [STREAMER_TABLE_NAME, true]);
     },
     getOnlineStreamersSorted: function() {
-        return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2 ORDER BY " + VIEWERS_COL + " DESC", [STREAMER_TABLE_NAME, true]);
+        return db.any("SELECT * FROM $1~ WHERE " + ONLINE_COL + "=$2 AND "+ VALID_COL +"=$3 ORDER BY " + VIEWERS_COL + " DESC", [STREAMER_TABLE_NAME, true, true]);
     },
     getStreamerByChannelName: function(channelName) {
         return db.oneOrNone("SELECT * FROM $1~ WHERE " + CHANNELNAME_COL + "=$2", [STREAMER_TABLE_NAME, channelName]);
     },
     addStreamer: function(name, channelName, preview, valid) {
       return db.query("INSERT INTO $1~ VALUES ($2, $3, false, 0, $4, $5)",[STREAMER_TABLE_NAME, name, channelName, preview, valid]);
+    },
+    validateStreamer: function(channelName){
+      return db.query("UPDATE $1~ SET $2~ = NOT $2~ WHERE $3~=$4", [STREAMER_TABLE_NAME, VALID_COL, CHANNELNAME_COL, channelName]);
+    },
+    setNameStreamer: function(channelName, name){
+      return db.query("UPDATE $1~ SET $2~ = $3 WHERE $4~=$5", [STREAMER_TABLE_NAME, NAME_COL, name, CHANNELNAME_COL, channelName]);
     }
 };
 

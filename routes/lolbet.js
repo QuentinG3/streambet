@@ -33,34 +33,20 @@ module.exports = {
             //Getting valid summoner of streamer
             database.summoners.getSummonerOfStreamer(name)
             .then(function(validList){
-              //Getting pending summoner of streamer
-              database.summoners.getPendingSummonerOfStreamer(name)
-              .then(function(pendingList){
-                //Getting regions
-                database.region.getRegion()
-                .then(function(regionList){
-                  res.render('stream', {
-                      streamer: streamer,
-                      summonersList: validList,
-                      summonersPendingList: pendingList,
-                      region_list: regionList,
-                      bet_range: [5,10,15,20],
-                      isAuthenticated: req.isAuthenticated(),
-                      user: req.user
-                  });
-                })
-                //Error in geting regions
-                .catch(function(error){
-                  res.status(404);
-                  res.render('404', {
-                      user: req.user,
-                      isAuthenticated: req.isAuthenticated(),
-                      url: req.url
-                  });
-                  lolbetRoutesDebug(error);
+              //Getting regions
+              database.region.getRegion()
+              .then(function(regionList){
+                res.render('stream', {
+                    streamer: streamer,
+                    summonersList: validList,
+                    summonersPendingList: pendingList,
+                    region_list: regionList,
+                    bet_range: [5,10,15,20],
+                    isAuthenticated: req.isAuthenticated(),
+                    user: req.user
                 });
               })
-              //error in getting pending summoner
+              //Error in geting regions
               .catch(function(error){
                 res.status(404);
                 res.render('404', {

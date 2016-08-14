@@ -79,8 +79,8 @@ function voteSummoner(ID, region, streamer, vote){
   //Request ajax
   $.post("/stream/"+channel_name+"/vote-summoner",data,function(data, status){
     if(data.success){
-      alert("success");
       //Update score of summoner and buttons
+
     }else{
       //Error message ? do nothing ?
     }

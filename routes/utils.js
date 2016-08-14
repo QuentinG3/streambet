@@ -88,16 +88,18 @@ module.exports = {
         //Preparing function in promises
         var summonerGetByNamePromise = Q.denodeify(LolApi.Summoner.getByName);
 
+        console.log("utils1");
         //We look for the summoner id by summonerName in the api
         summonerGetByNamePromise(summonersName, region)
             .then(function(summonersData) {
+              console.log("utils2");
                 //If the summoner is not level 30 we returned a rejected deffered
                 if (summonersData[summonersName].summonerLevel !== 30) {
                     deferred.reject(summonersName + " is not level 30 in " + region);
                 } else {
                     //We get the information on the league of the summoner
                     var getLeagueEntryDataPromise = Q.denodeify(LolApi.getLeagueEntryData);
-
+                    console.log("utils3");
                     //We create the results we want to return with the informations
                     var result = {
                         id: summonersData[summonersName].id,
@@ -109,7 +111,7 @@ module.exports = {
 
                     getLeagueEntryDataPromise(summonersData[summonersName].id, region)
                         .then(function(rankResponse) {
-
+                          console.log("utils4");
                             //adding the league information to the result
                             result.tier = rankResponse[summonersData[summonersName].id][0].tier;
                             result.division = rankResponse[summonersData[summonersName].id][0].entries[0].division;
@@ -120,7 +122,7 @@ module.exports = {
                             //We check if the summoner is current ingame
                             getCurrentGameAndCurrentChampion(summonersData, region,summonersName)
                             .then(function(gameResult){
-
+                              console.log("utils5");
                               result.ingame = gameResult.ingame;
                               result.champion = gameResult.champion;
 

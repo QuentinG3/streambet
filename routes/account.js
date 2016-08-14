@@ -516,15 +516,15 @@ module.exports = {
         database.users.getUserByToken(req.params.token)
         .then(function(user){
           if(!user){
-            res.render('reset', {error: "Password reset token is invalid or has expired."})
+            res.render('reset', {error: "Password reset token is invalid or has expired."});
           }else if(user.resetPasswordExpires > Date.now()){
-            res.render('reset', {error: "Password reset token is invalid or has expired."})
+            res.render('reset', {error: "Password reset token is invalid or has expired."});
           }else{
             res.render('reset');
           }
         })
         .catch(function(error){
-          res.render('reset', {error: "Internal error with the database"})
+          res.render('reset', {error: "Internal error with the database"});
         });
       }
     },
@@ -535,9 +535,9 @@ module.exports = {
       database.users.getUserByToken(req.params.token)
       .then(function(user){
         if(!user){
-          res.render('reset', {error: "Password reset token is invalid or has expired."})
+          res.render('reset', {error: "Password reset token is invalid or has expired."});
         }else if(user.resetPasswordExpires > Date.now()){
-          res.render('reset', {error: "Password reset token is invalid or has expired."})
+          res.render('reset', {error: "Password reset token is invalid or has expired."});
         }else{
           var password = req.body.password;
           var confirm = req.body.confirm;
@@ -568,25 +568,25 @@ module.exports = {
             .then(function(hashPassword){
               database.users.updateUserPasswordAndRemoveToken(user.username, hashPassword)
               .then(function(){
-                res.render('reset', {success: "Your password was successfuly modified !"})
+                res.render('reset', {success: "Your password was successfuly modified !"});
               })
               .catch(function(error){
                 userAccountDebug(error);
-                res.render('reset', {error: "Internal error with the database"})
+                res.render('reset', {error: "Internal error with the database"});
               });
             })
             .catch(function(error){
               userAccountDebug(error);
-              res.render('reset', {error: "Internal error"})
+              res.render('reset', {error: "Internal error"});
             });
           }else{
-            res.render('reset', {error_list: error_list})
+            res.render('reset', {error_list: error_list});
           }
 
         }
       })
       .catch(function(error){
-        res.render('reset', {error: "Internal error with the database"})
+        res.render('reset', {error: "Internal error with the database"});
       });
     },
 

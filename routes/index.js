@@ -67,19 +67,22 @@ router.post('/reset/:token', account.resetPassword);
 /* GET stream page. */
 router.get('/stream/:name', lolbet.stream);
 
-/* AJAX GET summoners pending list. */
-router.get('/stream/:name/summoners', summoners.pendingList);
-
-/* AJAX POST get summoner. */
-router.post('/stream/:name/get-summoner', summoners.getSummoner);
-
-/* AJAX POST add summoner. */
-router.post('/stream/:name/add-summoner', summoners.addSummoner);
-
-/* AJAX POST vote summoner. */
-router.post('/stream/:name/vote-summoner', summoners.voteSummoner);
-
 /* GET Ranking page. */
 router.get('/ranking', lolbet.ranking);
+
+/* SUMMONER REMOVED */
+/* AJAX GET summoners pending list. */
+//router.get('/stream/:name/summoners', summoners.pendingList);
+
+/* AJAX POST get summoner. */
+//router.post('/stream/:name/get-summoner', summoners.getSummoner);
+
+/* AJAX POST add summoner. */
+//router.post('/stream/:name/add-summoner', summoners.addSummoner);
+
+/* AJAX POST vote summoner. */
+//router.post('/stream/:name/vote-summoner', summoners.voteSummoner);
+
+
 
 module.exports = router;

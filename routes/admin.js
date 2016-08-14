@@ -4,6 +4,15 @@ var adminDebug = require('debug')('admin');
 module.exports = {
 
     home: function(req, res, next) {
+      var user = req.user;
+      if(! user.admin){
+        res.status(404);
+        res.render('404', {
+            user: req.user,
+            isAuthenticated: req.isAuthenticated(),
+            url: req.url
+        });
+      }else{
         //Get Streamers
         database.streamer.getAllStreamers()
         .then(function(streamerList){
@@ -43,5 +52,6 @@ module.exports = {
             isAuthenticated: req.isAuthenticated(),
             user: req.user});
         });
+      }
     }
 };

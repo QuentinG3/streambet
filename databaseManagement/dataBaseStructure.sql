@@ -9,6 +9,7 @@ CREATE TABLE users(name TEXT NOT NULL,
                     email TEXT NOT NULL UNIQUE,
                     money INT NOT NULL,
                     birthdate DATE DEFAULT CURRENT_DATE,
+                    admin BOOLEAN DEFAULT FALSE,
                     resetPasswordToken  TEXT UNIQUE,
                     resetPasswordExpires  BIGINT,
                     CHECK (money>=0));
@@ -29,13 +30,6 @@ CREATE TABLE summoners(summonersname TEXT NOT NULL,
                         summonerid TEXT NOT NULL,
                         streamer TEXT NOT NULL REFERENCES streamers(channelname),
                         PRIMARY KEY(region, summonerid));
-
-CREATE TABLE pendingsummoners(summonersname TEXT NOT NULL,
-                        region TEXT NOT NULL REFERENCES region(code),
-                        summonerid TEXT NOT NULL,
-                        streamer TEXT NOT NULL REFERENCES streamers(channelname),
-                        score INT,
-                        PRIMARY KEY(region, summonerid, streamer));
 
 CREATE TABLE games(gameid TEXT NOT NULL,
                     region TEXT NOT NULL REFERENCES region(code),
@@ -77,14 +71,6 @@ CREATE TABLE bets(gameId TEXT NOT NULL,
                     streamer TEXT NOT NULL,
                     PRIMARY KEY(gameid,region,users,streamer),
                     FOREIGN KEY(gameid,region,streamer) REFERENCES games(gameid,region,streamer));
-
-CREATE TABLE user_vote_summoners(users TEXT NOT NULL REFERENCES users(username),
-                                streamer TEXT NOT NULL REFERENCES streamers(channelname),
-                                summonerid TEXT NOT NULL,
-                                region TEXT NOT NULL REFERENCES region(code),
-                                vote INT NOT NULL,
-                                PRIMARY KEY(users, streamer, summonerid, region),
-                                FOREIGN KEY(summonerid,region) REFERENCES pendingsummoners(summonerid,region));
 
 CREATE TABLE betHistory(gameId TEXT NOT NULL,
                         region TEXT NOT NULL REFERENCES region(code),

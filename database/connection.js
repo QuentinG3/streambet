@@ -122,7 +122,9 @@ var summonerFunctions = {
       [SUMMONERS_TABLE_NAME, SUMMONERID_COL_SUMMONERS, REGION_COL_SUMMONERS, id, region]);
 
     },
-
+    deleteSummoner: function(id, region){
+      return db.query("DELETE FROM $1~ WHERE $2~=$4 AND $3~=$5",[SUMMONERS_TABLE_NAME,SUMMONERID_COL_SUMMONERS,REGION_COL_SUMMONERS,id,region]);
+    },
     voteSummoner: function(user, streamer, summonerID, region, vote){
       return db.query("SELECT * FROM VOTE_SUMMONER($1,$2,$3,$4,$5)",
       [user, streamer, summonerID, region, vote]);

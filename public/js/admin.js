@@ -65,7 +65,13 @@ function addSummoner(channelName){
   $.post("addSummoner",{streamer: channelName, summonerName: name, region: region},function(data, status){
     if(data.success){
       //Add summoner
-
+      $('#summoner-list-'+channelName).append(
+        '<tr id="'+data.region+'-'+data.summonerId+'" class="tr-with-button" data-toggle="tab" href="#tab'+channelName+'">'+
+          '<td>'+data.summonerId+'</td>'+
+          '<td>'+data.summonerName+'</td>'+
+          '<td class="text-center">'+data.region+'</td>'+
+          '<td class="text-center"><button onclick="deleteSummoner('+"'"+data.region+"','"+data.summonerId+"'"+')" type="button" class="btn btn-danger" name="button"><i class="fa fa-trash"></button></td>'+
+        '</tr>');
     }else{
       //Show error
       summonerErrorText.innerHTML = data.error;
@@ -74,6 +80,22 @@ function addSummoner(channelName){
   });
 
   return false;
+}
+
+
+/* Delete Summoner */
+function deleteSummoner(region,id){
+  //Request server
+  $.post("deleteSummoner",{summonerId: id, region: region},function(data, status){
+    if(data.success){
+      //Remove the summoner
+      $("#"+region+"-"+id).remove();
+    }else{
+      //Show error
+      summonerErrorText.innerHTML = data.error;
+      summonerError.style.display = "inherit";
+    }
+  });
 }
 
 

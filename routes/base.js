@@ -15,7 +15,7 @@ module.exports = {
         res.render('about', {
             about: [{
                 title: "What is streambet",
-                text: "Streambet is an esport betting website based on league of legends streaming. Every time a streamer enter in a ranked game on league of legends, StreamBet users have 5 minutes to bet on one of the team involved. At the end of the game, this bet is processed and the total amount is shared among the winners. We feature the most watched streamers on twitch.tv and we try to maintain their summoners list up-to-date. If you think we missed someone, please log in and add a new streamer in the home page.",
+                text: "Streambet is an esport betting website based on league of legends streaming. Every time a streamer enter in a ranked game on league of legends, StreamBet users have 5 minutes to bet on one of the team involved. At the end of the game, this bet is processed and the total amount is shared among the winners. We feature the most watched streamers on twitch.tv and we try to maintain their summoners list up-to-date.",
             }, {
                 title: "Who we are",
                 text: "We are two belgian computer science students. We study in the Catholic University of Louvain in Belgium. As league of legends players and streaming enthusiast, we decided to develop this website to create a new kind of bet system. We hope you'll enjoy this project and don't hesitate to give us your feedback !",
